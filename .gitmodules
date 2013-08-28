@@ -4,3 +4,6 @@
 [submodule "firepad"]
 	path = firepad
 	url = https://github.com/firebase/firepad.git
+[submodule "CodeMirror"]
+	path = CodeMirror
+	url = https://github.com/marijnh/CodeMirror
