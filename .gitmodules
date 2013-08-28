@@ -1,0 +1,6 @@
+[submodule "CodeMirror-MathJax"]
+	path = CodeMirror-MathJax
+	url = https://github.com/cben/CodeMirror-MathJax.git
+[submodule "firepad"]
+	path = firepad
+	url = https://github.com/firebase/firepad.git
