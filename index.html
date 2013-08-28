@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Collaborative editing + in-place math</title>
+    <script src="CodeMirror/lib/codemirror.js"></script>
+    <script src="CodeMirror/mode/markdown/markdown.js"></script>
+
+    <script src="CodeMirror-MathJax/render-math.js"></script>
+
+    <link rel="stylesheet" href="CodeMirror/lib/codemirror.css">
+    <style>
+      /* Expand editor to fit most of the page. */
+      html, body, form, textarea, .CodeMirror {
+        height: 100%; width: 100%;
+        -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
+      }
+      /* TODO: downsizing body is ugly but works better than downsizing form. */
+      body { height: 80%; width: 95%; }
+      /* These would make the editor exactly fill the available space,
+         but also cause CM to auto-resize and never scroll
+         (instead whole page scrolls), which makes CM slower.
+        body { display: table; }
+        form { display: table-row; } */
+
+      .CodeMirror { border: 1px solid silver; }
+      .CodeMirror { font-family: serif; }
+      .cm-header { font-size: 150%; line-height: 200%; }
+
+      /* .MathJax-Display has built-in vertical margin: 1em.
+         Inline math has nothing but this looks too dense.
+
+         TODO: syntax highlight $...$ and style with same padding,
+         otherwise this creates vetical jitter.  (High formulas cause
+         this jitter anyway, but MathJax makes an effort for simple
+         formulas to fit in a normal line.) */
+      /* .MathJax { padding-top: 10%; padding-bottom: 10%; } */
+    </style>
+
+    <script src="https://c328740.ssl.cf1.rackcdn.com/mathjax/2.2-latest/MathJax.js?config=TeX-AMS_HTML"></script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: true
+        },
+      });
+    </script>
+
+    <script src="https://cdn.firebase.com/v0/firebase.js"></script>
+    <!-- hack: use prebuilt example/firepad.js to allow running directly from git -->
+    <script src="firepad/examples/firepad.js"></script>
+    <link rel="stylesheet" href="firepad/examples/firepad.css" />
+  </head>
+  <body>
+    <h1>Collaborative editing + in-place math</h1>
+
+    <form><textarea id="code" name="code"></textarea></form>
+    <script id="script">
+      "use strict";
+
+      var editor = CodeMirror.fromTextArea(document.getElementById("code"),
+                                           {lineNumbers: true,
+                                            lineWrapping: true,
+                                            mode: "markdown"});
+      CodeMirror.renderMath(editor, MathJax);
+
+      var firepadRef = new Firebase('mathdown-alpha.firebaseIO.com/firepads/demo');
+      var firepad =  Firepad.fromCodeMirror(firepadRef, editor);
+      firepad.on('ready', function() {
+        if (firepad.isHistoryEmpty()) {
+          firepad.setText(
+"$$\binom{\mathbb{Math}}{down}$$\n" +
+"\n" +
+"# A First Level Header\n" +
+"\n" +
+"**Bold** and *italic* text. in a normal paragraph.\n" +
+"\n" +
+"Use $\LaTeX$ syntax for inline math $\sum^y_z x$ bar.\n" +
+"\n" +
+"## A Second Level Header\n" +
+"\n" +
+"$$\sum^b_c a$$\n"
+          );
+        }
+      });
+    </script>
+  </body>
+</html>
