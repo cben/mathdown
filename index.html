@@ -63,26 +63,43 @@
                                            {lineNumbers: true,
                                             lineWrapping: true,
                                             mode: "markdown"});
-      CodeMirror.renderMath(editor, MathJax);
 
-      var firepadRef = new Firebase('mathdown-alpha.firebaseIO.com/firepads/demo');
+      function locationQueryParams() {
+        /* If more is needed, use https://github.com/medialize/URI.js */
+        var queryParts = window.location.search.replace(/^\?/g, "").split("&");
+        var params = {};
+        for(var i = 0; i < queryParts.length; i++) {
+          var keyval = queryParts[i].split("=");
+          params[decodeURIComponent(keyval[0])] = decodeURIComponent(keyval[1] || "");
+        }
+        return params;
+      }
+
+      var doc = locationQueryParams()["doc"];
+      var firepadsRef = new Firebase("https://mathdown-alpha.firebaseIO.com/firepads");
+      var firepadRef = firepadsRef.child(doc);
+      console.log("firebase ref:", firepadRef.toString());
+
       var firepad =  Firepad.fromCodeMirror(firepadRef, editor);
-      firepad.on('ready', function() {
+      firepad.on("ready", function() {
         if (firepad.isHistoryEmpty()) {
           firepad.setText(
-"$$\binom{\mathbb{Math}}{down}$$\n" +
+"$$\\binom{\\mathbb{Math}}{down}$$\n" +
 "\n" +
 "# A First Level Header\n" +
 "\n" +
 "**Bold** and *italic* text. in a normal paragraph.\n" +
 "\n" +
-"Use $\LaTeX$ syntax for inline math $\sum^y_z x$ bar.\n" +
+"Use $\\LaTeX$ syntax for inline math $\\sum^y_z x$ bar.\n" +
 "\n" +
 "## A Second Level Header\n" +
 "\n" +
-"$$\sum^b_c a$$\n"
+"$$\\sum^b_c a$$\n"
           );
         }
+
+        /* TODO: Race condition with early typing? */
+        CodeMirror.renderMath(editor, MathJax);
       });
     </script>
   </body>
