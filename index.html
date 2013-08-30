@@ -62,7 +62,8 @@
       var editor = CodeMirror.fromTextArea(document.getElementById("code"),
                                            {lineNumbers: true,
                                             lineWrapping: true,
-                                            mode: "markdown"});
+                                            mode: {name: "markdown",
+                                                   underscoresBreakWords: false}});
 
       function locationQueryParams() {
         /* If more is needed, use https://github.com/medialize/URI.js */
