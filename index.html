@@ -9,20 +9,10 @@
 
     <link rel="stylesheet" href="CodeMirror/lib/codemirror.css">
     <style>
-      /* Expand editor to fit most of the page. */
-      html, body, form, textarea, .CodeMirror {
-        height: 100%; width: 100%;
-        -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
-      }
-      /* TODO: downsizing body is ugly but works better than downsizing form. */
-      body { height: 80%; width: 95%; }
-      /* These would make the editor exactly fill the available space,
-         but also cause CM to auto-resize and never scroll
-         (instead whole page scrolls), which makes CM slower.
-        body { display: table; }
-        form { display: table-row; } */
+      @media print { .header { display: none } }
 
-      .CodeMirror { border: 1px solid silver; }
+      @media screen { .CodeMirror { border: 1px solid silver; } }
+      @media print { .CodeMirror { border: 1px none; } }
       .CodeMirror { font-family: serif; }
       .cm-header { font-size: 150%; line-height: 200%; }
 
@@ -50,17 +40,21 @@
     <script src="https://cdn.firebase.com/v0/firebase.js"></script>
     <!-- hack: use prebuilt example/firepad.js to allow running directly from git -->
     <script src="firepad/examples/firepad.js"></script>
-    <link rel="stylesheet" href="firepad/examples/firepad.css" />
+    <link rel="stylesheet" href="firepad/examples/firepad.css"/>
+    <style>
+      .firepad { height: 100% }
+      .firepad .CodeMirror { position: relative; }
+    </style>
   </head>
   <body>
-    <h1>Collaborative editing + in-place math</h1>
+    <h1 class="header">Collaborative editing + in-place math</h1>
 
     <form><textarea id="code" name="code"></textarea></form>
     <script id="script">
       "use strict";
 
       var editor = CodeMirror.fromTextArea(document.getElementById("code"),
-                                           {lineNumbers: true,
+                                           {lineNumbers: false,
                                             lineWrapping: true,
                                             mode: {name: "markdown",
                                                    underscoresBreakWords: false}});
