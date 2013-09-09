@@ -17,7 +17,7 @@ Dependencies:
 
  * CodeMirror is also MIT.
  * MathJax is under Apache License 2.0.
- * Firebase is a proprietary service (issue 4), but their clied-side APIs, and the collaborative editor Firepad are MIT.
+ * Firebase is a proprietary service (#4), but their clied-side APIs, and the collaborative editor Firepad are MIT.
 
 ## Git trivia
 
