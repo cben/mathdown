@@ -2,10 +2,13 @@ mathdown
 ========
 
 Collaborative markdown with math.
-Powered by [CodeMirror][], [MathJax][] and [Firebase's Firepad](http://firepad.io).
+Powered by [CodeMirror][], [MathJax][] and [Firebase][]'s [Firepad][].
 
 [CodeMirror]: http://codemirror.net
 [MathJax]: http://mathjax.org
+[Firebase]: http://firebase.com
+[Firepad]: http://firepad.io
+[CodeMirror-MathJax]: http://github.com/cben/CodeMirror-MathJax
 
 **Alpha quality – will eat your math, burn your bookmarks & expose your secrets.**
 
@@ -17,7 +20,8 @@ Dependencies:
 
  * CodeMirror is also MIT.
  * MathJax is under Apache License 2.0.
- * Firebase is a proprietary service (#4), but their clied-side APIs, and the collaborative editor Firepad are MIT.
+ * My [CodeMirror-MathJax][] glue is also MIT.
+ * Firebase is a proprietary service (#4), but their clied-side APIs, and the collaborative editor [Firepad] are MIT.
 
 ## Git trivia
 
