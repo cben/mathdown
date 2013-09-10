@@ -16,7 +16,8 @@
         tex2jax: {
           inlineMath: [ ['$','$'], ["\\(","\\)"] ],
           displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
-          processEscapes: true
+          processEscapes: true,
+          preview: "none"
         },
       });
     </script>
@@ -46,7 +47,7 @@
     <div class="header">
       $\binom{\mathcal{Math}}{\text{down}}:$
       <h1 style="display: inline">
-        Collaborative formatted markdown with math |
+        Collaborative markdown + math |
         <a href="https://github.com/cben/mathdown/issues" class="warning">
           ⚠ Alpha quality! ⚠
         </a> |
@@ -126,8 +127,8 @@
             "\n" +
             "Use Markdown and $\LaTeX$ syntaxes (see **Help** link above).  " +
             "To edit formulas just enter them with arrow keys.\n" +
-            // HACK: Pad the editor to so there is more inviting
-            // space at the bottom.
+            // HACK: Pad the editor with a few emty lines so it looks
+            // more inviting to write in.
             "\n" +
             "\n"
           );
