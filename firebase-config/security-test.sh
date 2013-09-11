@@ -1,9 +1,9 @@
 #!/bin/bash
 # TODO: learn to write this kind of theng in Node.js.
 
-fails=0
+firebase=mathdown.firebaseio.com
 
-firebase=mathdown-alpha.firebaseio.com
+fails=0
 # Can't read list of pads
 curl --silent --head -X GET https://$firebase/firepads.json | grep 403 || let fails++
 # Can read pad with known name

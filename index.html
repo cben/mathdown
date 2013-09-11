@@ -117,7 +117,7 @@
       if(!doc) {
         window.location.search = "?doc=about";
       }
-      var firepadsRef = new Firebase("https://mathdown-alpha.firebaseIO.com/firepads");
+      var firepadsRef = new Firebase("https://mathdown.firebaseIO.com/firepads");
       var firepadRef = firepadsRef.child(doc);
       log("firebase ref:", firepadRef.toString());
 
