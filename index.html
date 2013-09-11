@@ -28,6 +28,7 @@
     <link rel="stylesheet" href="firepad/examples/firepad.css"/>
 
     <style>
+      a#logo { color: black; text-decoration: none; }
       .warning { color: orange }
 
       @media print { .header { display: none } }
@@ -45,7 +46,9 @@
   <body class="tex2jax_ignore">
     <!-- TODO: clean content/CSS. -->
     <div class="header">
-      <span class="tex2jax_process">$\binom{\mathcal{Math}}{\text{down}}:$</span>
+      <a href="?doc=about" target="_blank" class="tex2jax_process" id="logo">
+        $\binom{\mathcal{Math}}{\text{down}}$
+      </a>
       <h1 style="display: inline">
         Collaborative markdown + math |
         <a href="https://github.com/cben/mathdown/issues" class="warning">
