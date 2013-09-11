@@ -68,12 +68,6 @@
         try { console.log.apply(console, arguments); } catch (err) {}
       }
 
-      var editor = CodeMirror.fromTextArea(document.getElementById("code"),
-                                           {lineNumbers: false,
-                                            lineWrapping: true,
-                                            mode: {name: "markdown",
-                                                   underscoresBreakWords: false}});
-
       function locationQueryParams() {
         /* If more is needed, use https://github.com/medialize/URI.js */
         var queryParts = window.location.search.replace(/^\?/g, "").split("&");
@@ -117,9 +111,18 @@
       }
 
       var doc = locationQueryParams()["doc"];
+      if(!doc) {
+        window.location.search = "?doc=about";
+      }
       var firepadsRef = new Firebase("https://mathdown-alpha.firebaseIO.com/firepads");
       var firepadRef = firepadsRef.child(doc);
       log("firebase ref:", firepadRef.toString());
+
+      var editor = CodeMirror.fromTextArea(document.getElementById("code"),
+                                           {lineNumbers: false,
+                                            lineWrapping: true,
+                                            mode: {name: "markdown",
+                                                   underscoresBreakWords: false}});
 
       var firepad =  Firepad.fromCodeMirror(firepadRef, editor);
       firepad.on("ready", function() {
