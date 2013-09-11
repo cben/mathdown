@@ -31,13 +31,15 @@
       a#logo { color: black; text-decoration: none; }
       .warning { color: orange; }
 
-      @media print { .header { display: none; } }
+      @media print { #header { display: none; } }
 
+      #content { clear: both; }
       @media screen { .CodeMirror { border: 1px solid silver; } }
       @media print { .CodeMirror { border: 1px none; } }
       .CodeMirror { font-family: serif; }
       .cm-header { font-size: 150%; line-height: 200%; }
 
+      /* Override fixed size from firepad.css */
       .firepad { height: 100%; }
       .firepad .CodeMirror { position: relative; }
     </style>
@@ -45,7 +47,7 @@
 
   <body class="tex2jax_ignore">
     <!-- TODO: clean content/CSS. -->
-    <div class="header">
+    <div id="header">
       <a href="?doc=about" target="_blank" class="tex2jax_process" id="logo">
         $\binom{\mathcal{Math}}{\text{down}}$
       </a>
@@ -62,8 +64,8 @@
       </h1>
     </div>
 
-    <form><textarea id="code" name="code"></textarea></form>
-    <script id="script">
+    <form id="content"><textarea id="code" name="code"></textarea></form>
+    <script>
       "use strict";
 
       // Prevent errors on IE.  Might not actually log.
@@ -145,7 +147,7 @@
           );
         }
 
-        /* TODO: Race condition with early typing? */
+        // TODO: Race condition with early typing?
         CodeMirror.renderMath(editor, MathJax);
       });
     </script>
