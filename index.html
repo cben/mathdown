@@ -63,6 +63,11 @@
     <script id="script">
       "use strict";
 
+      // Prevent errors on IE.  Might not actually log.
+      function log() {
+        try { console.log.apply(console, arguments); } catch (err) {}
+      }
+
       var editor = CodeMirror.fromTextArea(document.getElementById("code"),
                                            {lineNumbers: false,
                                             lineWrapping: true,
@@ -114,7 +119,7 @@
       var doc = locationQueryParams()["doc"];
       var firepadsRef = new Firebase("https://mathdown-alpha.firebaseIO.com/firepads");
       var firepadRef = firepadsRef.child(doc);
-      console.log("firebase ref:", firepadRef.toString());
+      log("firebase ref:", firepadRef.toString());
 
       var firepad =  Firepad.fromCodeMirror(firepadRef, editor);
       firepad.on("ready", function() {
