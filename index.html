@@ -39,10 +39,14 @@
       #content { clear: both; }
       @media screen { .CodeMirror { border: 1px solid silver; } }
       @media print { .CodeMirror { border: 1px none; } }
+
       .CodeMirror { font-family: serif; }
+      .cm-header { font-size: 150%; line-height: 200%; }
       /* markdown mode styles `...` and indented code blocks as "comment". */
       .CodeMirror .cm-comment { font-family: monospace; }
-      .cm-header { font-size: 150%; line-height: 200%; }
+      /* exclude math from monospace style to avoid mathjax vertically
+         squishing formulas, especially display. */
+      .CodeMirror .math.cm-comment { font-family: serif; }
 
       /* Override fixed size from firepad.css */
       .firepad { height: 100%; }
