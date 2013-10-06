@@ -40,10 +40,11 @@
       @media screen { .CodeMirror { border: 1px solid silver; } }
       @media print { .CodeMirror { border: 1px none; } }
 
-      .CodeMirror { font-family: serif; }
+      /* Font choices stolen from Math.SE: http://graphicdesign.stackexchange.com/a/12961 */
+      .CodeMirror { font-family: Georgia, "Times New Roman", Times, serif; }
       .cm-header { font-size: 150%; line-height: 200%; }
       /* markdown mode styles `...` and indented code blocks as "comment". */
-      .CodeMirror .cm-comment { font-family: monospace; }
+      .CodeMirror .cm-comment { font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;  }
       /* exclude math from monospace style to avoid mathjax vertically
          squishing formulas, especially display. */
       .CodeMirror .math.cm-comment { font-family: serif; }
