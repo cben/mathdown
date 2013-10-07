@@ -13,7 +13,9 @@
         "checkpoint": {
           ".read": true,
           /* Ensure author of checkpoint is the same as the author of the revision they're checkpointing. */
-          ".write": "root.child($secretid).child('history').child(newData.child('id').val()).child('a').val() === newData.child('a').val()",
+          /* Temporarily disabled because this prevented any checkpointing
+          ".write": "root.child($secretid).child('history').child(newData.child('id').val()).child('a').val() === newData.child('a').val()", 
+          */
           ".validate": "newData.hasChildren(['a', 'o', 'id'])"
         },
         "users": {
