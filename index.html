@@ -86,8 +86,9 @@
       log("MJ:", MathJax.Message.Log());
       var origFilterText = MathJax.Message.filterText;
       MathJax.Message.filterText = function(text, n, msgType) {
-        if(msgType != "ProcessMath") {  // the "100%" is not informative.
-          log("MJ:", text);
+        // Exclude non-informative "Processing/Typesetting math: 0% / 100%".
+        if(msgType != "ProcessMath" && msgType != "TypesetMath") {
+          log("MJ:", text, "[" + msgType + "]");
         }
         return origFilterText(text, n, msgType);
       }
