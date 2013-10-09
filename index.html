@@ -82,6 +82,16 @@
         try { console.log.apply(console, arguments); } catch (err) {}
       }
 
+      // Send MathJax messages to log.
+      log("MJ:", MathJax.Message.Log());
+      var origFilterText = MathJax.Message.filterText;
+      MathJax.Message.filterText = function(text, n, msgType) {
+        if(msgType != "ProcessMath") {  // the "100%" is not informative.
+          log("MJ:", text);
+        }
+        return origFilterText(text, n, msgType);
+      }
+
       function locationQueryParams() {
         /* If more is needed, use https://github.com/medialize/URI.js */
         var queryParts = window.location.search.replace(/^\?/g, "").split("&");
