@@ -144,7 +144,8 @@
       log("firebase ref:", firepadRef.toString());
 
       var editor = CodeMirror.fromTextArea(document.getElementById("code"),
-                                           {lineNumbers: false,
+                                           {indentUnit: 4,
+                                            lineNumbers: false,
                                             lineWrapping: true,
                                             mode: {name: "markdown",
                                                    underscoresBreakWords: false}});
