@@ -168,6 +168,11 @@
           );
         }
 
+        // CM's autofocus option doesn't work with Firepad - seems focused
+        // but can't type.  Focusing here after Firepad init works.
+        editor.focus();
+
+        // Queuing this allows text to appear before math.
         // TODO: Race condition with early typing?
         MathJax.Hub.Queue(function() {
           CodeMirror.renderMath(editor, MathJax);
