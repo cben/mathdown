@@ -1,5 +1,5 @@
-mathdown
-========
+http://mathdown.net
+===================
 
 Collaborative markdown with math.
 Powered by [CodeMirror][], [MathJax][] and [Firebase][]'s [Firepad][].
