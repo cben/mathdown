@@ -168,7 +168,9 @@
         }
 
         // TODO: Race condition with early typing?
-        CodeMirror.renderMath(editor, MathJax);
+        MathJax.Hub.Queue(function() {
+          CodeMirror.renderMath(editor, MathJax);
+        });
       });
     </script>
   </body>
