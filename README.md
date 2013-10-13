@@ -21,17 +21,20 @@ Dependencies:
  * CodeMirror is also MIT.
  * MathJax is under Apache License 2.0.
  * My [CodeMirror-MathJax][] glue is also MIT.
- * Firebase is a proprietary service (#4), but their clied-side APIs, and the collaborative editor [Firepad] are MIT.
+ * Firebase is a **proprietary** service ([#4](https://github.com/cben/mathdown/issues/4)), and so is their clied-side javascipt API.
+ * The collaborative editor [Firepad] is MIT.  It calls firebase javascipt API.
 
 ## Git trivia
 
-After checking out, run this to materialize subdirs:
+After checking out, run this to materialize subdirs://
 
     git submodule update --init --recursive
 
 I'm directly working in gh-pages branch without a master branch, as that's the simplest thing that could possibly work (http://oli.jp/2011/github-pages-workflow/ lists several alternatives).
 
-### Other things called "mathdown"
+----
+
+Other things called "mathdown":
 
  * https://github.com/mayoff/Mathdown/tree/mathjax — Markdown.pl hacked for MathJax pass-through
  * https://github.com/keishi/kernlog/blob/master/markdown/extensions/mathdown.py
