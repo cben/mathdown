@@ -6,4 +6,4 @@
 	url = https://github.com/firebase/firepad.git
 [submodule "CodeMirror"]
 	path = CodeMirror
-	url = git@github.com:cben/CodeMirror.git
+	url = https://github.com/cben/CodeMirror.git
