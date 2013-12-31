@@ -16,10 +16,14 @@
     <title>Collaborative editing + in-place math</title>
 
     <script src="CodeMirror/lib/codemirror.js"></script>
+    <script src="CodeMirror/addon/search/searchcursor.js"></script>
+    <script src="CodeMirror/addon/dialog/dialog.js"></script>
+    <script src="CodeMirror/addon/search/search.js"></script>
     <script src="CodeMirror/mode/markdown/markdown.js"></script>
     <script src="CodeMirror-MathJax/render-math.js"></script>
 
-    <link rel="stylesheet" href="CodeMirror/lib/codemirror.css">
+    <link rel="stylesheet" href="CodeMirror/lib/codemirror.css"/>
+    <link rel="stylesheet" href="CodeMirror/addon/dialog/dialog.css"/>
 
     <script type="text/x-mathjax-config">
       MathJax.Hub.Config({
@@ -47,6 +51,19 @@
 
       @media print { #header { display: none; } }
 
+      /* Expand editor to fit most of the page. */
+      html, body, form, textarea, .CodeMirror {
+        height: 100%; width: 100%;
+        -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
+      }
+      /* TODO: downsizing body is ugly but works better than downsizing form. */
+      body { height: 80%; width: 95%; }
+      /* These would make the editor exactly fill the available space,
+         but also cause CM to auto-resize and never scroll
+         (instead whole page scrolls), which makes CM slower.
+        body { display: table; }
+        form { display: table-row; } */
+
       #content { clear: both; }
       @media screen { .CodeMirror { border: 1px solid silver; } }
       @media print { .CodeMirror { border: 1px none; } }
@@ -67,7 +84,7 @@
 
       /* Override fixed size from firepad.css */
       .firepad { height: 100%; }
-      .firepad .CodeMirror { position: relative; }
+      .firepad .CodeMirror { height: 100%; position: relative; }
     </style>
   </head>
 
