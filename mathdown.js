@@ -72,8 +72,7 @@ var editor = CodeMirror.fromTextArea(document.getElementById("code"),
                                      {indentUnit: 4,
                                       lineNumbers: false,
                                       lineWrapping: true,
-                                      mode: {name: "markdown",
-                                             underscoresBreakWords: false}});
+                                      mode: {name: "gfm"}});
 
 var firepad =  Firepad.fromCodeMirror(firepadRef, editor);
 firepad.on("ready", function() {
