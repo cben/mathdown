@@ -90,6 +90,10 @@ firepad.on("ready", function() {
         "\n" +
         "\n"
     );
+  } else {
+    // Keeping cursor at start (hopefully) reduces CM redrawing as
+    // syntax highlight and math rendering changes line heights.
+    editor.setCursor({line: 0, ch: 0});
   }
 
   // CM's autofocus option doesn't work with Firepad - seems focused
