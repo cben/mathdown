@@ -12,5 +12,9 @@
         branch = mathdown
 [submodule "firebase"]
 	path = firebase
-	url = https://github.com/firebase/firebase-bower
+	url = https://github.com/firebase/firebase-bower.git
 	branch = master
+[submodule "MathJax"]
+	path = MathJax
+	url = https://github.com/mathjax/MathJax.git
+	branch = v2.3-latest
