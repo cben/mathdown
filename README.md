@@ -9,6 +9,7 @@ Powered by [CodeMirror][], [MathJax][] and [Firebase][]'s [Firepad][].
 [Firebase]: http://firebase.com
 [Firepad]: http://firepad.io
 [CodeMirror-MathJax]: http://github.com/cben/CodeMirror-MathJax
+[firebase.js]: https://github.com/firebase/firebase-bower
 
 **Alpha quality – will eat your math, burn your bookmarks & expose your secrets.**
 
@@ -21,7 +22,7 @@ Dependencies:
  * CodeMirror is also MIT.
  * MathJax is under Apache License 2.0.
  * My [CodeMirror-MathJax][] glue is also MIT.
- * Firebase is a **proprietary** service ([#4](https://github.com/cben/mathdown/issues/4)), and so is their clied-side javascipt API.
+ * Firebase is a **proprietary** service ([#4](https://github.com/cben/mathdown/issues/4)); their client-side javascipt API [firebase.js][] is MIT.
  * The collaborative editor [Firepad] is MIT.  It calls firebase javascipt API.
 
 ## Git trivia
@@ -29,6 +30,8 @@ Dependencies:
 After checking out, run this to materialize subdirs://
 
     git submodule update --init --recursive
+
+Append ` --remote` to upgrade to newest versions of all submodules (need to commit afterwards if anything changed).
 
 I'm directly working in gh-pages branch without a master branch, as that's the simplest thing that could possibly work (http://oli.jp/2011/github-pages-workflow/ lists several alternatives).
 
