@@ -102,7 +102,6 @@ firepad.on("ready", function() {
   editor.focus();
 
   // Queuing this allows text to appear before math.
-  // TODO: Race condition with early typing?
   MathJax.Hub.Queue(function() {
     editor.renderAllMath();
   });
