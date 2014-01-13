@@ -73,6 +73,7 @@ var editor = CodeMirror.fromTextArea(document.getElementById("code"),
                                       lineNumbers: false,
                                       lineWrapping: true,
                                       mode: {name: "gfm"}});
+CodeMirror.hookMath(editor, MathJax);
 
 var firepad =  Firepad.fromCodeMirror(firepadRef, editor);
 firepad.on("ready", function() {
@@ -85,7 +86,7 @@ firepad.on("ready", function() {
         "\n" +
         "Use Markdown for document structure and $\\LaTeX$ math syntax (see **Help** link above).\n" +
         "To edit formulas just enter them with arrow keys.\n" +
-        // HACK: Pad the editor with a few emty lines so it looks
+        // HACK: Pad the editor with a few empty lines so it looks
         // more inviting to write in.
         "\n" +
         "\n"
@@ -103,6 +104,6 @@ firepad.on("ready", function() {
   // Queuing this allows text to appear before math.
   // TODO: Race condition with early typing?
   MathJax.Hub.Queue(function() {
-    CodeMirror.renderMath(editor, MathJax);
+    editor.renderAllMath();
   });
 });
