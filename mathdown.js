@@ -68,11 +68,23 @@ var firepadsRef = new Firebase("https://mathdown.firebaseIO.com/firepads");
 var firepadRef = firepadsRef.child(doc);
 log("firebase ref:", firepadRef.toString());
 
+// To add vertical margin to headers, the .cm-header[N] classes must apply to
+// <pre> and not the <span>.  Wrap the mode to achieve this.
+CodeMirror.defineMode("gfm_header_line_classes", function(cmConfig) {
+  var mode = CodeMirror.getMode(cmConfig, {name: "gfm"});
+  var origToken = mode.token;
+  mode.token = function(stream, state) {
+    var classes = origToken(stream, state);
+    return classes == null ? null : classes.replace(/\bheader\S*/g, "line-cm-$&");
+  }
+  return mode;
+});
 var editor = CodeMirror.fromTextArea(document.getElementById("code"),
                                      {indentUnit: 4,
                                       lineNumbers: false,
                                       lineWrapping: true,
-                                      mode: {name: "gfm"}});
+                                      mode: "gfm_header_line_classes"});
+
 CodeMirror.hookMath(editor, MathJax);
 
 var firepad =  Firepad.fromCodeMirror(firepadRef, editor);
