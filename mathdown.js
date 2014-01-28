@@ -70,12 +70,14 @@ log("firebase ref:", firepadRef.toString());
 
 // To add vertical margin to headers, the .cm-header[N] classes must apply to
 // <pre> and not the <span>.  Wrap the mode to achieve this.
-CodeMirror.defineMode("gfm_header_line_classes", function(cmConfig) {
-  var mode = CodeMirror.getMode(cmConfig, {name: "gfm"});
+CodeMirror.defineMode("gfm_header_line_classes", function(cmConfig, modeCfg) {
+  modeCfg.name = "gfm";
+  modeCfg.highlightFormatting = true;
+  var mode = CodeMirror.getMode(cmConfig, modeCfg);
   var origToken = mode.token;
   mode.token = function(stream, state) {
     var classes = origToken(stream, state);
-    return classes == null ? null : classes.replace(/\bheader\S*/g, "line-cm-$&");
+    return classes == null ? null : classes.replace(/(^| )(header\S*)/g, "$1line-cm-$2");
   }
   return mode;
 });

@@ -74,18 +74,34 @@
         font-family: Georgia, "Bitstream Charter", "Times New Roman", Times, serif;
       }
       /* Match h1..h6 default sizes in WebKit, Mozilla & IE as of 2013. */
-      pre.cm-header { padding-top: 0.5em; padding-bottom: 0.5em; }
       pre.cm-header1 { font-size: 2.00em; }
       pre.cm-header2 { font-size: 1.50em; }
       pre.cm-header3 { font-size: 1.17em; }
       pre.cm-header4 { font-size: 1.00em; }
       pre.cm-header5 { font-size: 0.83em; }
       pre.cm-header6 { font-size: 0.67em; }
+      /* Arbitrary margins for headers (non-hegligible but not too big). */
+      pre.cm-header { padding-top: 0.5em; padding-bottom: 0.5em; }
+      /* De-emphasize markup characters.  Whitewash colors by *0.4 factor. */
+      .cm-s-default .cm-formatting-header { color: #66F; }
+      .cm-s-default .cm-formatting-em { color: #666; }
+      .cm-s-default .cm-formatting-strong { color: #666; }
+      .cm-s-default .cm-formatting-code { color: #c96; }
+      .cm-s-default .cm-formatting-list { font-weight: bold; }
+      /* Want to disable/demphasize coloring of list lines, leaving only bullet colored.
+         But can't, as long as color is important for lining up continuation lines. 
+      .cm-s-default .cm-variable-2 { color: #003366; }
+      .cm-s-default .cm-variable-2.cm-formatting-list { color: #05a; }
+      .cm-s-default .cm-variable-3 { color: #005233; }
+      .cm-s-default .cm-variable-3.cm-formatting-list { color: #085; }
+      .cm-s-default .cm-keyword { color: #470052; }
+      .cm-s-default .cm-keyword.cm-formatting-list { color: #708; }
+      */
       /* markdown mode styles `...` and indented code blocks as "comment". */
-      .CodeMirror .cm-comment { font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;  }
+      .cm-comment { font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;  }
       /* exclude math from monospace style to avoid mathjax vertically
          squishing formulas, especially display. */
-      .CodeMirror .math.cm-comment { font-family: serif; }
+      .math.cm-comment { font-family: serif; }
 
       /* Override fixed size from firepad.css */
       .firepad { height: 100%; }
