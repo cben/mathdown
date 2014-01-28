@@ -68,6 +68,24 @@ var firepadsRef = new Firebase("https://mathdown.firebaseIO.com/firepads");
 var firepadRef = firepadsRef.child(doc);
 log("firebase ref:", firepadRef.toString());
 
+CodeMirror.defineOption("showLeadingSpace", false, function(cm, val, prev) {
+  if (prev == CodeMirror.Init) prev = false;
+  if (prev && !val)
+    cm.removeOverlay("leadingspace");
+  else if (!prev && val)
+    cm.addOverlay({
+      token: function(stream) {
+        if (stream.sol() && stream.eatSpace()) {
+          return "leadingspace";
+        } else {
+          stream.skipToEnd();
+          return null;
+        }
+      },
+      name: "leadingspace"
+    });
+});
+
 // To add vertical margin to headers, the .cm-header[N] classes must apply to
 // <pre> and not the <span>.  Wrap the mode to achieve this.
 CodeMirror.defineMode("gfm_header_line_classes", function(cmConfig, modeCfg) {
@@ -85,7 +103,8 @@ var editor = CodeMirror.fromTextArea(document.getElementById("code"),
                                      {indentUnit: 4,
                                       lineNumbers: false,
                                       lineWrapping: true,
-                                      mode: "gfm_header_line_classes"});
+                                      mode: "gfm_header_line_classes",
+                                      showLeadingSpace: true});
 
 CodeMirror.hookMath(editor, MathJax);
 
