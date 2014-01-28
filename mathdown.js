@@ -68,6 +68,7 @@ var firepadsRef = new Firebase("https://mathdown.firebaseIO.com/firepads");
 var firepadRef = firepadsRef.child(doc);
 log("firebase ref:", firepadRef.toString());
 
+// Stolen from CodeMirror/addon/edit/trailingspace.js.
 CodeMirror.defineOption("showLeadingSpace", false, function(cm, val, prev) {
   if (prev == CodeMirror.Init) prev = false;
   if (prev && !val)
@@ -93,9 +94,16 @@ CodeMirror.defineMode("gfm_header_line_classes", function(cmConfig, modeCfg) {
   modeCfg.highlightFormatting = true;
   var mode = CodeMirror.getMode(cmConfig, modeCfg);
   var origToken = mode.token;
+  // We use GFM mostly for URLs but don't want GitHub-specific formatting that
+  // makes `0123456789` a link.  TODO: add mode option of gfm.js.
+  var shaOrIssueRE = /^(?:[a-zA-Z0-9\-_]+\/)?(?:[a-zA-Z0-9\-_]+@)?(?:[a-f0-9]{7,40})|b^(?:[a-zA-Z0-9\-_]+\/)?(?:[a-zA-Z0-9\-_]+)?#[0-9]+$/;
   mode.token = function(stream, state) {
-    var classes = origToken(stream, state);
-    return classes == null ? null : classes.replace(/(^| )(header\S*)/g, "$1line-cm-$2");
+    var classes = origToken(stream, state) || "";
+    if (shaOrIssueRE.test(stream.current())) {
+      classes = classes.replace(/(^| )link( |$)/, " ");
+    }
+    classes = classes.replace(/(^| )(header\S*)/g, "$1line-cm-$2");
+    return /^\s*$/.test(classes) ? null : classes;
   }
   return mode;
 });
