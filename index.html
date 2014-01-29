@@ -65,6 +65,12 @@
         body { display: table; }
         form { display: table-row; } */
 
+      /* Override fixed editor size from firepad.css */
+      .firepad { height: 100%; }
+      .firepad .CodeMirror { height: 100%; position: relative; }
+      /* Disable Firepad logo */
+      .powered-by-firepad { background-image: none; }
+
       #content { clear: both; }
       @media screen { .CodeMirror { border: 1px solid silver; } }
       @media print { .CodeMirror { border: 1px none; } }
@@ -103,11 +109,11 @@
          squishing formulas, especially display. */
       .math.cm-comment { font-family: serif; }
 
-      /* Override fixed size from firepad.css */
-      .firepad { height: 100%; }
-      .firepad .CodeMirror { height: 100%; position: relative; }
-      /* Disable Firepad logo */
-      .powered-by-firepad { background-image: none; }
+      /* We set (in "renderLine" event) negative text-indent on indented lines,
+         which if inherited by any nested inline-block breaks their positioning
+         (math overlaps text, tabs become almost invisible).  Thanks to
+         https://github.com/mathjax/MathJax/issues/473 for easy fix. */
+      .CodeMirror pre > * { text-indent: 0; }
     </style>
   </head>
 

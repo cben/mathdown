@@ -107,12 +107,28 @@ CodeMirror.defineMode("gfm_header_line_classes", function(cmConfig, modeCfg) {
   }
   return mode;
 });
+
 var editor = CodeMirror.fromTextArea(document.getElementById("code"),
                                      {indentUnit: 4,
                                       lineNumbers: false,
                                       lineWrapping: true,
                                       mode: "gfm_header_line_classes",
                                       showLeadingSpace: true});
+
+// Indent soft-wrapped lines.  Based on CodeMirror/demo/indentwrap.html.
+var leadingSpaceAndListBullets = /^\s*([*+-]\s+|\d+\.\s+)?/;
+editor.on("renderLine", function(cm, line, elt) {
+  // Would like to measure real sizes of /leadingspace|formatting-list/ styled
+  // spans, but can't do that without inserting them into the DOM.
+  var leading = (leadingSpaceAndListBullets.exec(line.text) || [""])[0];
+  var off = CodeMirror.countColumn(leading, leading.length, cm.getOption("tabSize"));
+  // Using "ex" is a bit better than cm.defaultCharWidth() — it picks up
+  // increased font if applied to whole line, i.e. in header lines
+  // (not that it makes sense to indent headers).
+  elt.style.textIndent = "-" + off + "ex";
+  elt.style.paddingLeft = off + "ex";
+});
+editor.refresh();
 
 CodeMirror.hookMath(editor, MathJax);
 
