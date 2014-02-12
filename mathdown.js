@@ -131,18 +131,10 @@ editor.on("renderLine", function(cm, line, elt) {
 editor.refresh();
 
 // Keep title and url #hash part in sync with first line of document.
-var titleNode = document.getElementsByTagName("title")[0];
-function setTitle(text) {
-  if (titleNode.textContent !== undefined) {
-    titleNode.textContent = text;
-  } else {  // IE < 9
-    titleNode.innerText = text;
-  }
-}
 function updateTitle() {
   var text = editor.getLine(0); // TODO: find first # Title line?
   text = text.replace(/^\s*#+\s*/, "");
-  setTitle(text + " | mathdown");
+  document.title = text + " | mathdown";
   window.location.hash = text.replace(/\W+/g, "-").replace(/^-/, "").replace(/-$/, "");
 }
 CodeMirror.on(editor.getDoc(), "change", function(doc, changeObj) {
