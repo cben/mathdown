@@ -8,8 +8,8 @@
         branch = master
 [submodule "CodeMirror"]
 	path = CodeMirror
-	url = https://github.com/cben/CodeMirror.git
-        branch = mathdown
+	url = https://github.com/marijnh/CodeMirror
+        branch = master
 [submodule "firebase"]
 	path = firebase
 	url = https://github.com/firebase/firebase-bower.git
