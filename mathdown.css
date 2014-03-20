@@ -75,4 +75,8 @@ pre.cm-header { padding-top: 0.5em; padding-bottom: 0.5em; }
 .CodeMirror-gutter-wrapper { height: 100%; }
 .CodeMirror-gutter-elt { height: 100%; display: table; }
 .CodeMirror-foldgutter-open,
-.CodeMirror-foldgutter-folded { height: 100%; display: table-cell; vertical-align: middle; }
+.CodeMirror-foldgutter-folded {
+    height: 100%; display: table-cell; vertical-align: middle;
+    /* Small triagles are not covered by default fonts on WinXP and Android. */
+    font-family: "Lucida Sans Unicode", "Droid Sans Fallback", "Arial";
+}
