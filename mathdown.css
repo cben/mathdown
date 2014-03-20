@@ -75,4 +75,4 @@ pre.cm-header { padding-top: 0.5em; padding-bottom: 0.5em; }
 .CodeMirror-gutter-wrapper { height: 100%; }
 .CodeMirror-gutter-elt { height: 100%; display: table; }
 .CodeMirror-foldgutter-open,
-.CodeMirror-foldgutter-close { height: 100%; display: table-cell; vertical-align: middle; }
+.CodeMirror-foldgutter-folded { height: 100%; display: table-cell; vertical-align: middle; }
