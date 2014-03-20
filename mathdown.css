@@ -69,3 +69,10 @@ pre.cm-header { padding-top: 0.5em; padding-bottom: 0.5em; }
    (math overlaps text, tabs become almost invisible).  Thanks to
    https://github.com/mathjax/MathJax/issues/473 for easy fix. */
 .CodeMirror pre > * { text-indent: 0; }
+
+/* Vertically center gutter markers - looks better on our variable-height
+   padded headings. */
+.CodeMirror-gutter-wrapper { height: 100%; }
+.CodeMirror-gutter-elt { height: 100%; display: table; }
+.CodeMirror-foldgutter-open,
+.CodeMirror-foldgutter-close { height: 100%; display: table-cell; vertical-align: middle; }

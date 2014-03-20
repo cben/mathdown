@@ -109,7 +109,9 @@ CodeMirror.defineMode("gfm_header_line_classes", function(cmConfig, modeCfg) {
 });
 
 var editor = CodeMirror.fromTextArea(document.getElementById("code"),
-                                     {indentUnit: 4,
+                                     {foldGutter: true,
+                                      gutters: ["CodeMirror-foldgutter"],
+                                      indentUnit: 4,
                                       lineNumbers: false,
                                       lineWrapping: true,
                                       mode: "gfm_header_line_classes",
