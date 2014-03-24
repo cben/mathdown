@@ -1,18 +1,21 @@
 <!doctype html>
-<!--
-     This page is used to render all mathdown documents, using URLs such as
-     http://mathdown.net/?doc=iYrTultCuy6
-
-     See https://github.com/cben/mathdown/issues/6 and
-     https://github.com/cben/mathdown/issues/10 about security of
-     having (secret) doc ID in server-visible part of URL.
-
-     Currently the doc id is only parsed client-side but that should
-     change for https://github.com/cben/mathdown/issues/7.
--->
 <html>
   <head>
-    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+    <meta charset="utf-8"/>
+
+    <!--
+        This page is used to render all mathdown documents, using URLs such as
+        http://mathdown.net/?doc=iYrTultCuy6
+
+        See https://github.com/cben/mathdown/issues/6 and
+        https://github.com/cben/mathdown/issues/10 about security of
+        having (secret) doc ID in server-visible part of URL.
+
+        Currently the doc id is only parsed client-side but that should
+        change for https://github.com/cben/mathdown/issues/7.
+    -->
+
     <!-- The ellipsis will be replaced when the firepad content is loaded.
          TODO: spin the |\—/ instead? -->
     <title>⋯ | mathdown</title>
