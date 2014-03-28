@@ -3,6 +3,7 @@ http://mathdown.net
 
 Collaborative markdown with math.
 Powered by [CodeMirror][], [MathJax][] and [Firebase][]'s [Firepad][].
+Free testing [courtesy of Sause Labs](https://saucelabs.com/opensauce).
 
 [CodeMirror]: http://codemirror.net
 [MathJax]: http://mathjax.org
