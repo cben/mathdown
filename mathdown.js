@@ -109,8 +109,8 @@ CodeMirror.defineMode("gfm_header_line_classes", function(cmConfig, modeCfg) {
 });
 
 // Defaults are insert \t / reindent.  Indent / dedent are more expected & useful.
-CodeMirror.keyMap.default["Tab"] = "indentMore";
-CodeMirror.keyMap.default["Shift-Tab"] = "indentLess";
+CodeMirror.keyMap["default"]["Tab"] = "indentMore";
+CodeMirror.keyMap["default"]["Shift-Tab"] = "indentLess";
 
 var editor = CodeMirror.fromTextArea(document.getElementById("code"),
                                      {foldGutter: true,
