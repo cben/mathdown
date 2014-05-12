@@ -1,0 +1,20 @@
+{
+  "name": "mathdown",
+  "version": "0.0.0",
+  "description": "http://mathdown.net",
+  "devDependencies": {
+    "coffee-script": "~1.7.1",
+    "wd": "~0.2.19",
+    "chalk": "~0.4.0"
+  },
+  "scripts": {
+    "test": "coffee smoke-test.coffee"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cben/mathdown"
+  },
+  "author": "Beni Cherniavsky-Paskin <beni.cherniavsky@gmail.com>",
+  "license": "MIT",
+  "readmeFilename": "README.md"
+}
