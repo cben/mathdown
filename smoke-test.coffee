@@ -1,4 +1,4 @@
-sauceConnectLauncher = require('sauce-connect-launcher')
+sauceTunnel = require('sauce-tunnel')
 wd = require('wd')
 assert = require('assert')
 chalk = require('chalk')
@@ -48,11 +48,13 @@ test = (cb) ->
           console.log(chalk.green('ALL PASSED'))
           cb()
 
-sauceConnectLauncher sauceConnectOptions, (err, sauceConnectProcess) ->
-  assert.ifError(err)
+tunnel = new sauceTunnel(sauceUser, sauceKey, undefined, true, ['--verbose'])
+tunnel.start (status) ->
+  assert(status, 'tunnel creation failed')
+  console.log('tunnel created')
   browser.init desired, (err) ->
     assert.ifError(err)
     test ->
       browser.quit()
-      sauceConnectProcess.close ->
+      tunnel.stop ->
         console.log(chalk.green('Cleaned up.'))
