@@ -1,4 +1,6 @@
 sauceTunnel = require('sauce-tunnel')
+st = require('st')
+http = require('http')
 wd = require('wd')
 assert = require('assert')
 chalk = require('chalk')
@@ -35,7 +37,7 @@ desired = {
 
 test = (cb) ->
   # TODO: use current source (via Sauce Connect?)
-  browser.get 'http://mathdown.net/?doc=_mathdown_test_smoke', (err) ->
+  browser.get 'http://localhost:8000/?doc=_mathdown_test_smoke', (err) ->
     assert.ifError(err)
     browser.waitFor wd.asserters.jsCondition('document.title.match(/smoke test/)', 2000), (err, value) ->
       assert.ifError(err)
@@ -48,6 +50,13 @@ test = (cb) ->
           console.log(chalk.green('ALL PASSED'))
           cb()
 
+server = http.createServer(st({
+  path: process.cwd()
+  index: 'index.html'
+}))
+server.listen(8000)
+console.log('Server up, e.g. http://localhost:8000/?doc=_mathdown_test_smoke')
+
 tunnel = new sauceTunnel(sauceUser, sauceKey, undefined, true, ['--verbose'])
 tunnel.start (status) ->
   assert(status, 'tunnel creation failed')
@@ -56,5 +65,6 @@ tunnel.start (status) ->
     assert.ifError(err)
     test ->
       browser.quit()
+      server.close()
       tunnel.stop ->
         console.log(chalk.green('Cleaned up.'))
