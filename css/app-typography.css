@@ -21,3 +21,14 @@
   .cm-header-1, .cm-header-2 { line-height: 2.0rem; font-size: 1.9rem; padding-top:2.0rem; }
   .cm-header-3               { line-height: 1.5rem; font-size: 1.4rem; padding-top:1.5rem; }
 }
+
+/* Emphasis ----------------------------------------------------------------- */
+.cm-em { font-style:italic; }
+.cm-strong {
+	font-weight: bold;
+	-webkit-font-feature-settings: "smcp";
+		 -moz-font-feature-settings: "smcp";
+			-ms-font-feature-settings: "smcp";
+			 -o-font-feature-settings: "smcp";
+					font-feature-settings: "smcp";
+}
