@@ -10,7 +10,7 @@
     "wd": "~0.2.19"
   },
   "scripts": {
-    "test": "printenv; coffee smoke-test.coffee"
+    "test": "coffee smoke-test.coffee"
   },
   "repository": {
     "type": "git",

@@ -21,9 +21,9 @@ sauceConnectOptions = {
 # http://docs.drone.io/env.html  (Jenkins compatible)
 # https://www.codeship.io/documentation/continuous-integration/set-environment-variables/
 env = process.env
-build = env.BUILD_ID || env.TRAVIS_BUILD_ID || env.CI_BUILD_NUMBER
+build = env.BUILD_ID || env.TRAVIS_BUILD_ID || env.CI_BUILD_NUMBER || env.JOB_ID
 buildUrl = env.BUILD_URL || env.CI_BUILD_URL || build
-commit = env.GIT_COMMIT || env.TRAVIS_COMMIT || env.CI_COMMIT_ID
+commit = env.GIT_COMMIT || env.TRAVIS_COMMIT || env.CI_COMMIT_ID || env.COMMIT
 tunnelId = build
 tags = []
 tags.push('travis') if env.TRAVIS
