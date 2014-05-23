@@ -35,3 +35,28 @@
 }
 .cm-tag,
 .cm-formatting-link-string + .cm-string { opacity: 0.5; }
+
+/* Hang syntax markers of block-level elements into the margin */
+@media (min-width: 800px) {
+	.cm-formatting-header,
+	.cm-formatting-quote,
+	.cm-formatting-list,
+	.cm-hr:before {
+		color:inherit;
+		position: absolute;
+		bottom:top;
+		left:-5rem;
+		width:4.5rem;
+		text-align: right;
+		-webkit-box-sizing: border-box;
+			 -moz-box-sizing: border-box;
+				-ms-box-sizing: border-box;
+				 -o-box-sizing: border-box;
+						box-sizing: border-box;
+	}
+}
+
+/* To do:
+ - fix regex for headings (in CodeMirror submodule, markdown.js): `atxHeaderRE = /^#+\s/`
+ - fix headings’ index (ibidem): `state.header = match[0].length <= 6 ? match[0].length-1 : 6;`
+*/
