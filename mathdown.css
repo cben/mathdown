@@ -106,8 +106,9 @@ form, textarea, .CodeMirror {
 /* Fonts & Colors ----------------------------------------------------------- */
 .CodeMirror,
 .CodeMirror-code {
-  /* Font choices based on Math.SE: http://graphicdesign.stackexchange.com/a/12961 */
-  font-family: Georgia, "Bitstream Charter", "Times New Roman", Times, serif;
+  /* Homage to Don Knuth’s Computer Modern fonts; for alternatives
+     cfr Math.SE: http://graphicdesign.stackexchange.com/a/12961 */
+  font-family: "Computer Modern", "Times New Roman", Times, serif;
   -webkit-text-rendering: optimizeLegibility;
           text-rendering: optimizeLegibility;
     -webkit-font-kerning: auto;

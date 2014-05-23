@@ -6,3 +6,27 @@
 	font-weight: normal;
 	font-style: normal;
 }
+
+/* To do: Don’t load fonts as an external dependency, but serve our own,
+   likely from the MathJax lib. */
+@font-face {
+	font-family: "Computer Modern";
+	src: url('http://mirrors.ctan.org/fonts/cm-unicode/fonts/otf/cmunbi.otf');
+	font-weight: bold;
+	font-style: italic;
+}
+@font-face {
+	font-family: "Computer Modern";
+	src: url('http://mirrors.ctan.org/fonts/cm-unicode/fonts/otf/cmunrb.otf');
+	font-weight: bold;
+}
+@font-face {
+	font-family: "Computer Modern";
+	src: url('http://mirrors.ctan.org/fonts/cm-unicode/fonts/otf/cmunci.otf');
+	font-style: italic;
+}
+@font-face {
+	font-family: "Computer Modern";
+	src: url('http://mirrors.ctan.org/fonts/cm-unicode/fonts/otf/cmunrm.otf');
+	font-weight: normal;
+}
