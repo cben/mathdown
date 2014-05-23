@@ -39,6 +39,10 @@
 /* Hang syntax markers of block-level elements into the margin */
 @media (min-width: 800px) {
 	.cm-formatting-header,
+/* To do:
+ - fix regex for headings (in CodeMirror submodule, markdown.js): `atxHeaderRE = /^#+\s/`
+ - fix headings’ index (ibidem): `state.header = match[0].length <= 6 ? match[0].length-1 : 6;`
+*/
 	.cm-formatting-quote,
 	.cm-formatting-list,
 	.cm-hr:before {
@@ -56,7 +60,8 @@
 	}
 }
 
+.cm-formatting-list-ul           { visibility: hidden; }
+.cm-formatting-list-ul:before    { content:"–"; visibility: visible; }
 /* To do:
- - fix regex for headings (in CodeMirror submodule, markdown.js): `atxHeaderRE = /^#+\s/`
- - fix headings’ index (ibidem): `state.header = match[0].length <= 6 ? match[0].length-1 : 6;`
+ - fix regex for ordered lists (in markdown.js): `olRE = /^([0-9]+\.|[A-z]+\))\s+/`
 */
