@@ -92,24 +92,18 @@ form, textarea, .CodeMirror {
 
 
 /* Fonts & Colors ----------------------------------------------------------- */
-
-.CodeMirror {
+.CodeMirror,
+.CodeMirror-code {
   /* Font choices based on Math.SE: http://graphicdesign.stackexchange.com/a/12961 */
   font-family: Georgia, "Bitstream Charter", "Times New Roman", Times, serif;
+  -webkit-text-rendering: optimizeLegibility;
+          text-rendering: optimizeLegibility;
+    -webkit-font-kerning: auto;
+            font-kerning: auto;
+  line-height: 1.3em;
+  color: rgb(67,67,67);
 }
-/* Match h1..h6 default sizes in WebKit, Mozilla & IE as of 2013. */
-pre.cm-header-1 { font-size: 2.00em; }
-pre.cm-header-2 { font-size: 1.50em; }
-pre.cm-header-3 { font-size: 1.17em; }
-pre.cm-header-4 { font-size: 1.00em; }
-pre.cm-header-5 { font-size: 0.83em; }
-pre.cm-header-6 { font-size: 0.67em; }
-/* Arbitrary margins for headers (non-hegligible but not too big). */
-pre.cm-header { padding-top: 0.5em; padding-bottom: 0.5em; }
 
-
-/* markdown mode styles `...` and indented code blocks as "comment". */
-.cm-comment, .cm-leadingspace, .cm-formatting-list { font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace; }
 /* exclude math from monospace style to avoid mathjax vertically
    squishing formulas, especially display. */
 .math.cm-comment { font-family: serif; }
