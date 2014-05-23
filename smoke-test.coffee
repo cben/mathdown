@@ -58,7 +58,7 @@ test = (cb) ->
   # TODO: use current source (via Sauce Connect?)
   browser.get 'http://localhost:8000/?doc=_mathdown_test_smoke', (err) ->
     assert.ifError(err)
-    browser.waitFor wd.asserters.jsCondition('document.title.match(/smoke test/)', 10000), (err, value) ->
+    browser.waitFor wd.asserters.jsCondition('document.title.match(/smoke test/)'), 10000, (err, value) ->
       assert.ifError(err)
       browser.waitForElementByCss '.MathJax_Display', 15000, (err, el) ->
         assert.ifError(err)
