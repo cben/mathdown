@@ -23,7 +23,7 @@ sauceConnectOptions = {
 env = process.env
 build = env.BUILD_ID || env.TRAVIS_BUILD_ID || env.CI_BUILD_NUMBER
 buildUrl = env.BUILD_URL || env.CI_BUILD_URL || build
-commit = env.GIT_COMMIT || env.TRAVIS_COMMIT
+commit = env.GIT_COMMIT || env.TRAVIS_COMMIT || env.CI_COMMIT_ID
 tunnelId = build
 tags = []
 tags.push('travis') if env.TRAVIS
@@ -44,7 +44,7 @@ desired = {
   version: '8'
   platform: 'Windows XP'
   name: 'smoke test'
-  build: "commit #{commit} build #{buildUrl}"
+  build: "#{buildUrl} commit #{commit}"
   tags: tags
   # Most my tests timeout a lot due crashing without cleanup (see below);
   # this will waste less Sauce resources than default 90s.
