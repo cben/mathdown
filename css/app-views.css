@@ -1,0 +1,58 @@
+/* ALTERNATIVE VIEWS ======================================================== */
+/* To Do: Put controls in the GUI which allow the user to toggle alternative views on and off.
+	 We assume a view’s class name will be set on the .CodeMirror container. */
+
+/* Justified layout --------------------------------------------------------- */
+.justified .CodeMirror-sizer {
+	max-width: 35rem;
+	margin-left: auto !important;
+	margin-right: auto !important;
+}
+.justified .CodeMirror-code pre {
+	text-align: justify;
+	white-space: normal !important; /* https://bugs.webkit.org/show_bug.cgi?id=84448 */
+}
+
+/* Hide formatting syntax markers ------------------------------------------- */
+/* Cfr https://github.com/cben/mathdown/issues/29 */
+.hideSyntax .cm-formatting,
+.hideSyntax .cm-hr:before,
+.hideSyntax .cm-formatting-link-string + .cm-string { display: none; }
+
+/* Color-coded token highlighting ------------------------------------------- */
+/* To Do (if colored token highlighting would be desirable at all):
+	 implement theme with subtle color scheme,
+	 e.g. http://chriskempson.github.io/base16/#eighties */
+.colorize .cm-keyword                       { /* color: #708; */ }
+.colorize .cm-atom                          { /* color: #219; */ }
+.colorize .cm-number                        { /* color: #164; */ }
+.colorize .cm-def                           { /* color: #00f; */ }
+.colorize .cm-variable                      { /* color: black;*/ }
+.colorize .cm-variable-2                    { /* color: #05a; */ }
+.colorize .cm-variable-3                    { /* color: #085; */ }
+.colorize .cm-property                      { /* color: black;*/ }
+.colorize .cm-operator                      { /* color: black;*/ }
+.colorize .cm-comment                       { /* color: #a50; */ }
+.colorize .cm-string                        { /* color: #a11; */ }
+.colorize .cm-string-2                      { /* color: #f50; */ }
+.colorize .cm-meta                          { /* color: #555; */ }
+.colorize .cm-qualifier                     { /* color: #555; */ }
+.colorize .cm-builtin                       { /* color: #30a; */ }
+.colorize .cm-bracket                       { /* color: #997; */ }
+.colorize .cm-tag                           { /* color: #170; */ }
+.colorize .cm-attribute                     { /* color: #00c; */ }
+.colorize .cm-header                        { }
+.colorize .cm-quote                         { /* color: #090; */ }
+.colorize .cm-hr                            { /* color: #999; */ }
+.colorize .cm-link                          { /* color: #00c; */ }
+.colorize .cm-negative                      { /* color: #d44; */ }
+.colorize .cm-positive                      { /* color: #292; */ }
+.colorize .cm-header                        { }
+.colorize .cm-strong                        { }
+.colorize .cm-em                            { }
+.colorize .cm-link                          { }
+.colorize .cm-error                         { /* color: #f00; */ }
+.colorize .cm-invalidchar                   { /* color: #f00; */ }
+.colorize .CodeMirror-matchingbracket       { /* color: #0f0; */ }
+.colorize .CodeMirror-nonmatchingbracket    { /* color: #f22; */ }
+.colorize .CodeMirror-activeline-background { /* background: #e8f2ff; */ }
