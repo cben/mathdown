@@ -45,3 +45,25 @@
 	color:red;
 	font-size: 0.7em;
 }
+
+/* Blockquotes -------------------------------------------------------------- */
+.cm-quote,
+.cm-quote-1 {
+	font-style: italic;
+	/* To do:
+		 We want an empty white space above and below the blockquote.
+		 We also want the blockquote to be indented both on the left and the right.
+		 We would do that by setting margings or paddings, but then we have to also
+		 set a display:block; on the <span>, which we cannot do, because that fucks
+		 up the editing behaviour of CodeMirror.
+	display        : block;
+	padding-top    : 0.5rem;
+	padding-bottom : 0.5rem;
+	padding-left   : 1rem;
+	padding-right  : 1rem;
+	*/
+	/* To do: bug:
+		Apparently, the blockquote needs to be followed by an empty line, if not
+		it leaks into the following line.
+	*/
+}
