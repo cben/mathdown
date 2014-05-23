@@ -67,3 +67,20 @@
 		it leaks into the following line.
 	*/
 }
+
+/* (Fenced) Code blocks ----------------------------------------------------- */
+.cm-comment, .cm-leadingspace {
+	/* markdown mode styles `...` and indented code blocks as "comment". */
+	max-width: 60rem;
+	overflow-x:scroll;
+	/*white-space: nowrap;*/
+	font-family: Courier, monospace;
+	font-size:0.9em;
+	background-color: rgb(245,245,245);
+}
+
+/* Inline code -------------------------------------------------------------- */
+.cm-formatting-code + .cm-comment {
+	padding-left: 0.25em;
+	padding-right: 0.25em;
+}
