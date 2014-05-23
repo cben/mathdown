@@ -1,127 +1,56 @@
-@charset "utf-8";
-
-/* OVERRIDE LIBS ============================================================ */
-
-/* Override fixed editor size from firepad.css ------------------------------ */
-.firepad { height: 100%; }
-.firepad .CodeMirror { height: 100%; position: relative; }
-.powered-by-firepad { background-image: none; } /* Disable Firepad logo */
-
-/* CodeMirror Hacks --------------------------------------------------------- */
-/* These are relevant to the app; other overrides of the original CodeMirror css
-   are in `css/cm-codemirror.css` */
-.CodeMirror { min-height: 100vh; }
-@media (min-width: 800px) { .CodeMirror-gutter-wrapper {
-    height: 100%;
-    left:-5.5rem !important;
-  }
+#logo {
+  color: black; text-decoration: none;  /* Don't look like a link */
+  display: inline-block; width: 4em;
 }
-.CodeMirror-code > pre,
-.CodeMirror-code > div { text-indent: 0 !important; padding-left: 0; }
-.CodeMirror pre[style] { text-indent: 0; padding-left:0 !important; }
-/* We set (in "renderLine" event) negative text-indent on indented lines,
-   which if inherited by any nested inline-block breaks their positioning
-   (math overlaps text, tabs become almost invisible).  Thanks to
-   https://github.com/mathjax/MathJax/issues/473 for easy fix. */
-.CodeMirror pre > * { text-indent: 0 !important; }
+.warning { color: orange; }
 
-.CodeMirror-selected { background: yellow; }
-.CodeMirror-focused .CodeMirror-selected { background: yellow; }
-.CodeMirror-gutter-elt {
-  /* To do: When there are more lines in a header, the gutter folding arrow
-     should sit on the baseline of the first line. */
-  position: absolute;
-  bottom:1rem;
-}
+@media print { #header { display: none; } }
 
-/* NORMALIZE BROWSERS ======================================================= */
-html {
-  height: 100%;
-  width: 100%;
-  -webkit-box-sizing: border-box;
-     -moz-box-sizing: border-box;
-      -ms-box-sizing: border-box;
-       -o-box-sizing: border-box;
-          box-sizing: border-box;
-}
-html * {
-  -webkit-box-sizing: border-box;
-     -moz-box-sizing: border-box;
-      -ms-box-sizing: border-box;
-       -o-box-sizing: border-box;
-          box-sizing: border-box;
-}
-body { height: 100%; width: 100%; margin:0; }
+#content { clear: both; }
 
-/* Auto-responsive scaling for various screen sizes ------------------------- */
+@media screen { .CodeMirror { border: 1px solid silver; } }
+@media print { .CodeMirror { border: 1px none; } }
 
-@media screen and (max-width: 460px) {
-  html { font-size: 14px; }
-}
-@media screen and (min-width: 461px) and (max-width: 800px) {
-  html { font-size: 16px; }
-}
-@media screen and (min-width: 801px) {
-  html { font-size: 18px; }
-}
-
-
-
-/* DEFAULT STYLES & SETUP =================================================== */
-
-/* Setup and Dimensions of Editor Canvas ------------------------------------ */
-#content {
-  clear: both;
-  background-color: rgb(250,250,250);
-  min-height: 100%;
-}
-form, textarea, .CodeMirror {
-  -webkit-box-sizing: border-box;
-     -moz-box-sizing: border-box;
-      -ms-box-sizing: border-box;
-       -o-box-sizing: border-box;
-          box-sizing: border-box;
-  padding-right: 1rem;
+/* Expand editor to fit most of the page. */
+html, body, form, textarea, .CodeMirror {
+  height: 100%; width: 100%;
+  -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
 }
 /* TODO: downsizing body is ugly but works better than downsizing form. */
-/*body { height: 80%; width: 95%; }*/
+body { height: 80%; width: 95%; }
 /* These would make the editor exactly fill the available space,
    but also cause CM to auto-resize and never scroll
    (instead whole page scrolls), which makes CM slower.
   body { display: table; }
   form { display: table-row; } */
 
-.firedpad {
-  max-width: 100%;
+/* Override fixed editor size from firepad.css */
+.firepad { height: 100%; }
+.firepad .CodeMirror { height: 100%; position: relative; }
+/* Disable Firepad logo */
+.powered-by-firepad { background-image: none; }
+
+.CodeMirror {
+  /* Font choices based on Math.SE: http://graphicdesign.stackexchange.com/a/12961 */
+  font-family: Georgia, "Bitstream Charter", "Times New Roman", Times, serif;
 }
-.CodeMirror-sizer {
-  max-width: 35rem;
-  /*margin-right: 22px;*/
-}
-.CodeMirror-code {
-  max-width: 35rem;
-}
-
-
-/* Fonts & Colors ----------------------------------------------------------- */
-.CodeMirror,
-.CodeMirror-code {
-  /* Homage to Don Knuth’s Computer Modern fonts; for alternatives
-     cfr Math.SE: http://graphicdesign.stackexchange.com/a/12961 */
-  font-family: "Computer Modern", "Times New Roman", Times, serif;
-  -webkit-text-rendering: optimizeLegibility;
-          text-rendering: optimizeLegibility;
-    -webkit-font-kerning: auto;
-            font-kerning: auto;
-  line-height: 1.3em;
-  color: rgb(67,67,67);
-}
-
-
-/* TO DO’s ===================================================================*/
-
+/* Match h1..h6 default sizes in WebKit, Mozilla & IE as of 2013. */
+pre.cm-header-1 { font-size: 2.00em; }
+pre.cm-header-2 { font-size: 1.50em; }
+pre.cm-header-3 { font-size: 1.17em; }
+pre.cm-header-4 { font-size: 1.00em; }
+pre.cm-header-5 { font-size: 0.83em; }
+pre.cm-header-6 { font-size: 0.67em; }
+/* Arbitrary margins for headers (non-hegligible but not too big). */
+pre.cm-header { padding-top: 0.5em; padding-bottom: 0.5em; }
+/* De-emphasize markup characters.  Whitewash colors by *0.4 factor. */
+.cm-s-default .cm-formatting-header { color: #66F; }
+.cm-s-default .cm-formatting-em { color: #666; }
+.cm-s-default .cm-formatting-strong { color: #666; }
+.cm-s-default .cm-formatting-code { color: #c96; }
+.cm-s-default .cm-formatting-list { font-weight: bold; }
 /* Want to disable/de-emphasize coloring of list lines, leaving only bullet colored.
-   But can't, as long as color is important for lining up continuation lines.
+   But can't, as long as color is important for lining up continuation lines. 
 .cm-s-default .cm-variable-2 { color: #003366; }
 .cm-s-default .cm-variable-2.cm-formatting-list { color: #05a; }
 .cm-s-default .cm-variable-3 { color: #005233; }
@@ -129,3 +58,25 @@ form, textarea, .CodeMirror {
 .cm-s-default .cm-keyword { color: #470052; }
 .cm-s-default .cm-keyword.cm-formatting-list { color: #708; }
 */
+/* markdown mode styles `...` and indented code blocks as "comment". */
+.cm-comment, .cm-leadingspace, .cm-formatting-list { font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace; }
+/* exclude math from monospace style to avoid mathjax vertically
+   squishing formulas, especially display. */
+.math.cm-comment { font-family: serif; }
+
+/* We set (in "renderLine" event) negative text-indent on indented lines,
+   which if inherited by any nested inline-block breaks their positioning
+   (math overlaps text, tabs become almost invisible).  Thanks to
+   https://github.com/mathjax/MathJax/issues/473 for easy fix. */
+.CodeMirror pre > * { text-indent: 0; }
+
+/* Vertically center gutter markers - looks better on our variable-height
+   padded headings. */
+.CodeMirror-gutter-wrapper { height: 100%; }
+.CodeMirror-gutter-elt { height: 100%; display: table; }
+.CodeMirror-foldgutter-open,
+.CodeMirror-foldgutter-folded {
+    height: 100%; display: table-cell; vertical-align: middle;
+    /* Small triagles are not covered by default fonts on WinXP and Android. */
+    font-family: "Lucida Sans Unicode", "Droid Sans Fallback", "Arial";
+}
