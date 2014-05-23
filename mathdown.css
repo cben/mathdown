@@ -1,61 +1,5 @@
 @charset "utf-8";
 
-/* NORMALIZE BROWSERS ======================================================= */
-html {
-  height: 100%;
-  width: 100%;
-  -webkit-box-sizing: border-box;
-     -moz-box-sizing: border-box;
-      -ms-box-sizing: border-box;
-       -o-box-sizing: border-box;
-          box-sizing: border-box;
-}
-html * {
-  -webkit-box-sizing: border-box;
-     -moz-box-sizing: border-box;
-      -ms-box-sizing: border-box;
-       -o-box-sizing: border-box;
-          box-sizing: border-box;
-}
-body { height: 100%; width: 100%; margin:0; }
-
-/* Auto-responsive scaling for various screen sizes ------------------------- */
-@media screen and (max-width: 460px) {
-  html { font-size: 14px; }
-}
-@media screen and (min-width: 461px) and (max-width: 800px) {
-  html { font-size: 16px; }
-}
-@media screen and (min-width: 801px) {
-  html { font-size: 18px; }
-}
-
-
-/* DEFAULT STYLES & SETUP =================================================== */
-
-/* Setup and Dimensions of Editor Canvas ------------------------------------ */
-#content {
-  clear: both;
-  background-color: rgb(250,250,250);
-  min-height: 100%;
-}
-form, textarea, .CodeMirror {
-  -webkit-box-sizing: border-box;
-     -moz-box-sizing: border-box;
-      -ms-box-sizing: border-box;
-       -o-box-sizing: border-box;
-          box-sizing: border-box;
-  padding-right: 1rem;
-}
-/* TODO: downsizing body is ugly but works better than downsizing form. */
-/*body { height: 80%; width: 95%; }*/
-/* These would make the editor exactly fill the available space,
-   but also cause CM to auto-resize and never scroll
-   (instead whole page scrolls), which makes CM slower.
-  body { display: table; }
-  form { display: table-row; } */
-
-
 /* OVERRIDE LIBS ============================================================ */
 
 /* Override fixed editor size from firepad.css ------------------------------ */
@@ -88,6 +32,74 @@ form, textarea, .CodeMirror {
      should sit on the baseline of the first line. */
   position: absolute;
   bottom:1rem;
+}
+
+/* NORMALIZE BROWSERS ======================================================= */
+html {
+  height: 100%;
+  width: 100%;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+      -ms-box-sizing: border-box;
+       -o-box-sizing: border-box;
+          box-sizing: border-box;
+}
+html * {
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+      -ms-box-sizing: border-box;
+       -o-box-sizing: border-box;
+          box-sizing: border-box;
+}
+body { height: 100%; width: 100%; margin:0; }
+
+/* Auto-responsive scaling for various screen sizes ------------------------- */
+
+@media screen and (max-width: 460px) {
+  html { font-size: 14px; }
+}
+@media screen and (min-width: 461px) and (max-width: 800px) {
+  html { font-size: 16px; }
+}
+@media screen and (min-width: 801px) {
+  html { font-size: 18px; }
+}
+
+
+
+/* DEFAULT STYLES & SETUP =================================================== */
+
+/* Setup and Dimensions of Editor Canvas ------------------------------------ */
+#content {
+  clear: both;
+  background-color: rgb(250,250,250);
+  min-height: 100%;
+}
+form, textarea, .CodeMirror {
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+      -ms-box-sizing: border-box;
+       -o-box-sizing: border-box;
+          box-sizing: border-box;
+  padding-right: 1rem;
+}
+/* TODO: downsizing body is ugly but works better than downsizing form. */
+/*body { height: 80%; width: 95%; }*/
+/* These would make the editor exactly fill the available space,
+   but also cause CM to auto-resize and never scroll
+   (instead whole page scrolls), which makes CM slower.
+  body { display: table; }
+  form { display: table-row; } */
+
+.firedpad {
+  max-width: 100%;
+}
+.CodeMirror-sizer {
+  max-width: 35rem;
+  /*margin-right: 22px;*/
+}
+.CodeMirror-code {
+  max-width: 35rem;
 }
 
 

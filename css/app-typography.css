@@ -2,3 +2,22 @@
 
 /* TYPOGRAPHY FOR TOKENIZED, SEMANTIC ELEMENTS ============================== */
 
+/* Headings ----------------------------------------------------------------- */
+.cm-header   { color:rgb(67,67,67); }
+.cm-header-1, .cm-header-2, .cm-header-3, .cm-header-4 { padding-bottom: 1rem; }
+.cm-header-1:first-of-type { line-height: 4.0rem; font-size: 3.9rem; padding-top:1.0rem; }
+.cm-header-1 { line-height: 3.0rem; font-size: 2.9rem; padding-top:3.0rem; }
+.cm-header-2 { line-height: 2.5rem; font-size: 2.4rem; padding-top:3.0rem; }
+.cm-header-3 { line-height: 2.0rem; font-size: 1.9rem; padding-top:2.0rem; }
+.cm-header-4 { line-height: 1.0rem; font-size: 1.0rem; padding-top:2.0rem; text-transform: uppercase; }
+.cm-header-5 { line-height: 1.0rem; font-size: 1.0rem; padding-top:2.0rem; font-weight:  bold; }
+.cm-header-6 { line-height: 1.0rem; font-size: 1.0rem; padding-top:2.0rem; font-style: italic; }
+.cm-formatting-header-1:first-of-type { padding-top: 1rem; }
+.cm-formatting-header-1 { padding-top: 0.70rem; }
+.cm-formatting-header-2 { padding-top: 0.55rem; }
+.cm-formatting-header-3 { padding-top: 0.45rem; }
+@media screen and (max-width: 460px) {
+  .cm-header-1:first-of-type { line-height: 2.5rem; font-size: 2.4rem; padding-top:1.0rem; }
+  .cm-header-1, .cm-header-2 { line-height: 2.0rem; font-size: 1.9rem; padding-top:2.0rem; }
+  .cm-header-3               { line-height: 1.5rem; font-size: 1.4rem; padding-top:1.5rem; }
+}
