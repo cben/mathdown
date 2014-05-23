@@ -1,0 +1,37 @@
+@charset "utf-8";
+
+/* MARKDOWN SYNTAX HIGHLIGHTING --------------------------------------------- */
+/* Instead of color highlighting, we use typography (alternative font, font size),
+	 and color contrast (dimmed gray) to highlight Markdown’s syntax markers.
+	 Alternatively — or rather as an addition, we might implement colorization, too:
+	 cfr “Color-coded token highlighting”, below. */
+.cm-formatting {
+	background-color: transparent !important;
+	display:inline-block;
+	vertical-align:text-top;
+}
+.cm-formatting-header,
+.cm-formatting-em,
+.cm-formatting-strong,
+.cm-formatting-code,
+.cm-formatting-code-block,
+.cm-formatting-link,
+.cm-formatting-link-string,
+.cm-formatting-link-string + .cm-string,
+/*.cm-formatting-link + .cm-link + .cm-formatting-link + .cm-link,*/
+.cm-tag,
+.cm-formatting-quote,
+.cm-formatting-quote-1,
+/*.cm-formatting-list,
+.cm-formatting-list-ol,
+.cm-formatting-list-ul,*/
+.cm-hr {
+	color:rgb(67,67,67) !important;
+	opacity: 0.2;
+	font-family: Cousine, Consolas, Menlo, Monaco, "Lucida Console", "Liberation Mono", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New", Courier, monospace;
+	font-style:normal !important;
+	font-weight:normal !important;
+	font-size: 0.8rem;
+}
+.cm-tag,
+.cm-formatting-link-string + .cm-string { opacity: 0.5; }
