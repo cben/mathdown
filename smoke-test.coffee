@@ -17,6 +17,19 @@ sauceConnectOptions = {
   logger: console.log
 }
 
+# http://docs.travis-ci.com/user/ci-environment/#Environment-variables
+# http://docs.drone.io/env.html  (Jenkins compatible)
+# https://www.codeship.io/documentation/continuous-integration/set-environment-variables/
+env = process.env
+build = env.BUILD_ID || env.TRAVIS_BUILD_ID || env.CI_BUILD_NUMBER
+buildUrl = env.BUILD_URL || env.CI_BUILD_URL || build
+commit = env.GIT_COMMIT || env.TRAVIS_COMMIT
+tunnelId = build
+tags = []
+tags.push('travis') if env.TRAVIS
+tags.push('drone') if env.DRONE
+tags.push(env.CI_NAME) if env.CI_NAME
+
 browser = wd.remote('ondemand.saucelabs.com', 80, sauceUser, sauceKey)
 
 browser.on 'status', (info) ->
@@ -31,15 +44,21 @@ desired = {
   version: '8'
   platform: 'Windows XP'
   name: 'smoke test'
+  build: "commit #{commit} build #{buildUrl}"
+  tags: tags
+  # Most my tests timeout a lot due crashing without cleanup (see below);
+  # this will waste less Sauce resources than default 90s.
+  'idle-timeout': 30
 }
 
 # TODO: Cleanup even if there were errors.  Use promises for sanity?
+#  Use a test runner with guaranteed pre/post methods?
 
 test = (cb) ->
   # TODO: use current source (via Sauce Connect?)
   browser.get 'http://localhost:8000/?doc=_mathdown_test_smoke', (err) ->
     assert.ifError(err)
-    browser.waitFor wd.asserters.jsCondition('document.title.match(/smoke test/)', 2000), (err, value) ->
+    browser.waitFor wd.asserters.jsCondition('document.title.match(/smoke test/)', 10000), (err, value) ->
       assert.ifError(err)
       browser.waitForElementByCss '.MathJax_Display', 15000, (err, el) ->
         assert.ifError(err)
@@ -59,10 +78,13 @@ server.on 'request', (req, res) ->
 server.listen(8000)
 console.log('Server up, e.g. http://localhost:8000/?doc=_mathdown_test_smoke')
 
-tunnel = new sauceTunnel(sauceUser, sauceKey, undefined, true, ['--verbose'])
+tunnel = new sauceTunnel(sauceUser, sauceKey, tunnelId, true, ['--verbose'])
+console.log('Creating tunnel...')
 tunnel.start (status) ->
   assert(status, 'tunnel creation failed')
   console.log('tunnel created')
+  desired['tunnel-identifier'] = tunnel.identifier
+  console.log(desired)
   browser.init desired, (err) ->
     assert.ifError(err)
     test ->
