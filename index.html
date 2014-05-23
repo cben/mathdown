@@ -63,6 +63,23 @@
           processEscapes: true,
           preview: "none"
         },
+        "HTML-CSS": {
+          // TO DO:
+          // As we do not want to rely on locally installed fonts, we will always
+          // load webfonts, hence tell MathJax it should not look for locally
+          // installed fonts (empty set):
+          availableFonts: [],
+          // MathJax’s default fonts are STIX (a Times face). To match Don
+          // Knuth’s TeX Computer Modern face (which we use for the body text)
+          // we’ll use Latin-Modern for math, and need to tell MathJax to use
+          // these instead. (We *must* set a font, since if we would leave the
+          // value blank, MathJax won’t render anything at all.)
+          webFont: "Latin-Modern"
+          // TO DO: loading all fonts and their dozens of respective scripts
+          // takes way too long; we should probably concatenate these into
+          // a single, minified, gzipped file.
+          // MathJax docs: http://docs.mathjax.org/en/v1.1-latest/options/HTML-CSS.html
+        }
       });
     </script>
     <script src="MathJax/MathJax.js?config=TeX-AMS_HTML-full,Safe"></script>
