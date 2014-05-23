@@ -36,6 +36,9 @@
     <link rel="stylesheet" href="CodeMirror/addon/dialog/dialog.css"/>
     <link rel="stylesheet" href="CodeMirror/addon/fold/foldgutter.css" />
 
+    <link rel="stylesheet" href="css/fonts.css" />
+    <link rel="stylesheet" href="css/app-header.css" />
+
     <script type="text/x-mathjax-config">
       MathJax.Hub.Config({
         tex2jax: {
@@ -57,21 +60,31 @@
 
   <body class="tex2jax_ignore">
     <!-- TODO: clean content/CSS. -->
-    <div id="header">
-      <a href="?doc=about" target="_blank" class="tex2jax_process" id="logo">
-        $\binom{\mathcal{Math}}{\text{down}}$
-      </a>
-      <h1 style="display: inline">
-        Collaborative markdown + math |
-        <a href="https://github.com/cben/mathdown/issues" class="warning">
-          ⚠ Alpha quality! ⚠
+    <hgroup id="header">
+      <nav>
+        <a href="javascript:newPad()" id="new" title="New document"></a>
+        <a href="?doc=help" target="_blank" id="about" title="About"></a>
+        <!--a href="?doc=DCJtdsxteYC#Mathdown-Primer" target="_blank" id="primer" title="A Primer on Markdown"></a-->
+        <a href="?doc=DCJtdsxteYC#Mathdown-Bugs" target="_blank" id="bugs" title="Bug list"></a>
+      </nav>
+      <h1>
+        ℳ↧
+        <a href="?doc=about" target="_blank" id="logo">
+          Mathdown.
         </a>
-        <span style="float: right">
-          <a href="?doc=help" target="_blank">Help</a> |
-          <a href="javascript:newPad()">New document</a>
-        </span>
+        <i>
+          Collaborative markdown + math
+        </i>
       </h1>
-    </div>
+      <!--
+      <a href="https://github.com/cben/mathdown/issues" class="warning" title="⚠ Alpha quality!">
+        ⚠ Alpha
+      </a>
+      -->
+      <a href="https://github.com/cben/mathdown/issues" class="forkme" title="⚠ Alpha quality!">
+        <span class="github"></span> Fork me
+      </a>
+    </hgroup>
 
     <form id="content"><textarea id="code" name="code"></textarea></form>
     <script src="mathdown.js"></script>
