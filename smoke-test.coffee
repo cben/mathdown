@@ -54,6 +54,8 @@ server = http.createServer(st({
   path: process.cwd()
   index: 'index.html'
 }))
+server.on 'request', (req, res) ->
+  console.log(' < %s %s', chalk.green(req.method), req.url)
 server.listen(8000)
 console.log('Server up, e.g. http://localhost:8000/?doc=_mathdown_test_smoke')
 
