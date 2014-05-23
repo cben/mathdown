@@ -20,7 +20,6 @@ html * {
 body { height: 100%; width: 100%; margin:0; }
 
 /* Auto-responsive scaling for various screen sizes ------------------------- */
-
 @media screen and (max-width: 460px) {
   html { font-size: 14px; }
 }
@@ -32,12 +31,14 @@ body { height: 100%; width: 100%; margin:0; }
 }
 
 
+/* DEFAULT STYLES & SETUP =================================================== */
+
+/* Setup and Dimensions of Editor Canvas ------------------------------------ */
 #content {
   clear: both;
   background-color: rgb(250,250,250);
   min-height: 100%;
 }
-
 form, textarea, .CodeMirror {
   -webkit-box-sizing: border-box;
      -moz-box-sizing: border-box;
@@ -47,18 +48,50 @@ form, textarea, .CodeMirror {
   padding-right: 1rem;
 }
 /* TODO: downsizing body is ugly but works better than downsizing form. */
-
+/*body { height: 80%; width: 95%; }*/
 /* These would make the editor exactly fill the available space,
    but also cause CM to auto-resize and never scroll
    (instead whole page scrolls), which makes CM slower.
   body { display: table; }
   form { display: table-row; } */
 
-/* Override fixed editor size from firepad.css */
+
+/* OVERRIDE LIBS ============================================================ */
+
+/* Override fixed editor size from firepad.css ------------------------------ */
 .firepad { height: 100%; }
 .firepad .CodeMirror { height: 100%; position: relative; }
-/* Disable Firepad logo */
-.powered-by-firepad { background-image: none; }
+.powered-by-firepad { background-image: none; } /* Disable Firepad logo */
+
+/* CodeMirror Hacks --------------------------------------------------------- */
+/* These are relevant to the app; other overrides of the original CodeMirror css
+   are in `css/cm-codemirror.css` */
+.CodeMirror { min-height: 100vh; }
+@media (min-width: 800px) { .CodeMirror-gutter-wrapper {
+    height: 100%;
+    left:-5.5rem !important;
+  }
+}
+.CodeMirror-code > pre,
+.CodeMirror-code > div { text-indent: 0 !important; padding-left: 0; }
+.CodeMirror pre[style] { text-indent: 0; padding-left:0 !important; }
+/* We set (in "renderLine" event) negative text-indent on indented lines,
+   which if inherited by any nested inline-block breaks their positioning
+   (math overlaps text, tabs become almost invisible).  Thanks to
+   https://github.com/mathjax/MathJax/issues/473 for easy fix. */
+.CodeMirror pre > * { text-indent: 0 !important; }
+
+.CodeMirror-selected { background: yellow; }
+.CodeMirror-focused .CodeMirror-selected { background: yellow; }
+.CodeMirror-gutter-elt {
+  /* To do: When there are more lines in a header, the gutter folding arrow
+     should sit on the baseline of the first line. */
+  position: absolute;
+  bottom:1rem;
+}
+
+
+/* Fonts & Colors ----------------------------------------------------------- */
 
 .CodeMirror {
   /* Font choices based on Math.SE: http://graphicdesign.stackexchange.com/a/12961 */
@@ -79,6 +112,16 @@ pre.cm-header { padding-top: 0.5em; padding-bottom: 0.5em; }
 .cm-s-default .cm-formatting-strong { color: #666; }
 .cm-s-default .cm-formatting-code { color: #c96; }
 .cm-s-default .cm-formatting-list { font-weight: bold; }
+
+/* markdown mode styles `...` and indented code blocks as "comment". */
+.cm-comment, .cm-leadingspace, .cm-formatting-list { font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace; }
+/* exclude math from monospace style to avoid mathjax vertically
+   squishing formulas, especially display. */
+.math.cm-comment { font-family: serif; }
+
+
+/* TO DO’s ===================================================================*/
+
 /* Want to disable/de-emphasize coloring of list lines, leaving only bullet colored.
    But can't, as long as color is important for lining up continuation lines.
 .cm-s-default .cm-variable-2 { color: #003366; }
@@ -88,25 +131,4 @@ pre.cm-header { padding-top: 0.5em; padding-bottom: 0.5em; }
 .cm-s-default .cm-keyword { color: #470052; }
 .cm-s-default .cm-keyword.cm-formatting-list { color: #708; }
 */
-/* markdown mode styles `...` and indented code blocks as "comment". */
-.cm-comment, .cm-leadingspace, .cm-formatting-list { font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace; }
-/* exclude math from monospace style to avoid mathjax vertically
-   squishing formulas, especially display. */
-.math.cm-comment { font-family: serif; }
 
-/* We set (in "renderLine" event) negative text-indent on indented lines,
-   which if inherited by any nested inline-block breaks their positioning
-   (math overlaps text, tabs become almost invisible).  Thanks to
-   https://github.com/mathjax/MathJax/issues/473 for easy fix. */
-.CodeMirror pre > * { text-indent: 0; }
-
-/* Vertically center gutter markers - looks better on our variable-height
-   padded headings. */
-.CodeMirror-gutter-wrapper { height: 100%; }
-.CodeMirror-gutter-elt { height: 100%; display: table; }
-.CodeMirror-foldgutter-open,
-.CodeMirror-foldgutter-folded {
-    height: 100%; display: table-cell; vertical-align: middle;
-    /* Small triagles are not covered by default fonts on WinXP and Android. */
-    font-family: "Lucida Sans Unicode", "Droid Sans Fallback", "Arial";
-}
