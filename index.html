@@ -1,9 +1,6 @@
 <!doctype html>
 <html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
-    <meta charset="utf-8"/>
-
     <!--
         This page is used to render all mathdown documents, using URLs such as
         http://mathdown.net/?doc=iYrTultCuy6
@@ -15,10 +12,20 @@
         Currently the doc id is only parsed client-side but that should
         change for https://github.com/cben/mathdown/issues/7.
     -->
+    <!--
+        The ellipsis will be replaced when the firepad content is loaded.
+        TODO: spin the |\—/ instead?
+        To Do too: Create a favicon with the ℳ↧ logo and remove from the document’s title.
+    -->
+    <title>ℳ↧ ⋯</title>
 
-    <!-- The ellipsis will be replaced when the firepad content is loaded.
-         TODO: spin the |\—/ instead? -->
-    <title>⋯ | mathdown</title>
+    <meta name="language" content="en">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Mathdown">
 
     <script src="CodeMirror/lib/codemirror.js"></script>
     <script src="CodeMirror/addon/search/searchcursor.js"></script>
@@ -56,9 +63,7 @@
       });
     </script>
     <script src="MathJax/MathJax.js?config=TeX-AMS_HTML-full,Safe"></script>
-
   </head>
-
   <body class="tex2jax_ignore">
     <!-- TODO: clean content/CSS. -->
     <hgroup id="header">
@@ -86,7 +91,6 @@
         <span class="github"></span> Fork me
       </a>
     </hgroup>
-
     <form id="content"><textarea id="code" name="code"></textarea></form>
     <script src="mathdown.js"></script>
   </body>
