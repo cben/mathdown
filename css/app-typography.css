@@ -84,3 +84,50 @@
 	padding-left: 0.25em;
 	padding-right: 0.25em;
 }
+
+/* Math --------------------------------------------------------------------- */
+.math.cm-comment {
+	/* exclude math from monospace style to avoid mathjax vertically
+		 squishing formulas, especially display. */
+	font-family: serif;
+}
+/* Below are **very** ugly hacks that hack on CodeMirror’s very ugly DOM structure.
+   To do: bug: if an equation is the only marked-up element in a paragraph, it will
+   break the line as if it were a stand-alone equation. */
+.CodeMirror-code { counter-reset: equation; }
+pre > span.CodeMirror-widget { text-align: center; }
+pre > span.CodeMirror-widget:only-of-type { display:block; }
+pre > span.CodeMirror-widget:only-of-type > .math { display:block !important; width:100%; }
+pre > span.CodeMirror-widget:only-of-type > .math > .MathJax_Display { display:block !important; width:100%; counter-increment: equation; }
+pre > span.CodeMirror-widget:only-of-type > .math > .MathJax_Display:after {
+	display: block;
+	position: absolute;
+	width:2rem;
+	white-space: nowrap;
+	overflow:visible;
+	right:-3rem;
+	top:0;
+	bottom:0;
+	content:"("counter(equation, lower-greek)")";
+	text-transform: uppercase;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+	 -webkit-flex-direction: row;
+			 -ms-flex-direction: row;
+					 flex-direction: row;
+				-webkit-flex-wrap: nowrap;
+						-ms-flex-wrap: nowrap;
+								flex-wrap: nowrap;
+	-webkit-justify-content: flex-start;
+						-ms-flex-pack: start;
+					justify-content: flex-start;
+		-webkit-align-content: center;
+			 -ms-flex-line-pack: center;
+						align-content: center;
+			-webkit-align-items: center;
+					 -ms-flex-align: center;
+							align-items: center;
+}
+
+
