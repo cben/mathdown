@@ -32,3 +32,16 @@
 			 -o-font-feature-settings: "smcp";
 					font-feature-settings: "smcp";
 }
+
+/* Hyperlinks --------------------------------------------------------------- */
+.cm-link { color: rgb(0,0,180); text-decoration: none;}
+.cm-link:hover { color: rgb(0,0,200); text-decoration: underline; cursor:pointer;}
+
+
+/* Referenced links --------------------------------------------------------- */
+/* .cm-formatting-link + .cm-link + .cm-formatting-link + .cm-link { } */
+.cm-formatting-link + .cm-link + .cm-formatting-link + .cm-string,
+.cm-formatting-link + .cm-link + .cm-formatting-link + .cm-string + * {
+	color:red;
+	font-size: 0.7em;
+}
