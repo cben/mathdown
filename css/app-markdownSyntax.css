@@ -65,3 +65,13 @@
 /* To do:
  - fix regex for ordered lists (in markdown.js): `olRE = /^([0-9]+\.|[A-z]+\))\s+/`
 */
+.cm-formatting-code-block        { visibility: hidden; }
+.cm-formatting-code-block:before { content:"┄"; visibility: visible; }
+.cm-hr {
+	display: block;
+	border-bottom: solid 1px rgb(150,150,150);
+	color: transparent !important;
+}.cm-hr:before {
+	content:"⁂"; /* U+2042 'ASTERISM' */
+	color: rgb(67,67,67) !important;
+}
