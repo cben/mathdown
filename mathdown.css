@@ -117,10 +117,6 @@ form, textarea, .CodeMirror {
   color: rgb(67,67,67);
 }
 
-/* exclude math from monospace style to avoid mathjax vertically
-   squishing formulas, especially display. */
-.math.cm-comment { font-family: serif; }
-
 
 /* TO DO’s ===================================================================*/
 
@@ -133,4 +129,3 @@ form, textarea, .CodeMirror {
 .cm-s-default .cm-keyword { color: #470052; }
 .cm-s-default .cm-keyword.cm-formatting-list { color: #708; }
 */
-

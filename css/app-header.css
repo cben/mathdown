@@ -5,8 +5,8 @@
 #header {
 	display: block;
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-	background-color: rgb(1,25,35);
-	color:rgb(0,110,200);
+	background-color: rgb(0,20,10);
+	color:rgb(40,130,52);
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	font-weight   : 400;
@@ -20,7 +20,7 @@
 #header a          { text-decoration: none; color:inherit; }
 #header a:hover    { color:white; }
 #header h1         { font-size: inherit; }
-#header h1 a#logo  { font-weight: 800; color: rgb(50,160,250); }
+#header h1 a#logo  { font-weight: 800; color: rgb(70,160,82); }
 #header h1 i       { font-style: normal; font-weight: 400; }
 @media screen and (max-width: 850px) { #header h1 i { display: none; } }
 #header nav        { min-width: 5rem; }
