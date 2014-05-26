@@ -55,19 +55,21 @@ desired = {
 #  Use a test runner with guaranteed pre/post methods?
 
 test = (cb) ->
-  # TODO: use current source (via Sauce Connect?)
-  browser.get 'http://localhost:8000/?doc=_mathdown_test_smoke', (err) ->
-    assert.ifError(err)
-    browser.waitFor wd.asserters.jsCondition('document.title.match(/smoke test/)'), 10000, (err, value) ->
+  # Kludge: set to failed first, change to passed if we get to the end without crashing.
+  browser.sauceJobStatus false, ->
+    browser.get 'http://localhost:8000/?doc=_mathdown_test_smoke', (err) ->
       assert.ifError(err)
-      browser.waitForElementByCss '.MathJax_Display', 15000, (err, el) ->
+      browser.waitFor wd.asserters.jsCondition('document.title.match(/smoke test/)'), 10000, (err, value) ->
         assert.ifError(err)
-        el.text (err, text) ->
+        browser.waitForElementByCss '.MathJax_Display', 15000, (err, el) ->
           assert.ifError(err)
-          if not text.match(/^\s*α\s*$/)
-            assert.fail(text, '/^\s*α\s*$/', 'math text is wrong', ' match ')
-          console.log(chalk.green('ALL PASSED'))
-          cb()
+          el.text (err, text) ->
+            assert.ifError(err)
+            if not text.match(/^\s*α\s*$/)
+              assert.fail(text, '/^\s*α\s*$/', 'math text is wrong', ' match ')
+            console.log(chalk.green('ALL PASSED'))
+            browser.sauceJobStatus(true)
+            cb()
 
 server = http.createServer(st({
   path: process.cwd()

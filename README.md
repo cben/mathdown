@@ -1,6 +1,8 @@
 http://mathdown.net
 ===================
 
+![saucelabs test badge](https://saucelabs.com/browser-matrix/mathdown.svg)
+
 Collaborative markdown with math.
 Powered by [CodeMirror][], [MathJax][] and [Firebase][]'s [Firepad][].
 Free testing [courtesy of Sause Labs](https://saucelabs.com/opensauce).
