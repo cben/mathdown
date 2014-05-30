@@ -3,9 +3,11 @@
   "version": "0.0.0",
   "description": "http://mathdown.net",
   "devDependencies": {
+    "chalk": "~0.4.0",
     "coffee-script": "~1.7.1",
-    "wd": "~0.2.19",
-    "chalk": "~0.4.0"
+    "sauce-tunnel": "~2.0.6",
+    "st": "^0.4.1",
+    "wd": "~0.2.19"
   },
   "scripts": {
     "test": "coffee smoke-test.coffee"
