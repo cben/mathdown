@@ -50,7 +50,7 @@ pre.cm-header { padding-top: 0.5em; padding-bottom: 0.5em; }
 .cm-s-default .cm-formatting-code { color: #c96; }
 .cm-s-default .cm-formatting-list { font-weight: bold; }
 /* Want to disable/de-emphasize coloring of list lines, leaving only bullet colored.
-   But can't, as long as color is important for lining up continuation lines. 
+   But can't, as long as color is important for lining up continuation lines.
 .cm-s-default .cm-variable-2 { color: #003366; }
 .cm-s-default .cm-variable-2.cm-formatting-list { color: #05a; }
 .cm-s-default .cm-variable-3 { color: #005233; }
@@ -62,7 +62,8 @@ pre.cm-header { padding-top: 0.5em; padding-bottom: 0.5em; }
 .cm-comment, .cm-leadingspace, .cm-formatting-list { font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace; }
 /* exclude math from monospace style to avoid mathjax vertically
    squishing formulas, especially display. */
-.math.cm-comment { font-family: serif; }
+.cm-comment.inline_math, .cm-comment.display_math { font-family: serif; }
+.display_math { width:100%; }
 
 /* We set (in "renderLine" event) negative text-indent on indented lines,
    which if inherited by any nested inline-block breaks their positioning
