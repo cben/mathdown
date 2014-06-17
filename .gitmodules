@@ -1,15 +1,15 @@
 [submodule "CodeMirror-MathJax"]
 	path = CodeMirror-MathJax
 	url = https://github.com/cben/CodeMirror-MathJax.git
-        branch = gh-pages
+	branch = gh-pages
 [submodule "firepad"]
 	path = firepad
 	url = https://github.com/firebase/firepad.git
-        branch = master
+	branch = master
 [submodule "CodeMirror"]
 	path = CodeMirror
 	url = https://github.com/marijnh/CodeMirror
-        branch = master
+	branch = master
 [submodule "firebase"]
 	path = firebase
 	url = https://github.com/firebase/firebase-bower.git
@@ -17,4 +17,4 @@
 [submodule "MathJax"]
 	path = MathJax
 	url = https://github.com/mathjax/MathJax.git
-	branch = v2.3-latest
+	branch = master
