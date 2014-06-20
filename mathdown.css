@@ -34,6 +34,14 @@ body { height: 80%; width: 95%; }
   /* Font choices based on Math.SE: http://graphicdesign.stackexchange.com/a/12961 */
   font-family: Georgia, "Bitstream Charter", "Times New Roman", Times, serif;
 }
+/* markdown mode styles `...` and indented code blocks as "comment". */
+.cm-comment, .cm-leadingspace, .cm-formatting-list {
+  /* Prefer Courier and similar serif monospaced fonts.
+     Put Nimbus Mono L first to avoid Courier New -> Liberation Mono
+     substitution on linux (it's metrically compatible but sans-serif). */
+  font-family: Nimbus Mono L, Courier New, Courier, monospace;
+}
+
 /* Match h1..h6 default sizes in WebKit, Mozilla & IE as of 2013. */
 pre.cm-header-1 { font-size: 2.00em; }
 pre.cm-header-2 { font-size: 1.50em; }
@@ -58,8 +66,6 @@ pre.cm-header { padding-top: 0.5em; padding-bottom: 0.5em; }
 .cm-s-default .cm-keyword { color: #470052; }
 .cm-s-default .cm-keyword.cm-formatting-list { color: #708; }
 */
-/* markdown mode styles `...` and indented code blocks as "comment". */
-.cm-comment, .cm-leadingspace, .cm-formatting-list { font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace; }
 /* exclude math from monospace style to avoid mathjax vertically
    squishing formulas, especially display. */
 .cm-comment.inline_math, .cm-comment.display_math { font-family: serif; }
