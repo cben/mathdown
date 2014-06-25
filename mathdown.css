@@ -32,14 +32,14 @@ body { height: 80%; width: 95%; }
 
 .CodeMirror {
   /* Font choices based on Math.SE: http://graphicdesign.stackexchange.com/a/12961 */
-  font-family: Georgia, "Bitstream Charter", "Times New Roman", Times, serif;
+  font-family: "Georgia", "Bitstream Charter", "Times New Roman", "Times", serif;
 }
 /* markdown mode styles `...` and indented code blocks as "comment". */
 .cm-comment, .cm-leadingspace, .cm-formatting-list {
   /* Prefer Courier and similar serif monospaced fonts.
-     Put Nimbus Mono L first to avoid Courier New -> Liberation Mono
-     substitution on linux (it's metrically compatible but sans-serif). */
-  font-family: Nimbus Mono L, Courier New, Courier, monospace;
+     Prefer Nimbus Mono L to Courier New -> Liberation Mono substitution
+     on linux (it's metrically compatible but sans-serif). */
+  font-family: "Courier 10 Pitch", "Nimbus Mono L", "Courier New", "Courier", monospace;
 }
 
 /* Match h1..h6 default sizes in WebKit, Mozilla & IE as of 2013. */
