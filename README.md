@@ -18,7 +18,7 @@
 
 ![](http://rhythmus.be/mathdown/screengrab.gif)
 
-[![Typesetting special relativity in a web browser is delightful…](http://rhythmus.be/mathdown/delightful.png)](http://rhythmus.be/mathdown/index.html?doc=NzbDnWwn2nF#Zur-Elektrodynamik-bewegter-K-rper)
+![Typesetting special relativity in a web browser is delightful…](http://rhythmus.be/mathdown/delightful.png)](http://rhythmus.be/mathdown/index.html?doc=NzbDnWwn2nF#Zur-Elektrodynamik-bewegter-K-rper)
 
 ---
 
