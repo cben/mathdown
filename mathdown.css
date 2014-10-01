@@ -35,7 +35,7 @@ body { height: 80%; width: 95%; }
   font-family: "Georgia", "Bitstream Charter", "Times New Roman", "Times", serif;
 }
 /* markdown mode styles `...` and indented code blocks as "comment". */
-.cm-comment, .cm-leadingspace, .cm-formatting-list {
+.cm-comment, .cm-leadingspace, .cm-formatting-list, .cm-formatting-quote {
   /* Prefer Courier and similar serif monospaced fonts.
      Prefer Nimbus Mono L to Courier New -> Liberation Mono substitution
      on linux (it's metrically compatible but sans-serif). */
@@ -56,6 +56,7 @@ pre.cm-header { padding-top: 0.5em; padding-bottom: 0.5em; }
 .cm-s-default .cm-formatting-em { color: #666; }
 .cm-s-default .cm-formatting-strong { color: #666; }
 .cm-s-default .cm-formatting-code { color: #c96; }
+
 .cm-s-default .cm-formatting-list { font-weight: bold; }
 /* Want to disable/de-emphasize coloring of list lines, leaving only bullet colored.
    But can't, as long as color is important for lining up continuation lines.
@@ -66,6 +67,7 @@ pre.cm-header { padding-top: 0.5em; padding-bottom: 0.5em; }
 .cm-s-default .cm-keyword { color: #470052; }
 .cm-s-default .cm-keyword.cm-formatting-list { color: #708; }
 */
+
 /* exclude math from monospace style to avoid mathjax vertically
    squishing formulas, especially display. */
 .cm-comment.inline_math, .cm-comment.display_math { font-family: serif; }

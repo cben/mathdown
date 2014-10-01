@@ -68,6 +68,7 @@ var firepadsRef = new Firebase("https://mathdown.firebaseIO.com/firepads");
 var firepadRef = firepadsRef.child(doc);
 log("firebase ref:", firepadRef.toString());
 
+// Apply class="leadingspace" to leading whitespace so we can make it monospace.
 // Stolen from CodeMirror/addon/edit/trailingspace.js.
 CodeMirror.defineOption("showLeadingSpace", false, function(cm, val, prev) {
   if (prev == CodeMirror.Init) prev = false;
@@ -122,15 +123,21 @@ var editor = CodeMirror.fromTextArea(document.getElementById("code"),
                                       showLeadingSpace: true});
 
 // Indent soft-wrapped lines.  Based on CodeMirror/demo/indentwrap.html.
-var leadingSpaceAndListBullets = /^\s*([*+-]\s+|\d+\.\s+)?/;
+var leadingSpaceListBulletsQuotes = /^\s*([*+-]\s+|\d+\.\s+|>\s*)*/;
 editor.on("renderLine", function(cm, line, elt) {
-  // Would like to measure real sizes of /leadingspace|formatting-list/ styled
-  // spans, but can't do that without inserting them into the DOM.
-  var leading = (leadingSpaceAndListBullets.exec(line.text) || [""])[0];
+  // Show continued list/qoute lines aligned to start of text rather
+  // than first non-space char.  MINOR BUG: also does this inside
+  // literal blocks.
+  // Would like to measure real sizes of spans styled
+  // /leadingspace|formatting-list|formatting-quote/, but can't do
+  // that without inserting them into the DOM.  So count chars instead.
+  var leading = (leadingSpaceListBulletsQuotes.exec(line.text) || [""])[0];
   var off = CodeMirror.countColumn(leading, leading.length, cm.getOption("tabSize"));
   // Using "ex" is a bit better than cm.defaultCharWidth() — it picks up
   // increased font if applied to whole line, i.e. in header lines
   // (not that it makes sense to indent headers).
+  // However any resemblance of 1ex to the width of one monospace char
+  // is purely coincidental (1em is way too wide in practice).
   elt.style.textIndent = "-" + off + "ex";
   elt.style.paddingLeft = off + "ex";
 });
