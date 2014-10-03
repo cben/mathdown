@@ -25,7 +25,7 @@ Dependencies:
  * CodeMirror is also MIT.
  * MathJax is under Apache License 2.0.
  * My [CodeMirror-MathJax][] glue is also MIT.
- * Firebase is a **proprietary** service ([#4](https://github.com/cben/mathdown/issues/4)); their client-side javascipt API [firebase.js][] is MIT.
+ * Firebase is a **proprietary** service ([#4](https://github.com/cben/mathdown/issues/4)); their client-side javascipt API [firebase.js][] was [accidentally MIT-licensed for a time but is now proprietary](https://groups.google.com/forum/#!topic/firebase-talk/pAklVV3Whw8).
  * The collaborative editor [Firepad] is MIT.  It calls firebase javascipt API.
 
 ## Git trivia
@@ -34,9 +34,12 @@ After checking out, run this to materialize subdirs://
 
     git submodule update --init --recursive
 
-Append ` --remote` to upgrade to newest versions of all submodules (need to commit afterwards if anything changed).
+Append ` --remote` to upgrade to newest versions of all submodules (need to commit afterwards if anything changed).  However we can't update all deps:
 
-I'm directly working in gh-pages branch without a master branch, as that's the simplest thing that could possibly work (http://oli.jp/2011/github-pages-workflow/ lists several alternatives).
+ * firepad v1.0.0 is the last version including pre-built dist/firepad.js ([#57](https://github.com/cben/mathdown/issues/57)).
+ * firebase beyond v1.0.21 is not FOSS-licensed.  Until that it was MIT by mistake but pinning at v1.0.21 seems better for a short time — long term it's unhealthy as their wire protocol evolves...
+
+I'm directly working in gh-pages branch without a master branch, as that's the simplest thing that could possibly work (http://oli.jp/2011/github-pages-workflow/ lists several alternatives).  If you fork over
 
 ----
 

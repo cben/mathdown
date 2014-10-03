@@ -5,7 +5,6 @@
 [submodule "firepad"]
 	path = firepad
 	url = https://github.com/firebase/firepad.git
-	branch = master
 [submodule "CodeMirror"]
 	path = CodeMirror
 	url = https://github.com/codemirror/CodeMirror
@@ -13,7 +12,6 @@
 [submodule "firebase"]
 	path = firebase
 	url = https://github.com/firebase/firebase-bower.git
-	branch = master
 [submodule "MathJax"]
 	path = MathJax
 	url = https://github.com/mathjax/MathJax.git
