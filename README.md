@@ -36,8 +36,10 @@ After checking out, run this to materialize subdirs://
 
 Append ` --remote` to upgrade to newest versions of all submodules (need to commit afterwards if anything changed).  However we can't update all deps:
 
- * firepad v1.0.0 is the last version including pre-built dist/firepad.js ([#57](https://github.com/cben/mathdown/issues/57)).
- * firebase beyond v1.0.21 is not FOSS-licensed.  Until that it was MIT by mistake but pinning at v1.0.21 seems better for a short time — long term it's unhealthy as their wire protocol evolves...
+ * firebase beyond v1.0.21 is not FOSS-licensed.  Until that it was MIT by mistake but pinning at v1.0.21
+   seems better for a short time — long term it's unhealthy as their wire protocol evolves...
+ * firepad only includes pre-built dist/firepad.js in tagged versions since v1.0.0.
+   E.g. v1.1.0 would work, but it declares dependency on firebase 2.0.x, so for now firepad v1.0.0 seems safer.
 
 I'm directly working in gh-pages branch without a master branch, as that's the simplest thing that could possibly work (http://oli.jp/2011/github-pages-workflow/ lists several alternatives).  If you fork over
 
