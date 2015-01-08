@@ -28,6 +28,7 @@ tunnelId = build
 tags = []
 tags.push('travis') if env.TRAVIS
 tags.push('drone') if env.DRONE
+tags.push('shippable') if env.USER is 'shippable'
 tags.push(env.CI_NAME) if env.CI_NAME
 
 browser = wd.remote('ondemand.saucelabs.com', 80, sauceUser, sauceKey)
