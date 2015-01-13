@@ -5,6 +5,7 @@ wd = require('wd')
 assert = require('assert')
 chalk = require('chalk')
 
+# 'mathdown' is a sub-account I created.
 sauceUser = process.env.SAUCE_USERNAME || 'mathdown'
 # I hope storing this in a public test is OK given that an Open Sauce account
 # is free anyway.  Can always revoke if needed...
@@ -55,10 +56,10 @@ desired = {
 # TODO: Cleanup even if there were errors.  Use promises for sanity?
 #  Use a test runner with guaranteed pre/post methods?
 
-test = (cb) ->
+test = (url, cb) ->
   # Kludge: set to failed first, change to passed if we get to the end without crashing.
   browser.sauceJobStatus false, ->
-    browser.get 'http://localhost:8000/?doc=_mathdown_test_smoke', (err) ->
+    browser.get url + '?doc=_mathdown_test_smoke', (err) ->
       assert.ifError(err)
       browser.waitFor wd.asserters.jsCondition('document.title.match(/smoke test/)'), 10000, (err, value) ->
         assert.ifError(err)
@@ -72,14 +73,17 @@ test = (cb) ->
             browser.sauceJobStatus(true)
             cb()
 
+# https://docs.saucelabs.com/reference/sauce-connect/#can-i-access-applications-on-localhost-
+# lists ports we can use.
+port = 8001
 server = http.createServer(st({
   path: process.cwd()
   index: 'index.html'
 }))
 server.on 'request', (req, res) ->
   console.log(' < %s %s', chalk.green(req.method), req.url)
-server.listen(8000)
-console.log('Server up, e.g. http://localhost:8000/?doc=_mathdown_test_smoke')
+server.listen(port)
+console.log('Server up, e.g. http://localhost:' + port + '/?doc=_mathdown_test_smoke')
 
 tunnel = new sauceTunnel(sauceUser, sauceKey, tunnelId, true, ['--verbose'])
 console.log('Creating tunnel...')
@@ -90,8 +94,8 @@ tunnel.start (status) ->
   console.log(desired)
   browser.init desired, (err) ->
     assert.ifError(err)
-    test ->
+    test 'http://localhost:' + port, ->
       browser.quit()
       server.close()
       tunnel.stop ->
-        console.log(chalk.green('Cleaned up.'))
+        console.log(chalk.green('Tunnel stopped, cleaned up.'))
