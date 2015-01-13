@@ -12,7 +12,7 @@
 @media print { .CodeMirror { border: 1px none; } }
 
 /* Expand editor to fit most of the page. */
-html, body, form, textarea, .CodeMirror {
+html, body, form, textarea, .firepad, .CodeMirror {
   height: 100%; width: 100%;
   -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
 }
@@ -23,12 +23,6 @@ body { height: 80%; width: 95%; }
    (instead whole page scrolls), which makes CM slower.
   body { display: table; }
   form { display: table-row; } */
-
-/* Override fixed editor size from firepad.css */
-.firepad { height: 100%; }
-.firepad .CodeMirror { height: 100%; position: relative; }
-/* Disable Firepad logo */
-.powered-by-firepad { background-image: none; }
 
 .CodeMirror {
   /* Font choices based on Math.SE: http://graphicdesign.stackexchange.com/a/12961 */
