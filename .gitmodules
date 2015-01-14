@@ -8,7 +8,7 @@
 [submodule "CodeMirror"]
 	path = CodeMirror
 	url = https://github.com/codemirror/CodeMirror
-	branch = master
+	branch = direction
 [submodule "firebase"]
 	path = firebase
 	url = https://github.com/firebase/firebase-bower.git
