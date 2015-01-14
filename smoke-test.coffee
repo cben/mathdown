@@ -21,15 +21,17 @@ sauceConnectOptions = {
 # http://docs.travis-ci.com/user/ci-environment/#Environment-variables
 # http://docs.drone.io/env.html  (Jenkins compatible)
 # https://www.codeship.io/documentation/continuous-integration/set-environment-variables/
+# http://devcenter.wercker.com/articles/steps/variables.html
 env = process.env
-build = env.BUILD_ID || env.TRAVIS_BUILD_ID || env.CI_BUILD_NUMBER || env.JOB_ID
-buildUrl = env.BUILD_URL || env.CI_BUILD_URL || build
-commit = env.GIT_COMMIT || env.TRAVIS_COMMIT || env.CI_COMMIT_ID || env.COMMIT
+build = env.BUILD_ID || env.TRAVIS_BUILD_ID || env.CI_BUILD_NUMBER || (env.WERCKER_BUILD_URL || '').replace(/.*\//, '') || env.JOB_ID
+buildUrl = env.BUILD_URL || env.CI_BUILD_URL || env.WERCKER_BUILD_URL || build
+commit = env.GIT_COMMIT || env.TRAVIS_COMMIT || env.CI_COMMIT_ID || env.WERCKER_GIT_COMMIT || env.COMMIT
 tunnelId = build
 tags = []
 tags.push('travis') if env.TRAVIS
 tags.push('drone') if env.DRONE
 tags.push('shippable') if env.USER is 'shippable'
+tags.push('wercker') if env.WERCKER_BUILD_URL
 tags.push(env.CI_NAME) if env.CI_NAME
 
 browser = wd.remote('ondemand.saucelabs.com', 80, sauceUser, sauceKey)
