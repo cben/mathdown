@@ -60,7 +60,16 @@ function newPad() {
   window.open("?doc=" + doc, "_blank");
 }
 
-var doc = locationQueryParams()["doc"];
+// URL parameters
+// ==============
+var queryParams = locationQueryParams();
+var doc = queryParams["doc"];
+// EXPE-RIMENTAL KLUDGE param: for now we support dir=rtl to make RTL docs (somewhat) practical
+// (but don't expose it in the GUI).
+// In the future it might be ignored - once we autodetect each line's base direction (#23).
+// Also, document direction is semantic, it makes more sense to store it in firebase?
+var docDirection = (queryParams["dir"] == "rtl" ? "rtl" : "ltr");
+
 if(!doc) {
   window.location.search = "?doc=about";
 }
@@ -120,7 +129,8 @@ var editor = CodeMirror.fromTextArea(document.getElementById("code"),
                                       lineNumbers: false,
                                       lineWrapping: true,
                                       mode: "gfm_header_line_classes",
-                                      showLeadingSpace: true});
+                                      showLeadingSpace: true,
+                                      direction: docDirection});
 
 // Indent soft-wrapped lines.  Based on CodeMirror/demo/indentwrap.html.
 var leadingSpaceListBulletsQuotes = /^\s*([*+-]\s+|\d+\.\s+|>\s*)*/;
@@ -139,7 +149,21 @@ editor.on("renderLine", function(cm, line, elt) {
   // However any resemblance of 1ex to the width of one monospace char
   // is purely coincidental (1em is way too wide in practice).
   elt.style.textIndent = "-" + off + "ex";
-  elt.style.paddingLeft = off + "ex";
+
+  // We need to know line direction to set paddingLeft or paddingRight appropriately.
+  // TODO: CM should expose getDirection().
+  var lineDirection = elt.style.direction || cm.getDoc().direction;
+  // TODO: CM doesn't re-run this hook when line direction changed :-(
+  // => KLUDGE: set both paddings!  In fact this is a good for mixed-direction docs anyway -
+  //    long lines of opposite direction won't visually break indentation structrure.
+  //    But I'm afraid it may be a nuisance on pure-LTR docs, so as a compromise
+  //    I set only paddingLeft on LTR lines in LTR docs.
+  if (docDirection == "rtl" || lineDirection == "rtl") {
+    elt.style.paddingRight = off + "ex";
+    elt.style.paddingLeft = off + "ex";
+  } else {
+    elt.style.paddingLeft = off + "ex";
+  }
 });
 editor.refresh();
 

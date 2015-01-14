@@ -12,7 +12,7 @@
 @media print { .CodeMirror { border: 1px none; } }
 
 /* Expand editor to fit most of the page. */
-html, body, form, textarea, .CodeMirror {
+html, body, form, textarea, .firepad, .CodeMirror {
   height: 100%; width: 100%;
   -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
 }
@@ -24,22 +24,16 @@ body { height: 80%; width: 95%; }
   body { display: table; }
   form { display: table-row; } */
 
-/* Override fixed editor size from firepad.css */
-.firepad { height: 100%; }
-.firepad .CodeMirror { height: 100%; position: relative; }
-/* Disable Firepad logo */
-.powered-by-firepad { background-image: none; }
-
+/* Font choices based on Math.SE: http://graphicdesign.stackexchange.com/a/12961 */
 .CodeMirror {
-  /* Font choices based on Math.SE: http://graphicdesign.stackexchange.com/a/12961 */
-  font-family: "Georgia", "Bitstream Charter", "Times New Roman", "Times", serif;
+  font-family: "Georgia", "Bitstream Charter", "David", "David CLM", "Times New Roman", "Times", serif;
 }
 /* markdown mode styles `...` and indented code blocks as "comment". */
 .cm-comment, .cm-leadingspace, .cm-formatting-list, .cm-formatting-quote {
   /* Prefer Courier and similar serif monospaced fonts.
      Prefer Nimbus Mono L to Courier New -> Liberation Mono substitution
      on linux (it's metrically compatible but sans-serif). */
-  font-family: "Courier 10 Pitch", "Nimbus Mono L", "Courier New", "Courier", monospace;
+  font-family: "Courier 10 Pitch", "Nimbus Mono L", "Courier New", "Courier", "FreeMono", monospace;
 }
 
 /* Match h1..h6 default sizes in WebKit, Mozilla & IE as of 2013. */
