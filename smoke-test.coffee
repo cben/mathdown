@@ -18,21 +18,39 @@ sauceConnectOptions = {
   logger: console.log
 }
 
+# Build metadata
+# ==============
 # http://docs.travis-ci.com/user/ci-environment/#Environment-variables
 # http://docs.drone.io/env.html  (Jenkins compatible)
-# https://www.codeship.io/documentation/continuous-integration/set-environment-variables/
+# http://docs.shippable.com/en/latest/config.html#common-environment-variables
+# https://codeship.com/documentation/continuous-integration/set-environment-variables/#default-environment-variables
 # http://devcenter.wercker.com/articles/steps/variables.html
 env = process.env
-build = env.BUILD_ID || env.TRAVIS_BUILD_ID || env.CI_BUILD_NUMBER || (env.WERCKER_BUILD_URL || '').replace(/.*\//, '') || env.JOB_ID
-buildUrl = env.BUILD_URL || env.CI_BUILD_URL || env.WERCKER_BUILD_URL || build
-commit = env.GIT_COMMIT || env.TRAVIS_COMMIT || env.CI_COMMIT_ID || env.WERCKER_GIT_COMMIT || env.COMMIT
+build = env.CI_BUILD_NUMBER || env.BUILD_ID || env.TRAVIS_BUILD_ID || (env.WERCKER_BUILD_URL || '').replace(/.*\//, '') || env.JOB_ID
+buildUrl = env.CI_BUILD_URL || env.BUILD_URL || env.WERCKER_BUILD_URL || build
+commit = env.CI_COMMIT_ID || env.COMMIT || env.GIT_COMMIT || env.TRAVIS_COMMIT || env.WERCKER_GIT_COMMIT
+branch = env.CI_BRANCH || env.BRANCH || env.GIT_BRANCH || env.TRAVIS_BRANCH || env.WERCKER_GIT_BRANCH
+
 tunnelId = build
 tags = []
-tags.push('travis') if env.TRAVIS
+tags.push('shippable') if env.SHIPPABLE
+# Shippable tries too hard to be Travis-compatible, sets TRAVIS.
+tags.push('travis') if env.TRAVIS && ! env.SHIPPABLE
 tags.push('drone') if env.DRONE
-tags.push('shippable') if env.USER is 'shippable'
 tags.push('wercker') if env.WERCKER_BUILD_URL
-tags.push(env.CI_NAME) if env.CI_NAME
+tags.push(env.CI_NAME) if env.CI_NAME  # Covers Codeship (could also use env.CODESHIP).
+
+desired = {
+  browserName: 'internet explorer'
+  version: '8'
+  platform: 'Windows XP'
+  name: 'smoke test'
+  build: "#{buildUrl} [#{branch}] commit #{commit}"
+  tags: tags
+  # Most my tests timeout a lot due crashing without cleanup (see below);
+  # this will waste less Sauce resources than default 90s.
+  'idle-timeout': 30
+}
 
 browser = wd.remote('ondemand.saucelabs.com', 80, sauceUser, sauceKey)
 
@@ -42,18 +60,6 @@ browser.on 'command', (meth, path) ->
   console.log(' > %s: %s', chalk.yellow(meth), path)
 #browser.on 'http', (meth, path, data) ->
 #  console.log(' > %s %s %s', chalk.magenta(meth), path, chalk.grey(data))
-
-desired = {
-  browserName: 'internet explorer'
-  version: '8'
-  platform: 'Windows XP'
-  name: 'smoke test'
-  build: "#{buildUrl} commit #{commit}"
-  tags: tags
-  # Most my tests timeout a lot due crashing without cleanup (see below);
-  # this will waste less Sauce resources than default 90s.
-  'idle-timeout': 30
-}
 
 # TODO: Cleanup even if there were errors.  Use promises for sanity?
 #  Use a test runner with guaranteed pre/post methods?
