@@ -77,7 +77,7 @@ test = (url, cb) ->
             assert.ifError(err)
             if not text.match(/^\s*α\s*$/)
               assert.fail(text, '/^\s*α\s*$/', 'math text is wrong', ' match ')
-            console.log(chalk.green('ALL PASSED'))
+            console.log(chalk.green('\nALL PASSED\n'))
             browser.sauceJobStatus(true)
             cb()
 
@@ -107,3 +107,6 @@ tunnel.start (status) ->
       server.close()
       tunnel.stop ->
         console.log(chalk.green('Tunnel stopped, cleaned up.'))
+
+# TODO: inspect browser console log
+# https://support.saucelabs.com/entries/60070884-Enable-grabbing-server-logs-from-the-wire-protocol
