@@ -13,7 +13,7 @@
   },
   "scripts": {
     "test": "coffee smoke-test.coffee",
-    "run": "node server.js"
+    "run": "coffee server.coffee"
   },
   "repository": {
     "type": "git",

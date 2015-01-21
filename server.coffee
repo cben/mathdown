@@ -1,5 +1,3 @@
-# For starters, runs from manually compiled server.js.
-# TODO: run as CoffeeScript.  https://github.com/floriankrueger/heroku-on-coffee
 st = require('st')
 http = require('http')
 assert = require('assert')
