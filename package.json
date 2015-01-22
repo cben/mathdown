@@ -2,15 +2,18 @@
   "name": "mathdown",
   "version": "0.0.0",
   "description": "http://mathdown.net",
+  "dependencies": {
+    "coffee-script": "*",
+    "st": "*"
+  },
   "devDependencies": {
-    "chalk": "~0.4.0",
-    "coffee-script": "~1.7.1",
-    "sauce-tunnel": "~2.0.6",
-    "st": "^0.4.1",
-    "wd": "~0.2.19"
+    "chalk": "*",
+    "sauce-tunnel": "*",
+    "wd": "*"
   },
   "scripts": {
-    "test": "coffee smoke-test.coffee"
+    "test": "coffee smoke-test.coffee",
+    "start": "coffee server.coffee"
   },
   "repository": {
     "type": "git",
