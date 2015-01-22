@@ -2,7 +2,7 @@ st = require('st')
 http = require('http')
 assert = require('assert')
 
-port = process.env.PORT || 80;
+port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080;
 server = http.createServer(st({
   path: process.cwd()
   index: 'index.html'
