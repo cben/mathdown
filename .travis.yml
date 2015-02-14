@@ -1,7 +1,8 @@
 # This controls automated builds at Travis & Shippable.
 
 # http://blog.travis-ci.com/2014-12-17-faster-builds-with-container-based-infrastructure/
-sudo: false
+# Comment out for now because with it travis didn't build at all?
+##sudo: false
 
 language: node_js
 node_js:
