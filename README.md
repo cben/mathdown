@@ -124,6 +124,10 @@ The .com is currently a redirect to .net (served by Gandi), but I'm going play w
 Other things called "mathdown":
 
  * https://github.com/mayoff/Mathdown/tree/mathjax — Markdown.pl hacked for MathJax pass-through
- * https://github.com/keishi/kernlog/blob/master/markdown/extensions/mathdown.py
- * http://kwkbtr.info/log/201010050320 — a way to combine Showdown + Mathjax.
+ * https://github.com/keishi/kernlog/blob/master/markdown/extensions/mathdown.py - math in python-markdown, part of "Yet another blog for google app engine"
+ * http://kwkbtr.info/log/201010050320 — a way to combine Showdown + Mathjax
+ * https://gitlab.com/padawanphysicist/tw5-mathdown/tree/master - Math (via TeXZilla) + Markdown-it in TiddlyWiki5
+
+I should really talk to these folk whether it's OK that I'm using the name and the domain... 
+
  * http://www.urbandictionary.com/define.php?term=mathdown
