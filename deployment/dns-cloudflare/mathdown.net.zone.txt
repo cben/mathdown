@@ -1,0 +1,47 @@
+;; Domain:     mathdown.net
+;; Exported:   2015-02-15 14:12:19
+;; 
+;; This file is intended for use for informational and archival
+;; purposes ONLY and MUST be edited before use on a production
+;; DNS server.  In particular, you must:
+;;   -- update the SOA record with the correct authoritative name server
+;;   -- update the SOA record with the contact e-mail address information
+;;   -- update the NS record(s) with the authoritative name servers for this domain.
+;; 
+;; For further information, please consult the BIND documentation
+;; located on the following website:
+;; 
+;; http://www.isc.org/
+;; 
+;; And RFC 1035:
+;; 
+;; http://www.ietf.org/rfc/rfc1035.txt
+;; 
+;; Please note that we do NOT offer technical support for any use
+;; of this zone data, the BIND name server, or any other third-party
+;; DNS software.
+;; 
+;;     Use at your own risk.
+;; 
+$ORIGIN mathdown.net.
+@	3600	IN	SOA	mathdown.net.	root.mathdown.net.	(
+		2015021501	; serial
+		7200		; refresh
+		3600		; retry
+		86400		; expire
+		3600)		; minimum
+
+
+
+;; NS Records (YOU MUST CHANGE THIS)
+mathdown.net.	300	IN	NS	NS.SOMEWHERE.example.com.
+
+;; MX Records
+mathdown.net.	300	IN	MX	50	fb.mail.gandi.net.
+mathdown.net.	300	IN	MX	10	spool.mail.gandi.net.
+
+;; CNAME Records
+www.mathdown.net.	300	IN	CNAME	cben.github.io.
+3fb21ea8170f3c41c046913dd313925e.mathdown.net.	300	IN	CNAME	714313f93ea1bfae46a9bbc7409511b35b26cb89.comodoca.com.
+mathdown.net.	300	IN	CNAME	cben.github.io.
+*.mathdown.net.	300	IN	CNAME	webredir.vip.gandi.net.

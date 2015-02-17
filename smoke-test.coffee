@@ -1,5 +1,5 @@
 sauceTunnel = require('sauce-tunnel')
-st = require('st')
+st = require('st')  # TODO: use server.js!
 http = require('http')
 wd = require('wd')
 assert = require('assert')

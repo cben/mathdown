@@ -82,11 +82,11 @@ This app *mostly* works as static pages, and I intend to keep it this way.
   * You can run locally - just open `index.html`.
 
   * Github Pages serves the gh-pages branch at https://cben.github.io/mathdown.
-    Currently this also serves http://mathdown.net and http://www.mathdown.net but unfortunately this doesn't support HTTPS (#4).
+    Currently this also serves http://mathdown.net and http://www.mathdown.net but unfortunately this doesn't support HTTPS ([#6](https://github.com/cben/mathdown/issues/57)).
 
       * If you fork this repo, you can immediately use your version at https://YOUR-GITHUB-USERNAME.github.io/mathdown/!
 
-(For other branches/commits, there is no trivial solution - rawgit.com doesn't currently support submodules.)
+        (For other branches/commits, there is no trivial solution - rawgit.com doesn't currently support submodules.)
 
 As a dynamic app (`server.coffee`):
 
@@ -95,16 +95,14 @@ As a dynamic app (`server.coffee`):
 
 (you can choose any port of course.  <kbd>Ctrl+C</kbd> when done.)
 
-The only benefits the dynamic server is going to bring (not implemented yet) are:
+The only benefits the dynamic server is going to bring (not implemented yet) will be:
 
  1. Including the document text in the HTTP response for search engines (#7).
  2. Prettier `mathdown.net/foobar` instead of `mathdown.net/?doc=foobar` URLs (#59).
 
 **However you run it, you can open the same document ids and real-time collaboration will work!**
 
-I'm testing hosting on Heroku (https://mathdown.herokuapp.com, should auto-deploy from `gh-pages` on github) and Openshift (http://mathdown-cben.rhcloud.com/).
-Heroku Button for forks is very neat!
-Both require $20/month for TLS on custom domain; while I understand why that's an effective threshold for "serious" customers to pay, but it annoys me engineering-wise (shared cert TLS is not significantly cheaper for them than custom cert).  Also, upgrading to Openshift bronze failed so far.
+The app works on Heroku and RHcloud (aka Openshift), and I'm in process of switching https://mathdown.net to RHcloud ([#57](https://github.com/cben/mathdown/issues/57).  See [deployment/](deployment/README.md) subdirectory for details.
 
 ### mathdown.net and mathdown.com domains
 
