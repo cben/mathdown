@@ -30,7 +30,7 @@ Admin: https://openshift.redhat.com/app/console/application/546a6d7e5973cac90700
 
 Read logs:
 
-    rhc tail mathdown
+    rhc tail mathdown -o '-n 100'  # runs tail -f -n 100
 
 Ssh directly into the "gear":
 
