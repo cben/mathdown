@@ -88,6 +88,8 @@ This app *mostly* works as static pages, and I intend to keep it this way.
 
         (For other branches/commits, there is no trivial solution - rawgit.com doesn't currently support submodules.)
 
+        The easiest way to run (and share) uncommitted modifications is probably Cloud 9.  TODO: test, details.
+
 As a dynamic app (`server.coffee`):
 
     npm install  # once

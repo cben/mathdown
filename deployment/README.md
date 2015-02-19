@@ -99,6 +99,8 @@ Note: Both RHcloud and Heroku can only support custom-domain certs with SNI (cli
 [Eric Mill's tutorial]: https://konklone.com/post/switch-to-https-now-for-free
 [StartCom]: https://StartSSL.com
 
+Configuring the domains and certs on RHcloud can be repeated with `tls-certs-startcom/rhc-set-certs.sh` script.
+
 ## DNS
 
 DNS is served by Cloudflare.  They support [CNAME at the apex][] in their free plan, and they do it in a way that supposedly "doesn't  break the internet" .
