@@ -9,6 +9,7 @@ server = http.createServer(st({
   index: 'index.html'
 }))
 server.on 'request', (req, res) ->
+  # Note: full URLs might still appear in other platform logs, e.g. heroku[router]
   anonimizedUrl = req.url.replace(/([?&])doc=[^&]*/, '$1doc=...')
   # TODO: also log our responses, especially errors.
   console.log('[%s] %s %s %s < %s %s', new Date().toISOString(), req.method, req.headers.host, anonimizedUrl, req.socket.remoteAddress, req.headers['user-agent'])
