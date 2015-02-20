@@ -81,7 +81,7 @@ TODO: add deploy on heroku button.  Their 1-free-per-*app* model is perfect for 
 Currently CI runs tests against temp locally server and I must manually deploy to RHcloud/Heroku.
 It should be easy to config auto-deploy.
 
-What's more important would be testing that it works on RHcloud/Heroku: adding a separate "staging" app, deploying to it first, testing that it works in prod, only then deploying to main app.
+What's more important would be testing that it works on RHcloud/Heroku: adding a separate "staging" app, deploying to it first, testing that it works in prod, only then deploying to main app. (#77)
 
 ## HTTPS (TLS/SSL) certificates
 
@@ -103,13 +103,22 @@ Configuring the domains and certs on RHcloud can be repeated with `tls-certs-sta
 
 ## DNS
 
-DNS is served by Cloudflare.  They support [CNAME at the apex][] in their free plan, and they do it in a way that supposedly "doesn't  break the internet" .
+mathdown.net and mathdown.com domains are registered at https://www.gandi.net/ (expire 2016 Sep 10).
 
-Both mathdown.net, www.mathdown.net, mathdown.com, www.mathdown.com all point at Openshift.
+Using an apex domain (with www. subdomain) turns out to be a pain, but I'm sticking with it for now.
 
-Giving them control of my DNS does give them the ability to take over my site, acting as man-in-the-middle (as a CDN wants to do), including minting certificates for my domain.  Basically I trust them (no less than Github, Redhat, Heroku or Amazon).  See [discussion here](https://github.com/cben/mathdown/issues/6#issuecomment-74223153).
+  - Can't do normal CNAME; [some DNS providers][] can simulate it, notably [Cloudflare claim to have done it well][] (and free unlike dnssimple.
+  - Without CNAME, Github Pages do provide fixed IPs that are slower ([extra 302 redirect][]).
+  - Without CNAME, Heroku can't work at all!
+
+That's why DNS is served by Cloudflare (free plan).
+mathdown.net, www.mathdown.net, mathdown.com, www.mathdown.com all point at RHcloud.
+
+Giving them control of my DNS does give them the ability to take over my site, acting as man-in-the-middle (as a CDN wants to do), including minting certificates for my domain.
+Technically that's true for anyone serving my DNS, and I trust them.  See discussion at https://github.com/cben/mathdown/issues/6#issuecomment-74223153.
 
 Anyway I'm currently keeping Cloudflare's CDN abilities disabled (grey "bypass" icon).
 
-[CNAME at the apex]: https://blog.cloudflare.com/introducing-cname-flattening-rfc-compliant-cnames-at-a-domains-root/
-
+[some DNS providers]: https://devcenter.heroku.com/articles/custom-domains#root-domain
+[Cloudflare claim to have done it well]: https://blog.cloudflare.com/introducing-cname-flattening-rfc-compliant-cnames-at-a-domains-root/
+[extra 302 redirect]: https://news.ycombinator.com/item?id=7738293

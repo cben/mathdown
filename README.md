@@ -1,14 +1,14 @@
-http://mathdown.net
-===================
+https://mathdown.net
+====================
 
 Collaborative markdown with math.
 Powered by [CodeMirror][], [MathJax][] and [Firebase][]'s [Firepad][].
 
-[CodeMirror]: http://codemirror.net
-[MathJax]: http://mathjax.org
-[Firebase]: http://firebase.com
+[CodeMirror]: https://codemirror.net
+[MathJax]: https://www.mathjax.org
+[Firebase]: https://firebase.com
 [Firepad]: http://firepad.io
-[CodeMirror-MathJax]: http://github.com/cben/CodeMirror-MathJax
+[CodeMirror-MathJax]: https://github.com/cben/CodeMirror-MathJax
 [firebase.js]: https://github.com/firebase/firebase-bower
 
 **Alpha quality – will eat your math, burn your bookmarks & expose your secrets.**
@@ -28,11 +28,11 @@ Dependencies:
 ## Document hosting and privacy(?) on Firebase
 
 All user data is stored in Firebase.  [Their privacy policy](https://www.firebase.com/terms/privacy-policy.html).
-Documents access (read AND edit) is by secret document id which is part of the url.  **This is unsecure** as long as mathdown.net doesn't use HTTPS (#6)!
+Documents access (read AND edit) is by secret document id which is part of the url.  This is grossly unsecure unless using HTTPS.
 
 The downside is users can't really control their data.  Running a "self-hosted" copy of the site still leaves all data in the hands of Firebase.  See #4 for more discussion.
 
-The upside is all forks interoperate; you can change the design or tweak the editor and still access same documents.  E.g. http://mathdown.net/index.html?doc=demo and http://rhythmus.be/mathdown/index.html?doc=demo look different but access the same doc -- and real-time collaboration between them works!
+The upside is all forks interoperate; you can change the design or tweak the editor and still access same documents.  E.g. https://mathdown.net/index.html?doc=demo and http://rhythmus.be/mathdown/index.html?doc=demo look different but access the same doc -- and real-time collaboration between them works!
 
 I'm so far on the [free Firebase plan](https://www.firebase.com/pricing.html) - 50 concurrent (not sure if 1:1 with users), 100 MB Data Storage (used more than half).  => Will need $49/mo plan as soon as I get non-negligible usage.
 https://mathdown.firebaseio.com/?page=Analytics
@@ -50,7 +50,7 @@ Append ` --remote` to upgrade to newest versions of all submodules (need to comm
   * firepad only includes pre-built dist/firepad.js in tagged versions since v1.0.0.
     E.g. v1.1.0 would work, but it declares dependency on firebase 2.0.x, so for now firepad v1.0.0 seems safer.
 
-I'm directly working in `gh-pages` branch without a `master` branch, as that's the simplest thing that could possibly work (http://oli.jp/2011/github-pages-workflow/ lists several alternatives).
+I'm directly working in `gh-pages` branch without a `master` branch.  GH Pages is no longer the primary hosting but it's still useful to test the static version works.
 
 ## Test(s)
 
@@ -77,14 +77,16 @@ I've tried several free services for this, and currently prefer Travis:
 
 ## Where it's deployed and how to run your fork
 
+The main deployment runs on https://mathdown-cben.rhcloud.com/ (Openshift hosting operated by RedHat), and mathdown.net points to it.  The dynamic server has also been tested on Heroku.  See [deployment/](deployment/README.md) subdirectory for details.
+
 This app *mostly* works as static pages, and I intend to keep it this way.
 
   * You can run locally - just open `index.html`.
 
   * Github Pages serves the gh-pages branch at https://cben.github.io/mathdown.
-    Currently this also serves http://mathdown.net and http://www.mathdown.net but unfortunately this doesn't support HTTPS ([#6](https://github.com/cben/mathdown/issues/57)).
 
       * If you fork this repo, you can immediately use your version at https://YOUR-GITHUB-USERNAME.github.io/mathdown/!
+        Or maybe not immediately but [after you push something](http://stackoverflow.com/q/8587321/239657).
 
         (For other branches/commits, there is no trivial solution - rawgit.com doesn't currently support submodules.)
 
@@ -103,21 +105,6 @@ The only benefits the dynamic server is going to bring (not implemented yet) wil
  2. Prettier `mathdown.net/foobar` instead of `mathdown.net/?doc=foobar` URLs (#59).
 
 **However you run it, you can open the same document ids and real-time collaboration will work!**
-
-The app works on Heroku and RHcloud (aka Openshift), and I'm in process of switching https://mathdown.net to RHcloud ([#57](https://github.com/cben/mathdown/issues/57).  See [deployment/](deployment/README.md) subdirectory for details.
-
-### mathdown.net and mathdown.com domains
-
-Registered at https://www.gandi.net/ and currently DNS-served by them.
-Using an apex domain (with www. subdomain) turns out to be a pain, but I'm going to try.
-
-  - Can't do normal CNAME; some DNS providers can simulate it, notably Cloudflare claim to have done it well.
-  - Without CNAME, Github Pages do provide fixed IPs that are slower (extra 302 redirect).
-  - Without CNAME, Heroku can't work at all!
-
-I'm in process of getting free TLS certs from https://startssl.com.
-
-The .com is currently a redirect to .net (served by Gandi), but I'm going play with it in various ways.
 
 ----
 
