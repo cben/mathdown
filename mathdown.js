@@ -1,5 +1,7 @@
 // Main code running in every mathdown document (all shown via index.html).
 
+(function() {  // immediately executed
+
 "use strict";
 
 // Prevent errors on IE.  Might not actually log.
@@ -16,17 +18,6 @@ MathJax.Message.filterText = function(text, n, msgType) {
     log("MJ:", text, "[" + msgType + "]");
   }
   return origFilterText(text, n, msgType);
-}
-
-function locationQueryParams() {
-  /* If more is needed, use https://github.com/medialize/URI.js */
-  var queryParts = window.location.search.replace(/^\?/g, "").split("&");
-  var params = {};
-  for(var i = 0; i < queryParts.length; i++) {
-    var keyval = queryParts[i].split("=");
-    params[decodeURIComponent(keyval[0])] = decodeURIComponent(keyval[1] || "");
-  }
-  return params;
 }
 
 // Return an int in [0, 62).
@@ -62,20 +53,37 @@ function newPad() {
 
 // URL parameters
 // ==============
+
+function locationQueryParams() {
+  /* If more is needed, use https://github.com/medialize/URI.js */
+  var queryParts = window.location.search.replace(/^\?/g, "").split("&");
+  var params = {};
+  for(var i = 0; i < queryParts.length; i++) {
+    var keyval = queryParts[i].split("=");
+    params[decodeURIComponent(keyval[0])] = decodeURIComponent(keyval[1] || "");
+  }
+  return params;
+}
+
 var queryParams = locationQueryParams();
 var doc = queryParams["doc"];
-// EXPE-RIMENTAL KLUDGE param: for now we support dir=rtl to make RTL docs (somewhat) practical
+// EXPERIMENTAL KLUDGE param: for now we support dir=rtl to make RTL docs (somewhat) practical
 // (but don't expose it in the GUI).
 // In the future it might be ignored - once we autodetect each line's base direction (#23).
 // Also, document direction is semantic, it makes more sense to store it in firebase?
 var docDirection = (queryParams["dir"] == "rtl" ? "rtl" : "ltr");
 
 if(!doc) {
-  window.location.search = "?doc=about";
+    // TODO: this should be a server-side redirect (when we have a server).
+    window.location.search = "?doc=about";
+    return;
 }
 var firepadsRef = new Firebase("https://mathdown.firebaseIO.com/firepads");
 var firepadRef = firepadsRef.child(doc);
 log("firebase ref:", firepadRef.toString());
+
+// Editor
+// ======
 
 // Apply class="leadingspace" to leading whitespace so we can make it monospace.
 // Stolen from CodeMirror/addon/edit/trailingspace.js.
@@ -182,6 +190,9 @@ CodeMirror.on(editor.getDoc(), "change", function(doc, changeObj) {
 
 CodeMirror.hookMath(editor, MathJax);
 
+// Firepad
+// =======
+
 var firepad =  Firepad.fromCodeMirror(firepadRef, editor);
 firepad.on("ready", function() {
   if (firepad.isHistoryEmpty()) {
@@ -213,3 +224,5 @@ firepad.on("ready", function() {
     editor.renderAllMath();
   });
 });
+
+})()
