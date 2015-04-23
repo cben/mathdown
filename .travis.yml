@@ -4,6 +4,13 @@
 # Comment out for now because with it travis didn't build at all?
 ##sudo: false
 
+# By default travis blacklists `gh-pages` branch.  We want it tested.
+# http://docs.travis-ci.com/user/build-configuration/#Specify-branches-to-build
+branches:
+  only:
+    - gh-pages
+    - /.*/
+
 language: node_js
 node_js:
   - "0.11"  # Latest http://docs.travis-ci.com/user/languages/javascript-with-nodejs/#Provided-Node.js-Versions
