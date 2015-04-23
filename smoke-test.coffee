@@ -1,5 +1,6 @@
+require('coffee-script/register')
+server = require('./server')
 sauceTunnel = require('sauce-tunnel')
-st = require('st')  # TODO: use server.js!
 http = require('http')
 wd = require('wd')
 assert = require('assert')
@@ -84,14 +85,7 @@ test = (url, cb) ->
 # https://docs.saucelabs.com/reference/sauce-connect/#can-i-access-applications-on-localhost-
 # lists ports we can use.
 port = 8001
-server = http.createServer(st({
-  path: process.cwd()
-  index: 'index.html'
-}))
-server.on 'request', (req, res) ->
-  console.log(' < %s %s', chalk.green(req.method), req.url)
-server.listen(port)
-console.log('Server up, e.g. http://localhost:' + port + '/?doc=_mathdown_test_smoke')
+httpServer = server.main(port)
 
 tunnel = new sauceTunnel(sauceUser, sauceKey, tunnelId, true, ['--verbose'])
 console.log('Creating tunnel...')
@@ -104,9 +98,9 @@ tunnel.start (status) ->
     assert.ifError(err)
     test 'http://localhost:' + port, ->
       browser.quit()
-      server.close()
       tunnel.stop ->
         console.log(chalk.green('Tunnel stopped, cleaned up.'))
+      httpServer.close()
 
 # TODO: inspect browser console log
 # https://support.saucelabs.com/entries/60070884-Enable-grabbing-server-logs-from-the-wire-protocol
