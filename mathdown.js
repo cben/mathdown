@@ -4,9 +4,16 @@
 
 "use strict";
 
-// Prevent errors on IE.  Might not actually log.
+// Prevent errors on IE (but do strive to log somehow if IE Dev Tools are open).
 function log() {
-  try { console.log.apply(console, arguments); } catch (err) {}
+  try {
+    if(console.log.apply) {
+      console.log.apply(console, arguments);
+    } else {
+      /* IE's console.log doesn't have .apply, .call, or bind. */
+      console.log(Array.prototype.slice.call(arguments));
+    }
+  } catch (err) {}
 }
 
 // Send MathJax messages to log.
