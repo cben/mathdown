@@ -28,19 +28,24 @@ I'm on the Bronze plan (requires credit card but starts at $0), which allows me:
 
 Admin: https://openshift.redhat.com/app/console/application/546a6d7e5973cac907000028-mathdown
 
-Read logs:
+Read logs [[more info](https://developers.openshift.com/en/managing-log-files.html)]:
 
-    rhc tail mathdown -o '-n 100'  # runs tail -f -n 100
+    rhc ssh mathdown --gears 'cd app-root/logs/; ls -ltr; tail -f -n 100 *.log'
 
-Ssh directly into the "gear":
+SSH directly into the main "gear":
 
     rhc ssh mathdown
 
-or use direct command shown on admin page:
+or use direct command as shown on admin page:
 
     ssh 546a6d7e5973cac907000028@mathdown-cben.rhcloud.com
 
+Other gears are similarly accessible by direct SSH but you need to check the host names:
+
+    rhc show-app -a mathdown --gears
+
 Performance: TODO
+
 Haproxy status at: http://mathdown-cben.rhcloud.com/haproxy-status/ but I have little idea how to read that...
 
 Valuable Openshift tips: https://stackoverflow.com/questions/11730590/what-are-some-of-the-tricks-to-using-openshift
