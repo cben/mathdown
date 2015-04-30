@@ -1,6 +1,6 @@
 // Main code running in every mathdown document (all shown via index.html).
 
-(function() {  // immediately executed
+(function() {  // immediately executed.  TODO: this scoping makes debugging harder.
 
 "use strict";
 
@@ -21,7 +21,7 @@ log("MJ:", MathJax.Message.Log());
 var origFilterText = MathJax.Message.filterText;
 MathJax.Message.filterText = function(text, n, msgType) {
   // Exclude non-informative "Processing/Typesetting math: 0% / 100%".
-  if(msgType != "ProcessMath" && msgType != "TypesetMath") {
+  if(msgType !== "ProcessMath" && msgType !== "TypesetMath") {
     log("MJ:", text, "[" + msgType + "]");
   }
   return origFilterText(text, n, msgType);
@@ -79,9 +79,9 @@ var doc = queryParams["doc"];
 // (but don't expose it in the GUI).
 // In the future it might be ignored - once we autodetect each line's base direction (#23).
 // Also, document direction is semantic, it makes more sense to store it in firebase?
-var docDirection = (queryParams["dir"] == "rtl" ? "rtl" : "ltr");
+var docDirection = (queryParams["dir"] === "rtl" ? "rtl" : "ltr");
 
-if(!doc) {
+if(doc === undefined) {
     // TODO: this should be a server-side redirect (when we have a server).
     window.location.search = "?doc=about";
     return;
@@ -96,7 +96,7 @@ log("firebase ref:", firepadRef.toString());
 // Apply class="leadingspace" to leading whitespace so we can make it monospace.
 // Stolen from CodeMirror/addon/edit/trailingspace.js.
 CodeMirror.defineOption("showLeadingSpace", false, function(cm, val, prev) {
-  if (prev == CodeMirror.Init) prev = false;
+  if (prev === CodeMirror.Init) prev = false;
   if (prev && !val)
     cm.removeOverlay("leadingspace");
   else if (!prev && val)
@@ -174,7 +174,7 @@ editor.on("renderLine", function(cm, line, elt) {
   //    long lines of opposite direction won't visually break indentation structrure.
   //    But I'm afraid it may be a nuisance on pure-LTR docs, so as a compromise
   //    I set only paddingLeft on LTR lines in LTR docs.
-  if (docDirection == "rtl" || lineDirection == "rtl") {
+  if (docDirection === "rtl" || lineDirection === "rtl") {
     elt.style.paddingRight = off + "ex";
     elt.style.paddingLeft = off + "ex";
   } else {
@@ -191,7 +191,7 @@ function updateTitle() {
   window.location.hash = text.replace(/\W+/g, "-").replace(/^-/, "").replace(/-$/, "");
 }
 CodeMirror.on(editor.getDoc(), "change", function(doc, changeObj) {
-  if (changeObj.from.line == 0) {
+  if (changeObj.from.line === 0) {
     updateTitle();
   }
 });
@@ -201,7 +201,7 @@ CodeMirror.hookMath(editor, MathJax);
 // Firepad
 // =======
 
-var firepad =  Firepad.fromCodeMirror(firepadRef, editor);
+var firepad = Firepad.fromCodeMirror(firepadRef, editor);
 firepad.on("ready", function() {
   if (firepad.isHistoryEmpty()) {
     firepad.setText(
