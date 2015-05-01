@@ -37,6 +37,15 @@ The upside is all forks interoperate; you can change the design or tweak the edi
 I'm so far on the [free Firebase plan](https://www.firebase.com/pricing.html) - 50 concurrent (not sure if 1:1 with users), 100 MB Data Storage (used more than half).  => Will need $49/mo plan as soon as I get non-negligible usage.
 https://mathdown.firebaseio.com/?page=Analytics
 
+### Cookies
+
+The only cookies I'm aware of:
+
+  - `GEAR` session cookie set by OpenShift hosting (I presume for server stickiness, which I don't actually need).
+  - `mjx.menu` cookie set for a year(?) if you manually change MathJax settings. 
+
+I'm not sure Firebase never sets cookies.  Things will change once I implement login (#50).
+
 ## Git trivia
 
 After checking out, run this to materialize subdirs://
