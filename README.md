@@ -22,8 +22,11 @@ Dependencies:
   * CodeMirror is also MIT.
   * MathJax is under Apache License 2.0.
   * My [CodeMirror-MathJax][] glue is also MIT.
-  * Firebase is a **proprietary** service ([#4](https://github.com/cben/mathdown/issues/4)); their client-side javascipt API [firebase.js][] was [accidentally MIT-licensed for a time but is now proprietary](https://groups.google.com/forum/#!topic/firebase-talk/pAklVV3Whw8) (though gratis for almost any use) as are their APIs in other languages.
   * The collaborative editor [Firepad] is MIT.  It calls firebase javascipt API.
+  * Firebase is a **proprietary** service; their client-side javascipt API [firebase.js][] is also [proprietary](https://www.firebase.com/terms/terms-of-service.html), though apparently fine to distribute in practice — ([#4](https://github.com/cben/mathdown/issues/4)).
+    [firebase.js has been [accidentally MIT-licensed for a time](https://groups.google.com/forum/#!topic/firebase-talk/pAklVV3Whw8) but I've upgraded to newer versions so this doesn't apply.]
+
+    I'm not including firebase.js directly but using it as a git submodule.
 
 ## Document hosting and privacy(?) on Firebase
 
@@ -43,12 +46,10 @@ After checking out, run this to materialize subdirs://
 
     git submodule update --init --recursive
 
-Append ` --remote` to upgrade to newest versions of all submodules (need to commit afterwards if anything changed).  However we can't update all deps:
+Append ` --remote` to upgrade to newest versions of all submodules (need to commit afterwards if anything changed).  Known constraints on updating all deps:
 
-  * firebase beyond v1.0.21 is not FOSS-licensed.  Until that it was MIT by mistake but pinning at v1.0.21
-    seems better for a short time — long term it's unhealthy as their wire protocol evolves...
-  * firepad only includes pre-built dist/firepad.js in tagged versions since v1.0.0.
-    E.g. v1.1.0 would work, but it declares dependency on firebase 2.0.x, so for now firepad v1.0.0 seems safer.
+  * firepad only includes pre-built dist/firepad.js in tagged versions (after every release they strip it back).
+  * [CodeMirror-MathJax currently doesn't support MathJax 2.5](https://github.com/cben/CodeMirror-MathJax/issues/33).
 
 I'm directly working in `gh-pages` branch without a `master` branch.  GH Pages is no longer the primary hosting but it's still useful to test the static version works.
 
