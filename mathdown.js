@@ -4,6 +4,9 @@
 
 "use strict";
 
+// Logging
+// =======
+
 // Prevent errors on IE (but do strive to log somehow if IE Dev Tools are open).
 function log() {
   try {
@@ -26,6 +29,18 @@ MathJax.Message.filterText = function(text, n, msgType) {
   }
   return origFilterText(text, n, msgType);
 }
+
+var statusElement = document.getElementById("status");
+// Show "flash" message (remove if "")
+function setStatus(text) {
+  statusElement.innerHTML = "";
+  if(text) {
+    statusElement.appendChild(document.createTextNode(text));
+  }
+}
+
+// Random pad IDs
+// ==============
 
 // Return an int in [0, 62).
 var random62 = (window.crypto && window.crypto.getRandomValues) ?
@@ -203,6 +218,8 @@ CodeMirror.hookMath(editor, MathJax);
 
 var firepad =  Firepad.fromCodeMirror(firepadRef, editor);
 firepad.on("ready", function() {
+  setStatus("");
+
   if (firepad.isHistoryEmpty()) {
     firepad.setText(
       "# Untitled\n" +
@@ -232,5 +249,12 @@ firepad.on("ready", function() {
     editor.renderAllMath();
   });
 });
+firepad.on("synced", function(isSynced) {
+  if(!isSynced) {
+    setStatus("unsaved");
+  } else {
+    setStatus("");
+  }
+})
 
 })()
