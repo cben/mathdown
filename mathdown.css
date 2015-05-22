@@ -4,6 +4,28 @@
 }
 .warning { color: orange; }
 
+/* Horizontally center http://stackoverflow.com/a/10352525/239657 */
+#status_container {
+  position: fixed; top: 1ex; left: 0; right: 0;
+  text-align: center;
+}
+#status {
+  display: inline-block;
+  padding: 0 0.5em; border-radius: 1ex;
+  color: black; background-color: yellow;
+  font-size: 150%; font-style: italic;
+  opacity: 0;
+  -webkit-transition: opacity 0.3s ease;
+  transition: opacity 0.3s ease;  /* fast fade out */
+}
+#status.info {
+  /* Explanation for http://cubic-bezier.com/#0,.3,.85,0 curve:
+     quickly appear a tiny bit (10% at 5% time), then fade in slowly (50% at 80% time). */
+  opacity: 0.8;
+  -webkit-transition: opacity 2s cubic-bezier(0,.3,.85,0);
+  transition: opacity 2s cubic-bezier(0,.3,.85,0);  /* slow appear */
+}
+
 @media print { #header { display: none; } }
 
 #content { clear: both; }

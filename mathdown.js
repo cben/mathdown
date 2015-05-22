@@ -4,6 +4,9 @@
 
 "use strict";
 
+// Logging
+// =======
+
 // Prevent errors on IE (but do strive to log somehow if IE Dev Tools are open).
 function log() {
   try {
@@ -26,6 +29,20 @@ MathJax.Message.filterText = function(text, n, msgType) {
   }
   return origFilterText(text, n, msgType);
 }
+
+var statusElement = document.getElementById("status");
+// Show "flash" message.  To hide use className="" but it's still
+// useful to provide text (briefly visible).
+function setStatus(className, text) {
+  statusElement.innerHTML = "";
+  statusElement.className = className;
+  if(text) {
+    statusElement.appendChild(document.createTextNode(text));
+  }
+}
+
+// Random pad IDs
+// ==============
 
 // Return an int in [0, 62).
 var random62 = (window.crypto && window.crypto.getRandomValues) ?
@@ -203,6 +220,8 @@ CodeMirror.hookMath(editor, MathJax);
 
 var firepad = Firepad.fromCodeMirror(firepadRef, editor);
 firepad.on("ready", function() {
+  setStatus("", "done");
+
   if (firepad.isHistoryEmpty()) {
     firepad.setText(
       "# Untitled\n" +
@@ -232,5 +251,13 @@ firepad.on("ready", function() {
     editor.renderAllMath();
   });
 });
+
+firepad.on("synced", function(isSynced) {
+  if(!isSynced) {
+    setStatus("info", "Unsaved!");
+  } else {
+    setStatus("", "saved");
+  }
+})
 
 })()
