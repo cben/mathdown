@@ -31,9 +31,11 @@ MathJax.Message.filterText = function(text, n, msgType) {
 }
 
 var statusElement = document.getElementById("status");
-// Show "flash" message (remove if "")
-function setStatus(text) {
+// Show "flash" message.  To hide use className="" but it's still
+// useful to provide text (briefly visible).
+function setStatus(className, text) {
   statusElement.innerHTML = "";
+  statusElement.className = className;
   if(text) {
     statusElement.appendChild(document.createTextNode(text));
   }
@@ -218,7 +220,7 @@ CodeMirror.hookMath(editor, MathJax);
 
 var firepad =  Firepad.fromCodeMirror(firepadRef, editor);
 firepad.on("ready", function() {
-  setStatus("");
+  setStatus("", "done");
 
   if (firepad.isHistoryEmpty()) {
     firepad.setText(
@@ -249,11 +251,12 @@ firepad.on("ready", function() {
     editor.renderAllMath();
   });
 });
+
 firepad.on("synced", function(isSynced) {
   if(!isSynced) {
-    setStatus("unsaved");
+    setStatus("info", "Unsaved!");
   } else {
-    setStatus("");
+    setStatus("", "saved");
   }
 })
 
