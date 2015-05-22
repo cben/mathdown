@@ -15,7 +15,7 @@
 
 /* Horizontally center http://stackoverflow.com/a/10352525/239657 */
 #status_container {
-  position: fixed; top: 1ex; left: 0; right: 0;
+  position: fixed; top: 1ex; left: 0; right: 0; height: 0;
   text-align: center;
 }
 #status {
