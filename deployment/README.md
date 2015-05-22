@@ -22,6 +22,10 @@ The main deployment runs on https://mathdown-cben.rhcloud.com/, and mathdown.{ne
 
 (TODO: it's possible to configure pushes to gh-pages).
 
+Deployments history not exposed in UI, can be recovered from reflog:
+
+    rhc ssh mathdown 'cd git/mathdown.git; git log --walk-reflogs master --date=local --pretty=short'
+
 I'm on the Bronze plan (requires credit card but starts at $0), which allows me: no idling, custom domain TLS, paying several $/mo for [more quota][], option to scale beyond the 3 free machines ("gears").
 
 [more quota]: https://github.com/cben/mathdown/issues/73
@@ -59,11 +63,12 @@ There is also a deployment at https://mathdown.herokuapp.com/.  To deploy:
 
 (Heroku have an option to automatically deploy from github but that [doesn't support submodules](https://github.com/cben/mathdown/issues/57#issuecomment-74395026).)
 
+Admin: https://dashboard.heroku.com/apps/mathdown
+("Activity" tab shows history of deploys.)
+
 I'm on free plan => 1 web dyno, with idling ([dyno sleeps][] after a hour without traffic, takes ~10sec to wake up), no custom-domain TLS.
 
 [dyno sleeps]: https://blog.heroku.com/archives/2013/6/20/app_sleeping_on_heroku
-
-Admin: https://dashboard.heroku.com/apps/mathdown
 
 Read logs:
 
@@ -80,6 +85,7 @@ Performance (I installed various addons but haven't really instrumented anything
 - https://www.blitz.io/to#/dashboard/rush
 
 TODO: add deploy on heroku button.  Their 1-free-per-*app* model is perfect for contributors.
+(This might change with 2015 beta pricing limiting free to half month uptime)
 
 ## TODO: staging, continuous integration->deploy
 
@@ -127,3 +133,19 @@ Anyway I'm currently keeping Cloudflare's CDN abilities disabled (grey "bypass" 
 [some DNS providers]: https://devcenter.heroku.com/articles/custom-domains#root-domain
 [Cloudflare claim to have done it well]: https://blog.cloudflare.com/introducing-cname-flattening-rfc-compliant-cnames-at-a-domains-root/
 [extra 302 redirect]: https://news.ycombinator.com/item?id=7738293
+
+## TODO: Monitoring/alerting [#78](https://github.com/cben/mathdown/issues/78)
+
+Extremely rudimentary monitoring at
+
+- Pingdom: [private](https://my.pingdom.com/dashboard/checks) — public summary at http://stats.pingdom.com/imb1lncuugx2
+  Only checks that https://mathdown.net/ responds.
+
+- UptimeRobot: [private](https://uptimerobot.com/dashboard).
+  Checks http://mathdown.net, https://mathdown.net, https://cben.github.io/mathdown/ respond.
+  I paused checks of https://mathdown.herokuapp.com to avoid waking it up and wasting Heroku resources.
+
+If the server is down I will get mails, but I'm not tracking server-side load/error, especially on RHcloud.
+
+My Firebase usage graph: https://mathdown.firebaseio.com/?page=Analytics
+Firebase uptime: http://status.firebase.com/ (as of May 2015 my data is on [s-dal5-nss-33](http://status.firebase.com/1502938) but could move).
