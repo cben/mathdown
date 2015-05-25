@@ -1,4 +1,11 @@
-#header { font-size: 200%; }
+#header {
+  font-size: 200%;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  /* Vertically center, if we're lucky to fit. */
+  line-height: 3ex;
+  height: 3ex;
+}
+
 #logo {
   font-size: 50%;  /* Fit 2-line math within single-line header */
   color: black; text-decoration: none;  /* Don't look like a link */
@@ -7,7 +14,7 @@
 .warning { color: orange; }
 .call_to_action {
   font-weight: bold;
-  font-size: inherit; /* avoid browser <button> small font */
+  font-size: inherit; font-family: inherit; /* avoid parts of browser <button> styling */
   text-decoration: none;
   /*color: black; background-color: springgreen;
   padding: 0 0.5em; border-radius: 0.5ex; border-style: outset;*/
