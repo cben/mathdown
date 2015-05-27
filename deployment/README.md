@@ -26,6 +26,8 @@ Deployments history not exposed in UI, can be recovered from reflog:
 
     rhc ssh mathdown 'cd git/mathdown.git; git log --walk-reflogs master --date=local --pretty=short'
 
+**Do not interrupt git push**.  Once I did that and the app was not updated, one of the gears stayed down (haproxy showed "MAINT" state) but git itself was up to date so repeating git push was a no-op.
+
 I'm on the Bronze plan (requires credit card but starts at $0), which allows me: no idling, custom domain TLS, paying several $/mo for [more quota][], option to scale beyond the 3 free machines ("gears").
 
 [more quota]: https://github.com/cben/mathdown/issues/73
