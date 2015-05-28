@@ -122,65 +122,69 @@ CodeMirror.defineMode("gfm_header_line_classes", function(cmConfig, modeCfg) {
 CodeMirror.keyMap["default"]["Tab"] = "indentMore";
 CodeMirror.keyMap["default"]["Shift-Tab"] = "indentLess";
 
-var editor = CodeMirror.fromTextArea(document.getElementById("code"),
-                                     {foldGutter: true,
-                                      gutters: ["CodeMirror-foldgutter"],
-                                      indentUnit: 4,
-                                      lineNumbers: false,
-                                      lineWrapping: true,
-                                      mode: "gfm_header_line_classes",
-                                      showLeadingSpace: true,
-                                      direction: docDirection});
-
-// Indent soft-wrapped lines.  Based on CodeMirror/demo/indentwrap.html.
-var leadingSpaceListBulletsQuotes = /^\s*([*+-]\s+|\d+\.\s+|>\s*)*/;
-editor.on("renderLine", function(cm, line, elt) {
-  // Show continued list/qoute lines aligned to start of text rather
-  // than first non-space char.  MINOR BUG: also does this inside
-  // literal blocks.
-  // Would like to measure real sizes of spans styled
-  // /leadingspace|formatting-list|formatting-quote/, but can't do
-  // that without inserting them into the DOM.  So count chars instead.
-  var leading = (leadingSpaceListBulletsQuotes.exec(line.text) || [""])[0];
-  var off = CodeMirror.countColumn(leading, leading.length, cm.getOption("tabSize"));
-  // Using "ex" is a bit better than cm.defaultCharWidth() — it picks up
-  // increased font if applied to whole line, i.e. in header lines
-  // (not that it makes sense to indent headers).
-  // However any resemblance of 1ex to the width of one monospace char
-  // is purely coincidental (1em is way too wide in practice).
-  elt.style.textIndent = "-" + off + "ex";
-
-  // We need to know line direction to set paddingLeft or paddingRight appropriately.
-  // TODO: CM should expose getDirection().
-  var lineDirection = elt.style.direction || cm.getDoc().direction;
-  // TODO: CM doesn't re-run this hook when line direction changed :-(
-  // => KLUDGE: set both paddings!  In fact this is a good for mixed-direction docs anyway -
-  //    long lines of opposite direction won't visually break indentation structrure.
-  //    But I'm afraid it may be a nuisance on pure-LTR docs, so as a compromise
-  //    I set only paddingLeft on LTR lines in LTR docs.
-  if (docDirection === "rtl" || lineDirection === "rtl") {
-    elt.style.paddingRight = off + "ex";
-    elt.style.paddingLeft = off + "ex";
-  } else {
-    elt.style.paddingLeft = off + "ex";
-  }
-});
-editor.refresh();
-
-// Keep title and url #hash part in sync with first line of document.
-function updateTitle() {
-  var text = editor.getLine(0); // TODO: find first # Title line?
-  text = text.replace(/^\s*#+\s*/, "");
-  document.title = text + " | mathdown";
-  window.location.hash = text.replace(/\W+/g, "-").replace(/^-/, "").replace(/-$/, "");
+function createEditor(docDirection) {
+  return CodeMirror.fromTextArea(document.getElementById("code"),
+                                 {foldGutter: true,
+                                  gutters: ["CodeMirror-foldgutter"],
+                                  indentUnit: 4,
+                                  lineNumbers: false,
+                                  lineWrapping: true,
+                                  mode: "gfm_header_line_classes",
+                                  showLeadingSpace: true,
+                                  direction: docDirection});
 }
-CodeMirror.on(editor.getDoc(), "change", function(doc, changeObj) {
-  if (changeObj.from.line === 0) {
-    updateTitle();
-  }
-});
 
-CodeMirror.hookMath(editor, MathJax);
+function setupEditor(editor) {
+  // Indent soft-wrapped lines.  Based on CodeMirror/demo/indentwrap.html.
+  var leadingSpaceListBulletsQuotes = /^\s*([*+-]\s+|\d+\.\s+|>\s*)*/;
+  editor.on("renderLine", function(cm, line, elt) {
+    // Show continued list/qoute lines aligned to start of text rather
+    // than first non-space char.  MINOR BUG: also does this inside
+    // literal blocks.
+    // Would like to measure real sizes of spans styled
+    // /leadingspace|formatting-list|formatting-quote/, but can't do
+    // that without inserting them into the DOM.  So count chars instead.
+    var leading = (leadingSpaceListBulletsQuotes.exec(line.text) || [""])[0];
+    var off = CodeMirror.countColumn(leading, leading.length, cm.getOption("tabSize"));
+    // Using "ex" is a bit better than cm.defaultCharWidth() — it picks up
+    // increased font if applied to whole line, i.e. in header lines
+    // (not that it makes sense to indent headers).
+    // However any resemblance of 1ex to the width of one monospace char
+    // is purely coincidental (1em is way too wide in practice).
+    elt.style.textIndent = "-" + off + "ex";
+
+    // We need to know line direction to set paddingLeft or paddingRight appropriately.
+    // TODO: CM should expose getDirection().
+    var lineDirection = elt.style.direction || cm.getDoc().direction;
+    // TODO: CM doesn't re-run this hook when line direction changed :-(
+    // => KLUDGE: set both paddings!  In fact this is a good for mixed-direction docs anyway -
+    //    long lines of opposite direction won't visually break indentation structrure.
+    //    But I'm afraid it may be a nuisance on pure-LTR docs, so as a compromise
+    //    I set only paddingLeft on LTR lines in LTR docs.
+    if (docDirection === "rtl" || lineDirection === "rtl") {
+      elt.style.paddingRight = off + "ex";
+      elt.style.paddingLeft = off + "ex";
+    } else {
+      elt.style.paddingLeft = off + "ex";
+    }
+  });
+  editor.refresh();
+
+  // Keep title and url #hash part in sync with first line of document.
+  function updateTitle() {
+    var text = editor.getLine(0); // TODO: find first # Title line?
+    text = text.replace(/^\s*#+\s*/, "");
+    document.title = text + " | mathdown";
+    window.location.hash = text.replace(/\W+/g, "-").replace(/^-/, "").replace(/-$/, "");
+  }
+  CodeMirror.on(editor.getDoc(), "change", function(doc, changeObj) {
+    if (changeObj.from.line === 0) {
+      updateTitle();
+    }
+  });
+
+  CodeMirror.hookMath(editor, MathJax);
+}
 
 // Firepad
 // =======
@@ -230,8 +234,8 @@ function setupFirepad(editor, firepad) {
   })
 }
 
-// URL parameters
-// ==============
+// URL parameters => load document
+// ===============================
 
 function locationQueryParams() {
   /* If more is needed, use https://github.com/medialize/URI.js */
@@ -260,6 +264,9 @@ if(doc === undefined) {
   var firepadsRef = rootRef.child("firepads");
   var firepadRef = firepadsRef.child(doc);
   log("firebase ref:", firepadRef.toString());
+
+  var editor = createEditor(docDirection);
+  setupEditor(editor);
 
   var firepad = Firepad.fromCodeMirror(firepadRef, editor);
   setupFirepad(editor, firepad);
