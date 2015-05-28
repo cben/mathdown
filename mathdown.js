@@ -1,7 +1,5 @@
 // Main code running in every mathdown document (all shown via index.html).
 
-(function() {  // immediately executed.  TODO: this scoping makes debugging harder.
-
 "use strict";
 
 // Logging
@@ -75,37 +73,6 @@ function newPad() {
   window.open("?doc=" + doc, "_blank");
 }
 window.newPad = newPad;
-
-// URL parameters
-// ==============
-
-function locationQueryParams() {
-  /* If more is needed, use https://github.com/medialize/URI.js */
-  var queryParts = window.location.search.replace(/^\?/g, "").split("&");
-  var params = {};
-  for(var i = 0; i < queryParts.length; i++) {
-    var keyval = queryParts[i].split("=");
-    params[decodeURIComponent(keyval[0])] = decodeURIComponent(keyval[1] || "");
-  }
-  return params;
-}
-
-var queryParams = locationQueryParams();
-var doc = queryParams["doc"];
-// EXPERIMENTAL KLUDGE param: for now we support dir=rtl to make RTL docs (somewhat) practical
-// (but don't expose it in the GUI).
-// In the future it might be ignored - once we autodetect each line's base direction (#23).
-// Also, document direction is semantic, it makes more sense to store it in firebase?
-var docDirection = (queryParams["dir"] === "rtl" ? "rtl" : "ltr");
-
-if(doc === undefined) {
-    // TODO: this should be a server-side redirect (when we have a server).
-    window.location.search = "?doc=about";
-    return;
-}
-var firepadsRef = new Firebase("https://mathdown.firebaseIO.com/firepads");
-var firepadRef = firepadsRef.child(doc);
-log("firebase ref:", firepadRef.toString());
 
 // Editor
 // ======
@@ -218,46 +185,82 @@ CodeMirror.hookMath(editor, MathJax);
 // Firepad
 // =======
 
-var firepad = Firepad.fromCodeMirror(firepadRef, editor);
-firepad.on("ready", function() {
-  setStatus("", "done");
+function setupFirepad(editor, firepad) {
+  firepad.on("ready", function() {
+    setStatus("", "done");
 
-  if (firepad.isHistoryEmpty()) {
-    firepad.setText(
-      "# Untitled\n" +
-        "Bookmark this page — the random-looking address is the only way to access this document!\n" +
-        "Share the link to collaborate.\n" +
-        "Edits are saved in real time.\n" +
-        "\n" +
-        "Use Markdown for document structure and $\\LaTeX$ math syntax (see **Help** link above).\n" +
-        "To edit formulas just enter them with arrow keys.\n" +
-        // HACK: Pad the editor with a few empty lines so it looks
-        // more inviting to write in.
-        "\n" +
-        "\n"
-    );
-  } else {
-    // Keeping cursor at start (hopefully) reduces CM redrawing as
-    // syntax highlight and math rendering changes line heights.
-    editor.setCursor({line: 0, ch: 0});
-  }
+    if (firepad.isHistoryEmpty()) {
+      firepad.setText(
+        "# Untitled\n" +
+          "Bookmark this page — the random-looking address is the only way to access this document!\n" +
+          "Share the link to collaborate.\n" +
+          "Edits are saved in real time.\n" +
+          "\n" +
+          "Use Markdown for document structure and $\\LaTeX$ math syntax (see **Help** link above).\n" +
+          "To edit formulas just enter them with arrow keys.\n" +
+          // HACK: Pad the editor with a few empty lines so it looks
+          // more inviting to write in.
+          "\n" +
+          "\n"
+      );
+    } else {
+      // Keeping cursor at start (hopefully) reduces CM redrawing as
+      // syntax highlight and math rendering changes line heights.
+      editor.setCursor({line: 0, ch: 0});
+    }
 
-  // CM's autofocus option doesn't work with Firepad - seems focused
-  // but can't type.  Focusing here after Firepad init works.
-  editor.focus();
+    // CM's autofocus option doesn't work with Firepad - seems focused
+    // but can't type.  Focusing here after Firepad init works.
+    editor.focus();
 
-  // Queuing this allows text to appear before math.
-  MathJax.Hub.Queue(function() {
-    editor.renderAllMath();
+    // Queuing this allows text to appear before math.
+    MathJax.Hub.Queue(function() {
+      editor.renderAllMath();
+    });
   });
-});
 
-firepad.on("synced", function(isSynced) {
-  if(!isSynced) {
-    setStatus("info", "Unsaved!");
-  } else {
-    setStatus("", "saved");
+  //  firepadRef.child("
+  firepad.on("synced", function(isSynced) {
+    log("synced", isSynced);
+    if(!isSynced) {
+      setStatus("info", "Unsaved!");
+    } else {
+      setStatus("", "saved");
+    }
+  })
+}
+
+// URL parameters
+// ==============
+
+function locationQueryParams() {
+  /* If more is needed, use https://github.com/medialize/URI.js */
+  var queryParts = window.location.search.replace(/^\?/g, "").split("&");
+  var params = {};
+  for(var i = 0; i < queryParts.length; i++) {
+    var keyval = queryParts[i].split("=");
+    params[decodeURIComponent(keyval[0])] = decodeURIComponent(keyval[1] || "");
   }
-})
+  return params;
+}
 
-})()
+var queryParams = locationQueryParams();
+var doc = queryParams["doc"];
+// EXPERIMENTAL KLUDGE param: for now we support dir=rtl to make RTL docs (somewhat) practical
+// (but don't expose it in the GUI).
+// In the future it might be ignored - once we autodetect each line's base direction (#23).
+// Also, document direction is semantic, it makes more sense to store it in firebase?
+var docDirection = (queryParams["dir"] === "rtl" ? "rtl" : "ltr");
+
+if(doc === undefined) {
+    // TODO: this should be a server-side redirect (when we have a server).
+    window.location.search = "?doc=about";
+} else {
+  var rootRef = new Firebase("https://mathdown.firebaseIO.com/");
+  var firepadsRef = rootRef.child("firepads");
+  var firepadRef = firepadsRef.child(doc);
+  log("firebase ref:", firepadRef.toString());
+
+  var firepad = Firepad.fromCodeMirror(firepadRef, editor);
+  setupFirepad(editor, firepad);
+}
