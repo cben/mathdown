@@ -72,7 +72,7 @@ function newPad() {
   var doc = randomBase62(11);  // 62**11 ~= 2**65.
   window.open("?doc=" + doc, "_blank");
 }
-window.newPad = newPad;
+document.getElementById("new").onclick = newPad;
 
 // Editor
 // ======
