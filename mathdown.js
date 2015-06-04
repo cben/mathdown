@@ -222,16 +222,67 @@ function setupFirepad(editor, firepad) {
       editor.renderAllMath();
     });
   });
+}
+
+function timestampMs() {
+  return new Date().getTime();
+}
 
   //  firepadRef.child("
+function setupUnsavedWarning(connectedRef, editor, firepad, firepadRef) {
+  var loaded = false, connected = false, believedSynced = true, testedSynced = true;
+  var testSyncIntervalMs = 1*1000;
+
+  firepad.on("ready", function() {
+    loaded = true;
+    updateStatus();
+  });
+  connectedRef.on("value", function(snapshot) {
+    connected = snapshot.val();
+    updateStatus();
+  });
   firepad.on("synced", function(isSynced) {
-    log("synced", isSynced);
-    if(!isSynced) {
-      setStatus("info", "Unsaved!");
-    } else {
-      setStatus("", "saved");
+    believedSynced = isSynced;
+    updateStatus();
+  });
+  setInterval(function () {
+    if(connected) {             // no point computing
+      var headless = new Firepad.Headless(firepadRef);
+      headless.getText(function(fetchedText) {
+        var editorText = editor.getValue();
+        // This is not reliable during typing (by the time we
+        // reconstruct from firebase editor text might have changed),
+        // as well as during *incoming* changes from other editor.
+        testedSynced = (fetchedText === editorText);
+        updateStatus();
+      });
     }
-  })
+  }, testSyncIntervalMs);
+
+  function updateStatus() {
+    log("loaded = ", loaded, "connected =", connected,
+        "believedSynced = ", believedSynced, "testedSynced =", testedSynced);
+    if(!loaded) {
+      return;  // don't disturb "loading..." message (there can be no unsaved state yet).  TODO: OFFLINE TYPING?
+    }
+    if(connected) {
+      if(believedSynced) {
+        if(testedSynced) {
+          setStatus("", "saved");
+        } else {
+          setStatus("warning", "Online but unsaved — BUG?");
+        }
+      } else {
+        setStatus("info", "Unsaved!");
+      }
+    } else {  // not connected.
+      if(believedSynced) {
+        setStatus("info", "Offline");
+      } else {
+        setStatus("warning", "Offline — Unsaved changes!");
+      }
+    }
+  }
 }
 
 // URL parameters => load document
@@ -261,8 +312,7 @@ if(doc === undefined) {
     window.location.search = "?doc=about";
 } else {
   var rootRef = new Firebase("https://mathdown.firebaseIO.com/");
-  var firepadsRef = rootRef.child("firepads");
-  var firepadRef = firepadsRef.child(doc);
+  var firepadRef = rootRef.child("firepads").child(doc);
   log("firebase ref:", firepadRef.toString());
 
   var editor = createEditor(docDirection);
@@ -270,4 +320,7 @@ if(doc === undefined) {
 
   var firepad = Firepad.fromCodeMirror(firepadRef, editor);
   setupFirepad(editor, firepad);
+
+  var connectedRef = rootRef.child(".info/connected");
+  setupUnsavedWarning(connectedRef, editor, firepad, firepadRef);
 }
