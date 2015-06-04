@@ -44,6 +44,12 @@
   -webkit-transition: all 2s cubic-bezier(0,.3,.85,0);
   transition: all 2s cubic-bezier(0,.3,.85,0);  /* slow appear */
 }
+#status.warning {
+  color: black; background-color: orange;
+  opacity: 0.8; visibility: visible;
+  -webkit-transition: all 2s cubic-bezier(0,.3,.85,0);
+  transition: all 2s cubic-bezier(0,.3,.85,0);  /* slow appear */
+}
 
 @media print { #header { display: none; } }
 
