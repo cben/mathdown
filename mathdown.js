@@ -182,8 +182,6 @@ function setupEditor(editor) {
       updateTitle();
     }
   });
-
-  CodeMirror.hookMath(editor, MathJax);
 }
 
 // Firepad
@@ -219,6 +217,7 @@ function setupFirepad(editor, firepad) {
 
     // Queuing this allows text to appear before math.
     MathJax.Hub.Queue(function() {
+      CodeMirror.hookMath(editor, MathJax);
       editor.renderAllMath();
     });
   });
