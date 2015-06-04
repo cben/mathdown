@@ -229,11 +229,13 @@ function timestampMs() {
 }
 
   //  firepadRef.child("
-function setupUnsavedWarning(connectedRef, editor, firepad, firepadRef) {
+function setupUnsavedWarning(connectedRef, editor, firepad, headless) {
   var loaded = false, connected = false, believedSynced = true, testedSynced = true;
   var testSyncIntervalMs = 1*1000;
 
   firepad.on("ready", function() {
+    // before this we don't want to show messages, but we do run the
+    // callbacks to end up with correct believedSynced etc.
     loaded = true;
     updateStatus();
   });
@@ -246,8 +248,7 @@ function setupUnsavedWarning(connectedRef, editor, firepad, firepadRef) {
     updateStatus();
   });
   setInterval(function () {
-    if(connected) {             // no point computing
-      var headless = new Firepad.Headless(firepadRef);
+    if(connected) {             // meaningless if offline
       headless.getText(function(fetchedText) {
         var editorText = editor.getValue();
         // This is not reliable during typing (by the time we
@@ -322,5 +323,6 @@ if(doc === undefined) {
   setupFirepad(editor, firepad);
 
   var connectedRef = rootRef.child(".info/connected");
-  setupUnsavedWarning(connectedRef, editor, firepad, firepadRef);
+  var headless = new Firepad.Headless(firepadRef);
+  setupUnsavedWarning(connectedRef, editor, firepad, headless);
 }
