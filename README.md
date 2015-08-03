@@ -1,5 +1,5 @@
-https://mathdown.net
-====================
+https://www.mathdown.net
+========================
 
 Collaborative markdown with math.  Main features:
 
@@ -65,7 +65,7 @@ You can't even read documents without JavaScript; reading won't be hard to fix (
 The only cookies I'm aware of:
 
   - `GEAR` session cookie set by OpenShift hosting (I presume for server stickiness, which I don't actually need).
-  - `mjx.menu` cookie set for a year(?) if you manually change MathJax settings. 
+  - `mjx.menu` cookie set for a year(?) if you manually change MathJax settings.
 
 I'm not sure Firebase never sets cookies.  Things will change once I implement login (#50).
 

@@ -1,7 +1,7 @@
 # Deployment — details & procedures
 
 This app *mostly* works as static pages, and I intend to keep it this way.
-(To run simply open index.html.  See top-level README.md.)
+(To run simply open index.html.  Or fork on github and immediately use your gh-pages branch at https://YOUR-GITHUB-USERNAME.github.io/mathdown/.  See top-level README.md.)
 
 But for HTTPS on custom domain and some future features, I'm switching the main hosting to RHcloud.
 Run as a dynamic app (`server.coffee`):
@@ -10,8 +10,6 @@ Run as a dynamic app (`server.coffee`):
     env PORT=8001 npm start  # Prints URL you can click
 
 (you can choose any port of course.  <kbd>Ctrl+C</kbd> when done.)
-
-It should also be easy to run on Heroku (works as of writing this, not sure if I'll test this regularly).
 
 ## RHcloud (aka Openshift)
 
@@ -53,6 +51,9 @@ Other gears are similarly accessible by direct SSH but you need to check the hos
 Performance: TODO
 
 Haproxy status at: http://mathdown-cben.rhcloud.com/haproxy-status/ but I have little idea how to read that...
+
+Haproxy config is at `haproxy/conf/haproxy.cfg` under home dir on first gear.
+Source seems to be at https://github.com/openshift/origin-server/blob/master/cartridges/openshift-origin-cartridge-haproxy/versions/1.4/configuration/haproxy.cfg.erb
 
 Valuable Openshift tips: https://stackoverflow.com/questions/11730590/what-are-some-of-the-tricks-to-using-openshift
 
@@ -118,14 +119,16 @@ Configuring the domains and certs on RHcloud can be repeated with `tls-certs-sta
 
 mathdown.net and mathdown.com domains are registered at https://www.gandi.net/ (expire 2016 Sep 10).
 
-Using an apex domain (with www. subdomain) turns out to be a pain, but I'm sticking with it for now.
+Using an apex domain (with www. subdomain) turns out to be a pain, ~~but I'm sticking with it for now~~.
 
-  - Can't do normal CNAME; [some DNS providers][] can simulate it, notably [Cloudflare claim to have done it well][] (and free unlike dnssimple.
+  - Can't do normal CNAME; [some DNS providers][] can simulate it, notably [Cloudflare claim to have done it well][] (and free unlike dnssimple).
   - Without CNAME, Github Pages do provide fixed IPs that are slower ([extra 302 redirect][]).
   - Without CNAME, Heroku can't work at all!
 
 That's why DNS is served by Cloudflare (free plan).
 mathdown.net, www.mathdown.net, mathdown.com, www.mathdown.com all point at RHcloud.
+
+**Alas, Cloudflare serves the apex mathdown.{net,com} with a TTL of 7 days**, which means a long outage for some users when the server IP changes [https://github.com/cben/mathdown/issues/104].  So I'm switching back to `www.mathdown.net` as the primary domain.
 
 Giving them control of my DNS does give them the ability to take over my site, acting as man-in-the-middle (as a CDN wants to do), including minting certificates for my domain.
 Technically that's true for anyone serving my DNS, and I trust them.  See discussion at https://github.com/cben/mathdown/issues/6#issuecomment-74223153.
@@ -141,11 +144,10 @@ Anyway I'm currently keeping Cloudflare's CDN abilities disabled (grey "bypass" 
 Extremely rudimentary monitoring at
 
 - Pingdom: [private](https://my.pingdom.com/dashboard/checks) — public summary at http://stats.pingdom.com/imb1lncuugx2
-  Only checks that https://mathdown.net/ responds.
+  Only checks that https://mathdown.net/ responds & includes the string "MathJax".
 
 - UptimeRobot: [private](https://uptimerobot.com/dashboard).
-  Checks http://mathdown.net, https://mathdown.net, https://cben.github.io/mathdown/ respond.
-  I paused checks of https://mathdown.herokuapp.com to avoid waking it up and wasting Heroku resources.
+  Checks https://{www.,}mathdown.{net,com}, http://mathdown.net, and directly accessed rhcloud, heroku, gh-pages respond.
 
 If the server is down I will get mails, but I'm not tracking server-side load/error, especially on RHcloud.
 
