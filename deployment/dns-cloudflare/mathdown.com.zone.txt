@@ -1,5 +1,6 @@
+;; 
 ;; Domain:     mathdown.com
-;; Exported:   2015-02-15 14:12:33
+;; Exported:   2015-08-03 10:23:18
 ;; 
 ;; This file is intended for use for informational and archival
 ;; purposes ONLY and MUST be edited before use on a production
@@ -22,10 +23,9 @@
 ;; DNS software.
 ;; 
 ;;     Use at your own risk.
-;; 
-$ORIGIN mathdown.com.
+$ORIGIN .
 @	3600	IN	SOA	mathdown.com.	root.mathdown.com.	(
-		2015021501	; serial
+		2019026399	; serial
 		7200		; refresh
 		3600		; retry
 		86400		; expire
@@ -41,7 +41,6 @@ mathdown.com.	300	IN	MX	50	fb.mail.gandi.net.
 mathdown.com.	300	IN	MX	10	spool.mail.gandi.net.
 
 ;; CNAME Records
-www.mathdown.com.	300	IN	CNAME	mathdown-cben.rhcloud.com.
-3fb21ea8170f3c41c046913dd313925e.mathdown.com.	300	IN	CNAME	714313f93ea1bfae46a9bbc7409511b35b26cb89.comodoca.com.
 mathdown.com.	300	IN	CNAME	mathdown-cben.rhcloud.com.
 *.mathdown.com.	300	IN	CNAME	webredir.vip.gandi.net.
+www.mathdown.com.	300	IN	CNAME	mathdown-cben.rhcloud.com.
