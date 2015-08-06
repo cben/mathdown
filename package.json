@@ -3,13 +3,13 @@
   "version": "0.0.0",
   "description": "http://mathdown.net",
   "dependencies": {
-    "coffee-script": "*",
-    "st": "*"
+    "chalk": "^1.1.0",
+    "st": "^0.5.5",
+    "wd": "^0.3.12"
   },
   "devDependencies": {
-    "chalk": "*",
-    "sauce-tunnel": "*",
-    "wd": "*"
+    "coffee-script": "^1.9.3",
+    "sauce-tunnel": "^2.2.3"
   },
   "main": "server.coffee",
   "scripts": {
