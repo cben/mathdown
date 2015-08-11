@@ -109,32 +109,40 @@ I've tried several free services for this, and currently prefer Travis:
 
 The main deployment runs on https://mathdown-cben.rhcloud.com/ (Openshift hosting operated by RedHat), and mathdown.net points to it.  The dynamic server has also been tested on Heroku.  See [deployment/](deployment/README.md) subdirectory for details.
 
-This app *mostly* works as static pages, and I intend to keep it this way.
+**However you run it, you can open the same document ids (`doc=...`) and real-time collaboration will work!**
 
-  * You can run locally - just open `index.html`.
+Quick ways to run:
 
-  * Github Pages serves the gh-pages branch at https://cben.github.io/mathdown.
+[![Launch on OpenShift](https://launch-shifter.rhcloud.com/launch/LAUNCH ON.svg)](https://openshift.redhat.com/app/console/application_type/custom?&cartridges[]=nodejs-0.10&initial_git_url=https://github.com/cben/mathdown.git&initial_git_branch=gh-pages&name=mathdown) — make sure to replace with your fork & branch as needed.  Grab a tea - takes up to 10 minutes.  (Remember it'll not auto-update, it'll be up to you to git push newer versions...)
 
-      * If you fork this repo, you can immediately use your version at https://YOUR-GITHUB-USERNAME.github.io/mathdown/!
-        Or maybe not immediately but [after you push something](http://stackoverflow.com/q/8587321/239657).
-
-        (For other branches/commits, there is no trivial solution - rawgit.com doesn't currently support submodules.)
-
-        The easiest way to run (and share) uncommitted modifications is probably Cloud 9.  TODO: test, details.
-
-As a dynamic app (`server.coffee`):
+Run local server (`server.coffee`):
 
     npm install  # once
     env PORT=8001 npm start  # Prints URL you can click
 
 (you can choose any port of course.  <kbd>Ctrl+C</kbd> when done.)
 
+This app *mostly* works as pure static pages, and I intend to keep it this way.
+
+  * From a checkout, **just open `index.html` in your browser**.
+
+  * Github Pages serves the gh-pages branch at https://cben.github.io/mathdown.
+    Note that Github Pages is **insecure** (the HTTPS encryption is [not end-to-end][]),
+    so your doc IDs could be snooped giving full read & edit access to your docs.
+
+	[not end-to-end]: https://konklone.com/post/github-pages-now-sorta-supports-https-so-use-it#comment-54d648a969702d6be8110a00
+
+      * If you fork this repo, you can immediately use your version at https://YOUR-GITHUB-USERNAME.github.io/mathdown/!
+        Or maybe not immediately but [after you push something](http://stackoverflow.com/q/8587321/239657).  See above how it's **insecure**.
+
+  * For other branches/commits, there is no trivial solution - rawgit.com would be great but doesn't currently support submodules.
+
+  * The easiest way to run (and share) uncommitted modifications is probably Cloud 9.  TODO: test, details.
+
 The only benefits the dynamic server is going to bring (not implemented yet) will be:
 
  1. Including the document text in the HTTP response for search engines (#7).
  2. Prettier `mathdown.net/foobar` instead of `mathdown.net/?doc=foobar` URLs (#59).
-
-**However you run it, you can open the same document ids and real-time collaboration will work!**
 
 ----
 
