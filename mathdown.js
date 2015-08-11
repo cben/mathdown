@@ -8,7 +8,7 @@
 // Prevent errors on IE (but do strive to log somehow if IE Dev Tools are open).
 function log() {
   try {
-    if(console.log.apply) {
+    if (console.log.apply) {
       console.log.apply(console, arguments);
     } else {
       /* IE's console.log doesn't have .apply, .call, or bind. */
@@ -22,7 +22,7 @@ log("MJ:", MathJax.Message.Log());
 var origFilterText = MathJax.Message.filterText;
 MathJax.Message.filterText = function(text, n, msgType) {
   // Exclude non-informative "Processing/Typesetting math: 0% / 100%".
-  if(msgType !== "ProcessMath" && msgType !== "TypesetMath") {
+  if (msgType !== "ProcessMath" && msgType !== "TypesetMath") {
     log("MJ:", text, "[" + msgType + "]");
   }
   return origFilterText(text, n, msgType);
@@ -34,7 +34,7 @@ var statusElement = document.getElementById("status");
 function setStatus(className, text) {
   statusElement.innerHTML = "";
   statusElement.className = className;
-  if(text) {
+  if (text) {
     statusElement.appendChild(document.createTextNode(text));
   }
 }
@@ -122,16 +122,19 @@ CodeMirror.defineMode("gfm_header_line_classes", function(cmConfig, modeCfg) {
 CodeMirror.keyMap["default"]["Tab"] = "indentMore";
 CodeMirror.keyMap["default"]["Shift-Tab"] = "indentLess";
 
-function createEditor(docDirection) {
-  return CodeMirror.fromTextArea(document.getElementById("code"),
-                                 {foldGutter: true,
-                                  gutters: ["CodeMirror-foldgutter"],
-                                  indentUnit: 4,
-                                  lineNumbers: false,
-                                  lineWrapping: true,
-                                  mode: "gfm_header_line_classes",
-                                  showLeadingSpace: true,
-                                  direction: docDirection});
+function createEditor(docDirection, optionOverides) {
+  var options = {foldGutter: true,
+		 gutters: ["CodeMirror-foldgutter"],
+		 indentUnit: 4,
+		 lineNumbers: false,
+		 lineWrapping: true,
+		 mode: "gfm_header_line_classes",
+		 showLeadingSpace: true,
+		 direction: docDirection};
+  for (var key in optionOverides) {
+    options[key] = optionOverides[key];
+  }
+  return CodeMirror.fromTextArea(document.getElementById("code"), options);
 }
 
 function setupEditor(editor) {
@@ -225,7 +228,7 @@ function setupFirepad(editor, firepad) {
   //  firepadRef.child("
   firepad.on("synced", function(isSynced) {
     log("synced", isSynced);
-    if(!isSynced) {
+    if (!isSynced) {
       setStatus("info", "Unsaved!");
     } else {
       setStatus("", "saved");
@@ -249,24 +252,50 @@ function locationQueryParams() {
 
 var queryParams = locationQueryParams();
 var doc = queryParams["doc"];
+var view = queryParams["view"];
 // EXPERIMENTAL KLUDGE param: for now we support dir=rtl to make RTL docs (somewhat) practical
 // (but don't expose it in the GUI).
 // In the future it might be ignored - once we autodetect each line's base direction (#23).
 // Also, document direction is semantic, it makes more sense to store it in firebase?
 var docDirection = (queryParams["dir"] === "rtl" ? "rtl" : "ltr");
 
-if(doc === undefined) {
-    // TODO: this should be a server-side redirect (when we have a server).
-    window.location.search = "?doc=about";
-} else {
+if (doc !== undefined) {
   var rootRef = new Firebase("https://mathdown.firebaseIO.com/");
   var firepadsRef = rootRef.child("firepads");
   var firepadRef = firepadsRef.child(doc);
   log("firebase ref:", firepadRef.toString());
 
-  var editor = createEditor(docDirection);
+  var editor = createEditor(docDirection, {});
   setupEditor(editor);
 
   var firepad = Firepad.fromCodeMirror(firepadRef, editor);
   setupFirepad(editor, firepad);
+} else if (view !== undefined) {
+  var editor = createEditor(docDirection, {readOnly: true});
+  setupEditor(editor);
+
+  var req = new XMLHttpRequest();
+  req.onreadystatechange = function() {
+    log("view=... loading:", req.readyState, req.status);
+    if (req.readyState === 4) {
+      if (req.status === 200) {
+	editor.setValue(req.responseText);
+	setStatus("", "done");
+      } else {
+	editor.setValue("# *ERROR*: " + req.status + " " + req.statusText);
+	setStatus("warning", "Loading error.");
+      }
+
+      // With file://, it's anybody's guess if this works.
+      // Chrome refuses (and req.send() throws NetworkError.
+      // Firefox works, but doesn't know the content-type, so tries to parse response as x/html ("help.md: syntax error").  However if target doesn't exist, throws "NS_ERROR_DOM_BAD_URI: Access to restricted URI denied".
+    }
+  }
+  req.open('GET', view, true);  // TODO: constrain `view` against traversal?
+//  try {
+    req.send(null);
+//  } catch(err){}
+} else {
+  // TODO: this should be a server-side redirect (when we have a server).
+  window.location.search = "?doc=about";
 }
