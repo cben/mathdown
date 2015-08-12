@@ -119,21 +119,18 @@ Configuring the domains and certs on RHcloud can be repeated with `tls-certs-sta
 
 mathdown.net and mathdown.com domains are registered at https://www.gandi.net/ (expire 2016 Sep 10).
 
-Using an apex domain (with www. subdomain) turns out to be a pain, ~~but I'm sticking with it for now~~.
+Using an apex domain (with www. subdomain) turns out to be a pain, but I'm sticking with it for now(?).
 
   - Can't do normal CNAME; [some DNS providers][] can simulate it, notably [Cloudflare claim to have done it well][] (and free unlike dnssimple).
   - Without CNAME, Github Pages do provide fixed IPs that are slower ([extra 302 redirect][]).
   - Without CNAME, Heroku can't work at all!
 
-That's why DNS is served by Cloudflare (free plan).
+~~That's why DNS was served by Cloudflare (free plan, just DNS "bypassing" their CDN).~~
+**Alas, Cloudflare serves the apex mathdown.{net,com} with a TTL of 7 days**, which means a long outage for some users when the server IP changes [https://github.com/cben/mathdown/issues/104].
+I've switched to DNSimple as my DNS, with TTL of 10min.
 mathdown.net, www.mathdown.net, mathdown.com, www.mathdown.com all point at RHcloud.
 
-**Alas, Cloudflare serves the apex mathdown.{net,com} with a TTL of 7 days**, which means a long outage for some users when the server IP changes [https://github.com/cben/mathdown/issues/104].  So I'm switching back to `www.mathdown.net` as the primary domain.
-
-Giving them control of my DNS does give them the ability to take over my site, acting as man-in-the-middle (as a CDN wants to do), including minting certificates for my domain.
-Technically that's true for anyone serving my DNS, and I trust them.  See discussion at https://github.com/cben/mathdown/issues/6#issuecomment-74223153.
-
-Anyway I'm currently keeping Cloudflare's CDN abilities disabled (grey "bypass" icon).
+I also might switch back to `www.mathdown.net` as the primary domain?
 
 [some DNS providers]: https://devcenter.heroku.com/articles/custom-domains#root-domain
 [Cloudflare claim to have done it well]: https://blog.cloudflare.com/introducing-cname-flattening-rfc-compliant-cnames-at-a-domains-root/
