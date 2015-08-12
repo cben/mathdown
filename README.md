@@ -21,6 +21,10 @@ I'm using "CM" = CodeMirror, "MJ" = MathJax abbreviations a lot in the project.
 **Alpha quality – will eat your math, burn your bookmarks & expose your secrets.**
 I mean it.  See for example [#85](https://github.com/cben/mathdown/issues/4) — saving would sometimes be silently broken, for *half a year*!  I'm working to make it more robust (and tested) but for now, be careful.
 
+Issues:
+[![mathdown HuBoard](https://img.shields.io/github/issues/cben/mathdown.svg?label=mathdown%20(HuBoard))](https://huboard.com/cben/mathdown)
+[![CodeMirror-MathJax issues](https://img.shields.io/github/issues/cben/CodeMirror-MathJax.svg?label=CodeMirror-MathJax)](https://github.com/cben/CodeMirror-MathJax/issues)
+
 ## License
 
 My code is under [MIT License](LICENSE).
@@ -32,20 +36,20 @@ Dependencies:
   * My [CodeMirror-MathJax][] glue is also MIT.
   * The collaborative editor [Firepad] is MIT.  It calls firebase javascipt API.
   * Firebase is a **proprietary** service; their client-side javascipt API [firebase.js][] is also [proprietary](https://www.firebase.com/terms/terms-of-service.html), though apparently fine to distribute in practice — ([#4](https://github.com/cben/mathdown/issues/4)).
-    [firebase.js has been [accidentally MIT-licensed for a time](https://groups.google.com/forum/#!topic/firebase-talk/pAklVV3Whw8) but I've upgraded to newer versions so this doesn't apply.]
+    [firbease.js has been [accidentally MIT-licensed for a time](https://groups.google.com/forum/#!topic/firebase-talk/pAklVV3Whw8) but I've upgraded to newer versions so this doesn't apply.]
 
     I'm not including firebase.js directly but using it as a git submodule.
 
 ## Document hosting and privacy(?) on Firebase
 
-All user data is stored in Firebase.  [Their privacy policy](https://www.firebase.com/terms/privacy-policy.html).
+All user data is stored in Firebase, now owned by Google.  [Their privacy policy](https://www.firebase.com/terms/privacy-policy.html).
 Documents access (read AND edit) is by secret document id which is part of the url.  This is grossly unsecure unless using HTTPS.
 
 The downside is users can't really control their data.  Running a "self-hosted" copy of the site still leaves all data in the hands of Firebase.  See #4 for more discussion.
 
 The upside is all forks interoperate; you can change the design or tweak the editor and still access same documents.  E.g. https://mathdown.net/index.html?doc=demo and http://rhythmus.be/mathdown/index.html?doc=demo look different but access the same doc -- and real-time collaboration between them works!
 
-I'm so far on the [free Firebase plan](https://www.firebase.com/pricing.html) - 50 concurrent (not sure if 1:1 with users), 100 MB Data Storage (used more than half).  => Will need $49/mo plan as soon as I get non-negligible usage.
+I'm so far on the [free Firebase plan](https://www.firebase.com/pricing.html) - 50 concurrent (not sure if 1:1 with users), 100 MB Data Storage (used more than half).  => Will need 49USD/mo plan as soon as I get non-negligible usage.
 https://mathdown.firebaseio.com/?page=Analytics (only visible to me)
 
 ### Deletion is impossible
@@ -69,18 +73,36 @@ The only cookies I'm aware of:
 
 I'm not sure Firebase never sets cookies.  Things will change once I implement login (#50).
 
-## Git trivia
+## Installing dependencies
 
-After checking out, run this to materialize subdirs://
+[![Dependency Status](https://david-dm.org/cben/mathdown.svg)](https://david-dm.org/cben/mathdown)
+[![devDependency Status](https://david-dm.org/cben/mathdown/dev-status.svg)](https://david-dm.org/cben/mathdown#info=devDependencies)
 
-    git submodule update --init --recursive
+ 1. After checking out, run this to materialize client-side dependencies:
 
-Append ` --remote` to upgrade to newest versions of all submodules (need to commit afterwards if anything changed).  Known constraints on updating all deps:
+		git submodule update --init --recursive
 
-  * firepad only includes pre-built dist/firepad.js in tagged versions (after every release they strip it back).
-  * [CodeMirror-MathJax currently doesn't support MathJax 2.5](https://github.com/cben/CodeMirror-MathJax/issues/33).
+	Append ` --remote` to upgrade to newest versions of all submodules (need to commit afterwards if anything changed).  Known constraints on updating all deps:
 
-I'm directly working in `gh-pages` branch without a `master` branch.  GH Pages is no longer the primary hosting but it's still useful to test the static version works.
+	  * firepad only includes pre-built dist/firepad.js in tagged versions (after every release they strip it back).
+	  * [CodeMirror-MathJax currently doesn't support MathJax 2.5](https://github.com/cben/CodeMirror-MathJax/issues/33).
+
+	(I'm directly working in `gh-pages` branch without a `master` branch.  GH Pages automatically resolves https://... submodules.  It's no longer the primary hosting but it's still useful to test the static version works.)
+
+ 2. To install server-side dependencies (and devDependencies) listed in `package.json` run:
+
+        npm install
+
+	(But when deploying to RHcloud or Heroku, npm install might run in `--production` mode and devDependencies won't be available.)
+
+	To see whether any updates are needed/possible, run `npm outdated`.  To update run:
+
+		npm update --save
+		npm shrinkwrap
+
+    Then commit the new `package.json` and `npm-shrinkwrap.json`.
+	TODO: find way to use same **node.js version** in dev and prod?
+
 
 ## Test(s)
 
