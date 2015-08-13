@@ -1,10 +1,10 @@
 $ORIGIN mathdown.net.
 $TTL 1h
-mathdown.net. 3600 IN SOA ns1.dnsimple.com. admin.dnsimple.com. 1439404336 86400 7200 604800 300
+mathdown.net. 3600 IN SOA ns1.dnsimple.com. admin.dnsimple.com. 1439404341 86400 7200 604800 300
 mathdown.net. 3600 IN NS ns1.dnsimple.com.
 mathdown.net. 3600 IN NS ns2.dnsimple.com.
 mathdown.net. 3600 IN NS ns3.dnsimple.com.
 mathdown.net. 3600 IN NS ns4.dnsimple.com.
-; mathdown.net. 600 IN ALIAS mathdown-cben.rhcloud.com.
-mathdown.net. 600 IN TXT ALIAS for mathdown-cben.rhcloud.com
-www.mathdown.net. 600 IN CNAME mathdown-cben.rhcloud.com.
+; mathdown.net. 60 IN ALIAS osaka-3545.herokussl.com.
+mathdown.net. 60 IN TXT ALIAS for osaka-3545.herokussl.com
+www.mathdown.net. 60 IN CNAME osaka-3545.herokussl.com.

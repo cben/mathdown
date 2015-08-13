@@ -59,6 +59,8 @@ Valuable Openshift tips: https://stackoverflow.com/questions/11730590/what-are-s
 
 ## Heroku
 
+The primary reason Heroku is not my main hosting (beyond open source allegiance) is SSL (see below).
+
 There is also a deployment at https://mathdown.herokuapp.com/.  To deploy:
 
     git remote add heroku https://git.heroku.com/mathdown.git  # once
@@ -69,9 +71,10 @@ There is also a deployment at https://mathdown.herokuapp.com/.  To deploy:
 Admin: https://dashboard.heroku.com/apps/mathdown
 ("Activity" tab shows history of deploys.)
 
-I'm on free plan => 1 web dyno, with idling ([dyno sleeps][] after a hour without traffic, takes ~10sec to wake up), no custom-domain TLS.
+I'm on "Hobby" $7/mo plan => 1 dyno, no idling.
+If I'm not serving mathdown.net all day, could run fine on Free plan ([dyno sleeps][] after a 30min without traffic, takes ~10sec to wake up, limited to **max 18hrs/day**).
 
-[dyno sleeps]: https://blog.heroku.com/archives/2013/6/20/app_sleeping_on_heroku
+[dyno sleeps]: https://devcenter.heroku.com/articles/dyno-sleeping
 
 Read logs:
 
@@ -87,8 +90,29 @@ Performance (I installed various addons but haven't really instrumented anything
 - https://heroku.nodetime.com/sso/login
 - https://www.blitz.io/to#/dashboard/rush
 
-TODO: add deploy on heroku button.  Their 1-free-per-*app* model is perfect for contributors.
-(This might change with 2015 beta pricing limiting free to half month uptime)
+### SSL on Heroku
+
+The wildcard cert on https://mathdown.herokuapp.com/ is free.
+For custom domain cert, Heroku charges $20/mo for the [SSL addon][] and it only accepts *one* cert.
+Since I haven't bought a multi-domain cert for both .net and .com, I'd need $40/mo and [hackish config](http://stackoverflow.com/a/18982770/239657).
+
+=> I've provisioned the .net cert on Heroku so I can sometimes direct traffic there.
+.com must stay on RHcloud.  But .com doesn't officially exist.
+
+Cert config is not in the via web dashboard at all (AFAICT).  To see status:
+
+    heroku certs:info --app=mathdown
+
+This tells you the "SSL Endpoint", currently osaka-3545.herokussl.com, that DNS must point to (*not* mathdown.herokuapp.com!).
+
+Provisioning the cert:
+
+    # only I have ~/StartSSL/, it can't go under git
+    openssl rsa -in ~/StartSSL/my-private-encrypted.key -out ~/StartSSL/my-private-decrypted.key
+    heroku certs:update --app=mathdown deployment/tls-certs-startcom/GENERATED-CHAINED-mathdown.net.pem  ~/StartSSL/my-private-decrypted.key
+	rm ~/StartSSL/my-private-decrypted.key
+
+[SSL addon]: https://devcenter.heroku.com/articles/ssl-endpoint
 
 ## TODO: staging, continuous integration->deploy
 
@@ -121,16 +145,20 @@ mathdown.net and mathdown.com domains are registered at https://www.gandi.net/ (
 
 Using an apex domain (with www. subdomain) turns out to be a pain, but I'm sticking with it for now(?).
 
-  - Can't do normal CNAME; [some DNS providers][] can simulate it, notably [Cloudflare claim to have done it well][] (and free unlike dnssimple).
+  - Can't do normal CNAME; [some DNS providers][] can simulate it, notably [Cloudflare claim to have done it well][] (and free unlike DNSimple).
   - Without CNAME, Github Pages do provide fixed IPs that are slower ([extra 302 redirect][]).
   - Without CNAME, Heroku can't work at all!
 
 ~~That's why DNS was served by Cloudflare (free plan, just DNS "bypassing" their CDN).~~
 **Alas, Cloudflare serves the apex mathdown.{net,com} with a TTL of 7 days**, which means a long outage for some users when the server IP changes [https://github.com/cben/mathdown/issues/104].
-I've switched to DNSimple as my DNS, with TTL of 10min.
-mathdown.net, www.mathdown.net, mathdown.com, www.mathdown.com all point at RHcloud.
+I've switched to DNSimple as my DNS, with TTL of 1-10min.
+mathdown.net, www.mathdown.net, mathdown.com, www.mathdown.com usually all point at RHcloud, though .net may be shunted to Heroku sometimes.
 
 I also might switch back to `www.mathdown.net` as the primary domain?
+
+Quick way to download current DNSimple settings (in a logged-in browser):
+https://dnsimple.com/domains/mathdown.net/zone.txt
+https://dnsimple.com/domains/mathdown.com/zone.txt
 
 [some DNS providers]: https://devcenter.heroku.com/articles/custom-domains#root-domain
 [Cloudflare claim to have done it well]: https://blog.cloudflare.com/introducing-cname-flattening-rfc-compliant-cnames-at-a-domains-root/
