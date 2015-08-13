@@ -1,9 +1,10 @@
 # Deployment — details & procedures
 
 This app *mostly* works as static pages, and I intend to keep it this way.
-(To run simply open index.html.  Or fork on github and immediately use your gh-pages branch at https://YOUR-GITHUB-USERNAME.github.io/mathdown/.  See top-level README.md.)
+(To run simply open index.html.  Or fork on github and immediately use your gh-pages branch at https://YOUR-GITHUB-USERNAME.github.io/mathdown/ (note: this is **insecure**, the HTTPS is not end-to-end).  See top-level README.md.)
 
-But for HTTPS on custom domain and some future features, I'm switching the main hosting to RHcloud.
+But for HTTPS on custom domain and some future features, I've switched to a Node.js server and the main hosting to RHcloud.
+
 Run as a dynamic app (`server.coffee`):
 
     npm install  # once
@@ -11,10 +12,19 @@ Run as a dynamic app (`server.coffee`):
 
 (you can choose any port of course.  <kbd>Ctrl+C</kbd> when done.)
 
+To deploy use `deployment/deploy.sh` (aka `npm run deploy`).
+It first pushes to staging copies of the app:
+https://mathdown-staging.herokuapp.com
+https://mathdown8staging-cben.rhcloud.com
+then runs the test against those copies, and only then deploys the real Rhcloud & Heroku apps.
+
+(The funny `mathdown8staging` name is because openshift allows only letters & numbers there — so I invented a convention of `8` separator, because you can pronounce it as "at".  Which doesn't make too much sense here but does in mathdown8<branch> use cases...)
+
 ## RHcloud (aka Openshift)
 
 The main deployment runs on https://mathdown-cben.rhcloud.com/, and mathdown.{net,com} point to it (see DNS section).  To deploy:
 
+    # Don't run this directly - use deployment/deploy.sh
     git remote add rhcloud	ssh://546a6d7e5973cac907000028@mathdown-cben.rhcloud.com/~/git/mathdown.git/  # once
     git push rhcloud gh-pages:master
 
@@ -63,6 +73,7 @@ The primary reason Heroku is not my main hosting (beyond open source allegiance)
 
 There is also a deployment at https://mathdown.herokuapp.com/.  To deploy:
 
+    # Don't run this directly - use deployment/deploy.sh
     git remote add heroku https://git.heroku.com/mathdown.git  # once
     git push heroku gh-pages:master
 
@@ -113,13 +124,6 @@ Provisioning the cert:
 	rm ~/StartSSL/my-private-decrypted.key
 
 [SSL addon]: https://devcenter.heroku.com/articles/ssl-endpoint
-
-## TODO: staging, continuous integration->deploy
-
-Currently CI runs tests against temp locally server and I must manually deploy to RHcloud/Heroku.
-It should be easy to config auto-deploy.
-
-What's more important would be testing that it works on RHcloud/Heroku: adding a separate "staging" app, deploying to it first, testing that it works in prod, only then deploying to main app. (#77)
 
 ## HTTPS (TLS/SSL) certificates
 

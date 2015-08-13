@@ -13,8 +13,9 @@
   },
   "main": "server.coffee",
   "scripts": {
+    "start": "coffee server.coffee",
     "test": "coffee smoke-test.coffee",
-    "start": "coffee server.coffee"
+    "deploy": "deployment/deploy.sh"
   },
   "repository": {
     "type": "git",

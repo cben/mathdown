@@ -1,3 +1,7 @@
+# Usages:
+#   coffee smoke-test.coffee   # run local server, test it via tunnel
+#   coffee smoke-test.coffee https://mathdown-staging.herokuapp.com   # test publicly accessible instance
+
 require('coffee-script/register')
 server = require('./server')
 sauceTunnel = require('sauce-tunnel')
@@ -32,6 +36,8 @@ buildUrl = env.CI_BUILD_URL || env.BUILD_URL || env.WERCKER_BUILD_URL || build
 commit = env.CI_COMMIT_ID || env.COMMIT || env.GIT_COMMIT || env.TRAVIS_COMMIT || env.WERCKER_GIT_COMMIT
 branch = env.CI_BRANCH || env.BRANCH || env.GIT_BRANCH || env.TRAVIS_BRANCH || env.WERCKER_GIT_BRANCH
 
+siteToTest = process.argv[2]
+
 tunnelId = build
 tags = []
 tags.push('shippable') if env.SHIPPABLE
@@ -45,7 +51,7 @@ desired = {
   browserName: 'internet explorer'
   version: '8'
   platform: 'Windows XP'
-  name: 'smoke test'
+  name: if siteToTest then 'smoke test ' + siteToTest else 'smoke test'
   build: "#{buildUrl} [#{branch}] commit #{commit}"
   tags: tags
   # Most my tests timeout a lot due crashing without cleanup (see below);
@@ -82,22 +88,30 @@ test = (url, cb) ->
             browser.sauceJobStatus(true)
             cb()
 
-# https://docs.saucelabs.com/reference/sauce-connect/#can-i-access-applications-on-localhost-
-# lists ports we can use.
-port = 8001
-httpServer = server.main(port)
-
-tunnel = new sauceTunnel(sauceUser, sauceKey, tunnelId, true, ['--verbose'])
-console.log('Creating tunnel...')
-tunnel.start (status) ->
-  assert(status, 'tunnel creation failed')
-  console.log('tunnel created')
-  desired['tunnel-identifier'] = tunnel.identifier
-  console.log(desired)
+createBrowserAndTest = (url, cb) ->
   browser.init desired, (err) ->
     assert.ifError(err)
-    test 'http://localhost:' + port, ->
+    test url, ->
       browser.quit()
+      cb()
+
+if siteToTest  # Testing existing instance
+  createBrowserAndTest process.argv[2], ->
+else  # Run local server, test it via tunnel
+  # https://docs.saucelabs.com/reference/sauce-connect/#can-i-access-applications-on-localhost-
+  # lists ports we can use.
+  port = 8001
+  httpServer = server.main(port)
+  url = 'http://localhost:' + port
+
+  tunnel = new sauceTunnel(sauceUser, sauceKey, tunnelId, true, ['--verbose'])
+  console.log('Creating tunnel...')
+  tunnel.start (status) ->
+    assert(status, 'tunnel creation failed')
+    console.log('tunnel created')
+    desired['tunnel-identifier'] = tunnel.identifier
+    console.log(desired)
+    createBrowserAndTest url, ->
       tunnel.stop ->
         console.log(chalk.green('Tunnel stopped, cleaned up.'))
       httpServer.close()
