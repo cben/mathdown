@@ -4,11 +4,11 @@
   "description": "http://mathdown.net",
   "dependencies": {
     "chalk": "^1.1.0",
+    "coffee-script": "^1.9.3",
     "st": "^0.5.5",
     "wd": "^0.3.12"
   },
   "devDependencies": {
-    "coffee-script": "^1.9.3",
     "sauce-tunnel": "^2.2.3"
   },
   "main": "server.coffee",

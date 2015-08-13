@@ -48,6 +48,11 @@
         }
       }
     },
+    "coffee-script": {
+      "version": "1.9.3",
+      "from": "coffee-script@",
+      "resolved": "https://registry.npmjs.org/coffee-script/-/coffee-script-1.9.3.tgz"
+    },
     "st": {
       "version": "0.5.5",
       "from": "st@^0.5.5",
