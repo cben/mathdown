@@ -82,28 +82,28 @@ I'm not sure Firebase never sets cookies.  Things will change once I implement l
 
  1. After checking out, run this to materialize client-side dependencies:
 
-		git submodule update --init --recursive
+    git submodule update --init --recursive
 
-	Append ` --remote` to upgrade to newest versions of all submodules (need to commit afterwards if anything changed).  Known constraints on updating all deps:
+  Append ` --remote` to upgrade to newest versions of all submodules (need to commit afterwards if anything changed).  Known constraints on updating all deps:
 
-	  * firepad only includes pre-built dist/firepad.js in tagged versions (after every release they strip it back).
-	  * [CodeMirror-MathJax currently doesn't support MathJax 2.5](https://github.com/cben/CodeMirror-MathJax/issues/33).
+    * firepad only includes pre-built dist/firepad.js in tagged versions (after every release they strip it back).
+    * [CodeMirror-MathJax currently doesn't support MathJax 2.5](https://github.com/cben/CodeMirror-MathJax/issues/33).
 
-	(I'm directly working in `gh-pages` branch without a `master` branch.  GH Pages automatically resolves https://... submodules.  It's no longer the primary hosting but it's still useful to test the static version works.)
+  (I'm directly working in `gh-pages` branch without a `master` branch.  GH Pages automatically resolves https://... submodules.  It's no longer the primary hosting but it's still useful to test the static version works.)
 
  2. To install server-side dependencies (and devDependencies) listed in `package.json` run:
 
         npm install
 
-	(But when deploying to RHcloud or Heroku, npm install might run in `--production` mode and devDependencies won't be available.)
+  (But when deploying to RHcloud or Heroku, npm install might run in `--production` mode and devDependencies won't be available.)
 
-	To see whether any updates are needed/possible, run `npm outdated`.  To update run:
+  To see whether any updates are needed/possible, run `npm outdated`.  To update run:
 
-		npm update --save
-		npm shrinkwrap
+    npm update --save
+    npm shrinkwrap
 
     Then commit the new `package.json` and `npm-shrinkwrap.json`.
-	TODO: find way to use same **node.js version** in dev and prod?
+  TODO: find way to use same **node.js version** in dev and prod?
 
 
 ## Test(s)
@@ -154,7 +154,7 @@ This app *mostly* works as pure static pages, and I intend to keep it this way.
     Note that Github Pages is **insecure** (the HTTPS encryption is [not end-to-end][]),
     so your doc IDs could be snooped giving full read & edit access to your docs.
 
-	[not end-to-end]: https://konklone.com/post/github-pages-now-sorta-supports-https-so-use-it#comment-54d648a969702d6be8110a00
+  [not end-to-end]: https://konklone.com/post/github-pages-now-sorta-supports-https-so-use-it#comment-54d648a969702d6be8110a00
 
       * If you fork this repo, you can immediately use your version at https://YOUR-GITHUB-USERNAME.github.io/mathdown/!
         Or maybe not immediately but [after you push something](http://stackoverflow.com/q/8587321/239657).  See above how it's **insecure**.
@@ -177,6 +177,7 @@ Other things called "mathdown":
  * http://kwkbtr.info/log/201010050320 — a way to combine Showdown + Mathjax
  * https://gitlab.com/padawanphysicist/tw5-mathdown/tree/master — Math (via TeXZilla) + Markdown-it in TiddlyWiki5
  * https://github.com/domluna/mathdown — Watches markdown files, converts to HTML with KateX.
+ * https://github.com/jirkalewandowski/mathdown — heuristically recognizes LaTeX formulas in text with no delimiters.
 
 I should really talk to these folk whether it's OK that I'm using the name and the domain...
 
