@@ -51,7 +51,7 @@ The downside is users can't really control their data.  Running a "self-hosted" 
 
 The upside is all forks interoperate; you can change the design or tweak the editor and still access same documents.  E.g. https://mathdown.net/index.html?doc=demo and http://rhythmus.be/mathdown/index.html?doc=demo look different but access the same doc -- and real-time collaboration between them works!
 
-I'm so far on the [free Firebase plan](https://www.firebase.com/pricing.html) - 50 concurrent (not sure if 1:1 with users), 100 MB Data Storage (used more than half).  => Will need 49USD/mo plan as soon as I get non-negligible usage.
+I'm so far on the [free Firebase plan](https://www.firebase.com/pricing.html) - 100 devices (not sure if 1:1 with users), 1GB Data Storage (used <100MB).  => Will need 49USD/mo plan as soon as I get non-negligible usage.
 https://mathdown.firebaseio.com/?page=Analytics (only visible to me)
 
 ### Deletion is impossible
