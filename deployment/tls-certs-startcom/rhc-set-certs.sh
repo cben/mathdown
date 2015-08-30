@@ -7,7 +7,7 @@ if [ $# -lt 2 -o $# -gt 3 ]; then
     echo "  $0 'mathdown -n cben' ~/StartSSL/my-private-decrypted.key"
     echo "use encrypted keyfile (unsecure on multi-user systems):"
     echo "  read -s -p 'Passphrase: ' passphrase"
-    echo "  $0 mathdown ~/StartSSL/my-private-encrypted.key \"$passphrase\""
+    echo "  $0 mathdown ~/StartSSL/my-private-encrypted.key \"\$passphrase\""
     echo
     echo "I believe this script is idempotent (up to \"Certificate Added\" date)."
     echo "Not sure if it's zero downtime but it's pretty fast."
