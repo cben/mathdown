@@ -1,0 +1,3 @@
+echo '@@@@@@@@@@@ Enabling npm production @@'
+pwd
+echo 'production = true' >> .npmrc
