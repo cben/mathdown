@@ -1,0 +1,4 @@
+#!/bin/bash
+echo 'Enabling npm production'
+echo 'production = true' >> $OPENSHIFT_REPO_DIR/.npmrc
+tail -v -n 1000 $OPENSHIFT_REPO_DIR/.npmrc
