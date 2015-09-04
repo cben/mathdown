@@ -5,6 +5,7 @@
   "dependencies": {
     "chalk": "^1.1.0",
     "coffee-script": "^1.9.3",
+    "mathjax": "^2.5.1",
     "st": "^0.5.5"
   },
   "devDependencies": {
