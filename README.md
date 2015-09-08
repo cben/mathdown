@@ -131,13 +131,18 @@ I've tried several free services for this, and currently prefer Travis:
 
 ## Where it's deployed and how to run your fork
 
-The main deployment runs on https://mathdown-cben.rhcloud.com/ (Openshift hosting operated by RedHat), and mathdown.net points to it.  The dynamic server has also been tested on Heroku.  See [deployment/](deployment/README.md) subdirectory for details.
+The main deployment runs on https://mathdown-cben.rhcloud.com/ (Openshift hosting operated by RedHat), and mathdown.net points to it.  The dynamic server has also been tested on Heroku.  See <deployment/> subdirectory for details.
 
 **However you run it, you can open the same document ids (`doc=...`) and real-time collaboration will work!**
 
 Quick ways to run:
 
-[![Launch on OpenShift](https://launch-shifter.rhcloud.com/launch/LAUNCH ON.svg)](https://openshift.redhat.com/app/console/application_type/custom?&cartridges[]=nodejs-0.10&initial_git_url=https://github.com/cben/mathdown.git&initial_git_branch=gh-pages&name=mathdown) — make sure to replace with your fork & branch as needed.  Grab a tea - takes up to 10 minutes.  (Remember it'll not auto-update, it'll be up to you to git push newer versions...)
+[![Launch on OpenShift](https://launch-shifter.rhcloud.com/launch/LAUNCH ON.svg)](https://openshift.redhat.com/app/console/application_type/custom?&cartridges[]=nodejs-0.10&initial_git_url=https://github.com/cben/mathdown.git&initial_git_branch=gh-pages&name=mathdown) — make sure to replace with your fork & branch as needed.  Don't enable scaling without reading "Creating an app" in <deployment/README.md>.  Grab a tea - takes up to 10 minutes.  (Remember it'll not auto-update, it'll be up to you to git push newer versions...)
+
+Deploy on Heroku:
+
+	heroku create my-mathdown --remote heroku-my-mathdown
+	git push heroku-my-mathdown gh-pages:master
 
 Run local server (`server.coffee`):
 
@@ -154,10 +159,11 @@ This app *mostly* works as pure static pages, and I intend to keep it this way.
     Note that Github Pages is **insecure** (the HTTPS encryption is [not end-to-end][]),
     so your doc IDs could be snooped giving full read & edit access to your docs.
 
-  [not end-to-end]: https://konklone.com/post/github-pages-now-sorta-supports-https-so-use-it#comment-54d648a969702d6be8110a00
+    [not end-to-end]: https://konklone.com/post/github-pages-now-sorta-supports-https-so-use-it#comment-54d648a969702d6be8110a00
 
       * If you fork this repo, you can immediately use your version at https://YOUR-GITHUB-USERNAME.github.io/mathdown/!
-        Or maybe not immediately but [after you push something](http://stackoverflow.com/q/8587321/239657).  See above how it's **insecure**.
+      Or maybe not immediately but [after you push something](http://stackoverflow.com/q/8587321/239657).
+	  See above how it's **insecure**.
 
   * For other branches/commits, there is no trivial solution - rawgit.com would be great but doesn't currently support submodules.
 

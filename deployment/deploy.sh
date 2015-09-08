@@ -16,6 +16,6 @@ git fetch
 git push heroku-staging origin/gh-pages:master
 ./node_modules/.bin/coffee smoke-test.coffee https://mathdown-staging.herokuapp.com
 git push rhcloud-staging origin/gh-pages:master
-./node_modules/.bin/coffee smoke-test.coffee https://mathdown8staging-cben.rhcloud.com
+./node_modules/.bin/coffee smoke-test.coffee https://staging-mathdown.rhcloud.com
 git push heroku origin/gh-pages:master
 git push rhcloud origin/gh-pages:master
