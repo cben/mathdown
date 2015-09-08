@@ -51,7 +51,7 @@ The downside is users can't really control their data.  Running a "self-hosted" 
 
 The upside is all forks interoperate; you can change the design or tweak the editor and still access same documents.  E.g. https://mathdown.net/index.html?doc=demo and http://rhythmus.be/mathdown/index.html?doc=demo look different but access the same doc -- and real-time collaboration between them works!
 
-I'm so far on the [free Firebase plan](https://www.firebase.com/pricing.html) - 100 devices (not sure if 1:1 with users), 1GB Data Storage (used <100MB).  => Will need 49USD/mo plan as soon as I get non-negligible usage.
+I'm so far on the [free Firebase plan](https://www.firebase.com/pricing.html) - 100 devices (not sure if 1:1 with users), 1GB Data Storage (used < 100MB).  => Will need 49USD/mo plan as soon as I get non-negligible usage.
 https://mathdown.firebaseio.com/?page=Analytics (only visible to me)
 
 ### Deletion is impossible
@@ -131,13 +131,13 @@ I've tried several free services for this, and currently prefer Travis:
 
 ## Where it's deployed and how to run your fork
 
-The main deployment runs on https://mathdown-cben.rhcloud.com/ (Openshift hosting operated by RedHat), and mathdown.net points to it.  The dynamic server has also been tested on Heroku.  See <deployment/> subdirectory for details.
+The main deployment runs on https://mathdown-cben.rhcloud.com/ (Openshift hosting operated by RedHat), and mathdown.net points to it.  The dynamic server has also been tested on Heroku.  See [deployment/](deployment/) subdirectory for details.
 
 **However you run it, you can open the same document ids (`doc=...`) and real-time collaboration will work!**
 
 Quick ways to run:
 
-[![Launch on OpenShift](https://launch-shifter.rhcloud.com/launch/LAUNCH ON.svg)](https://openshift.redhat.com/app/console/application_type/custom?&cartridges[]=nodejs-0.10&initial_git_url=https://github.com/cben/mathdown.git&initial_git_branch=gh-pages&name=mathdown) — make sure to replace with your fork & branch as needed.  Don't enable scaling without reading "Creating an app" in <deployment/README.md>.  Grab a tea - takes up to 10 minutes.  (Remember it'll not auto-update, it'll be up to you to git push newer versions...)
+[![Launch on OpenShift](https://launch-shifter.rhcloud.com/launch/LAUNCH ON.svg)](https://openshift.redhat.com/app/console/application_type/custom?&cartridges[]=nodejs-0.10&initial_git_url=https://github.com/cben/mathdown.git&initial_git_branch=gh-pages&name=mathdown) — make sure to replace with your fork & branch as needed.  Don't enable scaling without reading "Creating an app" in [deployment/README.md](deployment/README.md).  Grab a tea - takes up to 10 minutes.  (Remember it'll not auto-update, it'll be up to you to git push newer versions...)
 
 Deploy on Heroku:
 
