@@ -94,6 +94,7 @@ As of these writing, I've used these procedures (it's useful to timestamp by pip
 	rhc app create -a staging -n mathdown -t nodejs-0.10 --scaling --debug --trace
 	git remote remove rhcloud-staging
 	git remote add -f rhcloud-staging $(rhc app show staging -n mathdown | sed -n 's/^\s*git url:\s*\(\S*\)/\1/ip')
+	git push -f rhcloud-staging gh-pages:master
 	rm ./staging -rf
 
 	rhc app create -a prod -n mathdown --from-code https://github.com/cben/mathdown\#gh-pages -t nodejs-0.10 --scaling --gear-size small.highcpu --debug --trace
