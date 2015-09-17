@@ -8,13 +8,14 @@
     "st": "^0.5.5"
   },
   "devDependencies": {
+    "jasmine": "^2.3.2",
     "sauce-tunnel": "^2.2.3",
     "wd": "^0.3.12"
   },
   "main": "server.coffee",
   "scripts": {
     "start": "coffee server.coffee",
-    "test": "coffee smoke-test.coffee",
+    "test": "jasmine",
     "deploy": "deployment/deploy.sh"
   },
   "repository": {

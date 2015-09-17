@@ -1,0 +1,10 @@
+{
+  "spec_dir": "spec",
+  "spec_files": [
+    "00-register-coffee.js",
+    "**/*[sS]pec.coffee"
+  ],
+  "helpers": [
+    "helpers/**/*.js"
+  ]
+}
