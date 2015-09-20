@@ -1,6 +1,5 @@
-# Usages:
-#   coffee smoke-test.coffee   # run local server, test it via tunnel
-#   coffee smoke-test.coffee https://mathdown-staging.herokuapp.com   # test publicly accessible instance
+# Usage: By default runs local server, tests it via tunnel;
+# if SITE_TO_TEST env var is set to a publicly accessible URL, tests that skipping server & tunnel.
 
 require('coffee-script/register')
 server = require('../server')
