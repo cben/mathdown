@@ -7,7 +7,6 @@ server = require('../server')
 sauceTunnel = require('sauce-tunnel')
 http = require('http')
 wd = require('wd')  # TODO: compare vs http://webdriver.io/
-assert = require('assert')
 chalk = require('chalk')
 
 # 'mathdown' is a sub-account I created.
@@ -39,7 +38,7 @@ branch = env.CI_BRANCH || env.BRANCH || env.GIT_BRANCH || env.TRAVIS_BRANCH || e
 
 siteToTest = env.SITE_TO_TEST
 
-tunnelId = build
+uniqueTunnelIdentifier = build
 tags = []
 tags.push('shippable') if env.SHIPPABLE
 # Shippable tries too hard to be Travis-compatible, sets TRAVIS.
@@ -48,87 +47,122 @@ tags.push('drone') if env.DRONE
 tags.push('wercker') if env.WERCKER_BUILD_URL
 tags.push(env.CI_NAME) if env.CI_NAME  # Covers Codeship (could also use env.CODESHIP).
 
-desired = {
-  browserName: 'internet explorer'
-  version: '8'
-  platform: 'Windows XP'
-  name: if siteToTest then 'smoke test ' + siteToTest else 'smoke test'
+commonDesired = {
   build: "#{buildUrl} [#{branch}] commit #{commit}"
   tags: tags
-  # Most my tests timeout a lot due crashing without cleanup (see below);
-  # this will waste less Sauce resources than default 90s.
-  'idle-timeout': 30
+  # Waste less Sauce resources than default 90s if this script crashed.
+  'idle-timeout': 90
 }
 
-# TODO refactor me more
+desiredBrowsers = [
+  {browserName: 'internet explorer', version: '8.0', platform: 'Windows XP'}
+  {browserName: 'internet explorer', version: '9.0', platform: 'Windows 7'}
+  {browserName: 'microsoftedge', version: '20.10240', platform: 'Windows 10'}
+  # Arbitrary somewhat old - but not ancient - FF and Chrome versions.
+  {browserName: 'firefox', version: '30.0', platform: 'Linux'}
+  {browserName: 'chrome', version: '30.0', platform: 'Linux'}
+  {browserName: 'safari', version: '8.1', platform: 'OS X 10.11'}
+  # TODO: mobile
+]
 
-createBrowserAndTest = (site) ->
-  browser = null
+itSlowly = (text, func) -> it(text, func, 30000)
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 90000  # bleh
 
-  # TODO: should I reuse one browser instance for many tests?
-  # From the wd docs reusing one should work but is it isolated enough?
-  # I suppose `browser.get()` does reset browser state...
-  # Also, seeing individual tests on SauceLabs would be cool: https://youtu.be/Dzplh1tAwIg?t=370
-  beforeAll (done) ->
-    browser = wd.remote('ondemand.saucelabs.com', 80, sauceUser, sauceKey)
-    browser.on 'status', (info) ->
-      console.log(chalk.cyan(info))
-    browser.on 'command', (meth, path) ->
-      console.log(' > %s: %s', chalk.yellow(meth), path)
-    #browser.on 'http', (meth, path, data) ->
-    #  console.log(' > %s %s %s', chalk.magenta(meth), path, chalk.grey(data))
+merge = (objs...) ->
+  merged = {}
+  for obj in objs
+    for k, v of obj
+      merged[k] = v
+  merged
 
-    browser.init desired, (err) ->
-      assert.ifError(err)
-      done()
+# I've factored parts of the test suite into "desribeFoo" functions.
+# When I want to pass them values computed in beforeAll/Each blocks,
+# I have to pass "getValue" callables rather than the values themselves
+# (see https://gist.github.com/cben/43fcbbae95019aa73ecd).
+describeBrowserTest = (browserName, getDesired, site) ->
+  describe browserName, ->
+    browser = null
 
-  # TODO: inspect browser console log
-  # https://support.saucelabs.com/entries/60070884-Enable-grabbing-server-logs-from-the-wire-protocol
-  # https://code.google.com/p/selenium/wiki/JsonWireProtocol#/session/:sessionId/log
-  # Sounds like these should work but on SauceLabs they return:
-  #   Selenium error: Command not found: GET /session/XXXXXXXX-XXXX-XXXX-XXXX-XXXXe3fcc97e/log/types
-  #   Selenium error: Command not found: POST /session/XXXXXXXX-XXXX-XXXX-XXXX-XXXX26210a31/log
-  # respectively...
-  #
-  # afterEach (done) ->
-  #   browser.logTypes (err, arrayOfLogTypes) ->
-  #     assert.ifError(err)
-  #     console.log(chalk.yellow('LOG TYPES:'), arrayOfLogTypes)
-  #     browser.log 'browser', (err, arrayOfLogs) ->
-  #       assert.ifError(err)
-  #       console.log(chalk.yellow('LOGS:'), arrayOfLogs)
-  #       done()
+    # Theoretically should use a custom reporter to set pass/fail status on Sauce Labs.
+    # Practically this kludge works, as long as test cases set eachPassed to true when done.
+    eachPassed = false
+    allPassed = true
 
-  afterAll (done) ->
-    browser.quit()
-    done()
+    beforeEach (done) ->
+      eachPassed = false
 
-  it 'should load and render math', (done) ->
-    # Kludge: set to failed first, change to passed if we get to the end without crashing.
-    browser.sauceJobStatus false, ->
+    afterEach (done) ->
+      if not eachPassed
+        allPassed = false
+
+    # TODO: should I reuse one browser instance for many tests?
+    # From the wd docs reusing one should work but is it isolated enough?
+    # I suppose `browser.get()` does reset browser state...
+    # Also, seeing individual tests on SauceLabs would be cool: https://youtu.be/Dzplh1tAwIg?t=370
+    beforeAll (done) ->
+      browser = wd.remote('ondemand.saucelabs.com', 80, sauceUser, sauceKey)
+      browser.on 'status', (info) ->
+        console.log(chalk.cyan(info))
+      browser.on 'command', (meth, path) ->
+        console.log(' > %s: %s', chalk.yellow(meth), path)
+      #browser.on 'http', (meth, path, data) ->
+      #  console.log(' > %s %s %s', chalk.magenta(meth), path, chalk.grey(data))
+
+      browser.init getDesired(), (err) ->
+        expect(err).toBeFalsy()
+        done()
+
+    # TODO: inspect browser console log
+    # https://support.saucelabs.com/entries/60070884-Enable-grabbing-server-logs-from-the-wire-protocol
+    # https://code.google.com/p/selenium/wiki/JsonWireProtocol#/session/:sessionId/log
+    # Sounds like these should work but on SauceLabs they return:
+    #   Selenium error: Command not found: GET /session/XXXXXXXX-XXXX-XXXX-XXXX-XXXXe3fcc97e/log/types
+    #   Selenium error: Command not found: POST /session/XXXXXXXX-XXXX-XXXX-XXXX-XXXX26210a31/log
+    # respectively...
+    #
+    # afterEach (done) ->
+    #   browser.logTypes (err, arrayOfLogTypes) ->
+    #     expect(err).toBeFalsy()
+    #     console.log(chalk.yellow('LOG TYPES:'), arrayOfLogTypes)
+    #     browser.log 'browser', (err, arrayOfLogs) ->
+    #       expect(err).toBeFalsy()
+    #       console.log(chalk.yellow('LOGS:'), arrayOfLogs)
+    #       done()
+
+    afterAll (done) ->
+      browser.sauceJobStatus allPassed, ->
+        browser.quit()
+        done()
+
+    itSlowly 'should load and render math', (done) ->
       browser.get site + '?doc=_mathdown_test_smoke', (err) ->
-        assert.ifError(err)
+
+        expect(err).toBeFalsy()
         browser.waitFor wd.asserters.jsCondition('document.title.match(/smoke test/)'), 10000, (err, value) ->
-          assert.ifError(err)
+          expect(err).toBeFalsy()
           browser.waitForElementByCss '.MathJax_Display', 15000, (err, el) ->
-            assert.ifError(err)
+            expect(err).toBeFalsy()
             el.text (err, text) ->
-              assert.ifError(err)
-              if not text.match(/^\s*α\s*$/)
-                assert.fail(text, '/^\s*α\s*$/', 'math text is wrong', ' match ')
-              console.log(chalk.green('\nALL PASSED\n'))
-              browser.sauceJobStatus(true)
+              expect(err).toBeFalsy()
+              expect(text).toMatch(/^\s*α\s*$/)
+              eachPassed = true
               done()
 
-
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
+describeAllBrowsers = (getDesired, site) ->
+  for b in desiredBrowsers
+    do (b) ->
+      name = "#{b.browserName} #{b.version} on #{b.platform}"
+      describeBrowserTest(name, (-> merge(b, getDesired())), site)
 
 if siteToTest  # Testing existing instance
-  describe "#{siteToTest} on IE8", ->
-    createBrowserAndTest(siteToTest)
+  describe "#{siteToTest}", ->
+    describeAllBrowsers(
+      (-> merge(commonDesired, {name: 'smoke test of ' + siteToTest})),
+      siteToTest)
 else  # Run local server, test it via tunnel
-  describe 'Served site on IE8', ->
+  describe 'Served site via Sauce Connect', ->
     tunnel = null
+    actualTunnelId = null
     # https://docs.saucelabs.com/reference/sauce-connect/#can-i-access-applications-on-localhost-
     # lists ports we can use.
     httpServer = null
@@ -139,13 +173,13 @@ else  # Run local server, test it via tunnel
       httpServer = server.main(port)
       # TODO: wait until server is actually up
 
-      tunnel = new sauceTunnel(sauceUser, sauceKey, tunnelId, true, ['--verbose'])
+      tunnel = new sauceTunnel(sauceUser, sauceKey, uniqueTunnelIdentifier, true, ['--verbose'])
       console.log('Creating tunnel...')
-      tunnel.start (status) ->
-        assert(status, 'tunnel creation failed')
+      tunnel.start (tunnel_status) ->
+        expect(tunnel_status).toBeTruthy()
         console.log('tunnel created')
-        desired['tunnel-identifier'] = tunnel.identifier
-        console.log(desired)
+        # HORRIBLE KLUDGE
+        actualTunnelId = tunnel.identifier
         done()
 
     afterAll (done) ->
@@ -154,11 +188,16 @@ else  # Run local server, test it via tunnel
         httpServer.close()
         done()
 
-    describe 'nested', ->
-      createBrowserAndTest(site)
+    describeAllBrowsers(
+      (-> merge(commonDesired, {
+        name: 'smoke test'
+        'tunnel-identifier': actualTunnelId
+      })),
+      site)
 
 # TODO: Cleanup doesn't happen if there were errors.
 # Replace assert with Jasmine's expect()?
 
 # TODO: parallelize (at least between different browsers).
-# I probably want Vows instead of Jasmine, see https://github.com/jlipps/sauce-node-demo example.
+# I probably want Vows instead of Jasmine, see https://github.com/jlipps/sauce-node-demo example?
+# Or Nightwatch.js?
