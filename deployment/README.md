@@ -218,9 +218,10 @@ Extremely rudimentary monitoring at
 
 - Pingdom: [private](https://my.pingdom.com/dashboard/checks) — public summary at http://stats.pingdom.com/imb1lncuugx2
   Only checks that https://mathdown.net/ responds & includes the string "MathJax".
+  On errors it provides useful details (Reports => Uptime Reports) - IP tried, traceroute, full HTTP exchange.
 
-- UptimeRobot: [private](https://uptimerobot.com/dashboard).
-  Checks https://{www.,}mathdown.{net,com}, http://mathdown.net, and directly accessed rhcloud, heroku, gh-pages respond.
+- UptimeRobot: [private dashboard](https://uptimerobot.com/dashboard), [public RSS link](http://rss.uptimerobot.com/u161856-2938762f077934131eb64592ffd2e8f9).  [Handy Chrome extension (needs private API key)](http://shreyaspurohit.github.io/chrome.extension.uptimeRobotMonitor/).
+  Checks that https://{www.,}mathdown.{net,com}, http://mathdown.net, and directly accessed rhcloud, heroku, gh-paes respond.  No details if they don't.
 
 If the server is down I will get mails, but I'm not tracking server-side load/error, especially on RHcloud.
 
