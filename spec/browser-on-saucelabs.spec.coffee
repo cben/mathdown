@@ -32,7 +32,8 @@ sauceConnectOptions = {
 # http://devcenter.wercker.com/articles/steps/variables.html
 env = process.env
 build = env.CI_BUILD_NUMBER || env.BUILD_ID || env.TRAVIS_BUILD_ID || (env.WERCKER_BUILD_URL || '').replace(/.*\//, '') || env.JOB_ID
-buildUrl = env.CI_BUILD_URL || env.BUILD_URL || env.WERCKER_BUILD_URL || build
+travisBuildUrl = (env.TRAVIS_REPO_SLUG && env.TRAVIS_BUILD_ID && "https://travis-ci.org/#{env.TRAVIS_REPO_SLUG}/builds/#{env.TRAVIS_BUILD_ID}")
+buildUrl = env.CI_BUILD_URL || env.BUILD_URL || env.WERCKER_BUILD_URL || travisBuildUrl || build
 commit = env.CI_COMMIT_ID || env.COMMIT || env.GIT_COMMIT || env.TRAVIS_COMMIT || env.WERCKER_GIT_COMMIT
 branch = env.CI_BRANCH || env.BRANCH || env.GIT_BRANCH || env.TRAVIS_BRANCH || env.WERCKER_GIT_BRANCH
 
