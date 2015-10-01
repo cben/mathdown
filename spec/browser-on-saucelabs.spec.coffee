@@ -38,7 +38,6 @@ branch = env.CI_BRANCH || env.BRANCH || env.GIT_BRANCH || env.TRAVIS_BRANCH || e
 
 siteToTest = env.SITE_TO_TEST
 
-uniqueTunnelIdentifier = build
 tags = []
 tags.push('shippable') if env.SHIPPABLE
 # Shippable tries too hard to be Travis-compatible, sets TRAVIS.
@@ -51,22 +50,22 @@ commonDesired = {
   build: "#{buildUrl} [#{branch}] commit #{commit}"
   tags: tags
   # Waste less Sauce resources than default 90s if this script crashed.
-  'idle-timeout': 90
+  'idle-timeout': 30
 }
 
 desiredBrowsers = [
   {browserName: 'internet explorer', version: '8.0', platform: 'Windows XP'}
-  {browserName: 'internet explorer', version: '9.0', platform: 'Windows 7'}
-  {browserName: 'microsoftedge', version: '20.10240', platform: 'Windows 10'}
+#  {browserName: 'internet explorer', version: '9.0', platform: 'Windows 7'}
+#  {browserName: 'microsoftedge', version: '20.10240', platform: 'Windows 10'}
   # Arbitrary somewhat old - but not ancient - FF and Chrome versions.
-  {browserName: 'firefox', version: '30.0', platform: 'Linux'}
-  {browserName: 'chrome', version: '30.0', platform: 'Linux'}
-  {browserName: 'safari', version: '8.1', platform: 'OS X 10.11'}
+#  {browserName: 'firefox', version: '30.0', platform: 'Linux'}
+#  {browserName: 'chrome', version: '30.0', platform: 'Linux'}
+#  {browserName: 'safari', version: '8.1', platform: 'OS X 10.11'}
   # TODO: mobile
 ]
 
 itSlowly = (text, func) -> it(text, func, 30000)
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 90000  # bleh
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000  # bleh
 
 merge = (objs...) ->
   merged = {}
@@ -144,6 +143,7 @@ describeBrowserTest = (browserName, getDesired, site) ->
             expect(err).toBeFalsy()
             el.text (err, text) ->
               expect(err).toBeFalsy()
+              console.log('el.text:', text, 'match:', text.match(/^\s*α\s*$/))
               expect(text).toMatch(/^\s*α\s*$/)
               eachPassed = true
               done()
@@ -173,8 +173,9 @@ else  # Run local server, test it via tunnel
       httpServer = server.main(port)
       # TODO: wait until server is actually up
 
-      tunnel = new sauceTunnel(sauceUser, sauceKey, uniqueTunnelIdentifier, true, ['--verbose'])
-      console.log('Creating tunnel...')
+      # undefined => unique tunnel id will be automatically chosen
+      tunnel = new sauceTunnel(sauceUser, sauceKey, undefined, true, ['--verbose'])
+      console.log(chalk.green('Creating tunnel...'))
       tunnel.start (tunnel_status) ->
         expect(tunnel_status).toBeTruthy()
         console.log('tunnel created')
@@ -194,9 +195,6 @@ else  # Run local server, test it via tunnel
         'tunnel-identifier': actualTunnelId
       })),
       site)
-
-# TODO: Cleanup doesn't happen if there were errors.
-# Replace assert with Jasmine's expect()?
 
 # TODO: parallelize (at least between different browsers).
 # I probably want Vows instead of Jasmine, see https://github.com/jlipps/sauce-node-demo example?
