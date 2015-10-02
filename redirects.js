@@ -24,7 +24,7 @@ canonicalDomains = {
 };
 
 // returns {status, headers} object or null if no redirect.
-// headers is an onbject including at least {Location}.
+// headers is an object including at least {Location}.
 exports.computeRedirect = function computeRedirect(method, protocol, host, path) {
   method = method.toUpperCase();
   protocol = protocol.toLowerCase();
