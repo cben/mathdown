@@ -8,13 +8,16 @@
     "st": "^0.5.5"
   },
   "devDependencies": {
+    "expect.js": "^0.3.1",
+    "mocha": "^2.3.3",
     "sauce-tunnel": "^2.2.3",
+    "sync-exec": "^0.6.2",
     "wd": "^0.3.12"
   },
   "main": "server.coffee",
   "scripts": {
     "start": "coffee server.coffee",
-    "test": "coffee smoke-test.coffee",
+    "test": "mocha",
     "deploy": "deployment/deploy.sh"
   },
   "repository": {
