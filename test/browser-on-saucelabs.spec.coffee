@@ -24,9 +24,20 @@ sauceConnectOptions = {
 
 timeouts = {
   tunnel: 60000
-  sauceIdle: 30000  # Waste less Sauce resources than default 90s if this script crashed.
-  sauceSession: 20000
+  sauceSession: 60000  # is normally very fast but sometimes took >20s.
+  sauceIdle: 30000  # waste less Sauce resources than default 90s if this script crashed.
 }
+
+desiredBrowsers = [
+  {browserName: 'internet explorer', version: '8.0', platform: 'Windows XP'}
+  {browserName: 'internet explorer', version: '9.0', platform: 'Windows 7'}
+  {browserName: 'microsoftedge', version: '20.10240', platform: 'Windows 10'}
+  # Arbitrary somewhat old - but not ancient - FF and Chrome versions.
+  {browserName: 'firefox', version: '30.0', platform: 'Linux'}
+  {browserName: 'chrome', version: '30.0', platform: 'Linux'}
+  {browserName: 'safari', version: '8.1', platform: 'OS X 10.11'}
+  # TODO: mobile
+]
 
 # Build metadata
 # ==============
@@ -57,17 +68,6 @@ commonDesired = {
   tags: tags
   'idle-timeout': timeouts.sauceIdle
 }
-
-desiredBrowsers = [
-  {browserName: 'internet explorer', version: '8.0', platform: 'Windows XP'}
-  {browserName: 'internet explorer', version: '9.0', platform: 'Windows 7'}
-  {browserName: 'microsoftedge', version: '20.10240', platform: 'Windows 10'}
-  # Arbitrary somewhat old - but not ancient - FF and Chrome versions.
-  {browserName: 'firefox', version: '30.0', platform: 'Linux'}
-  {browserName: 'chrome', version: '30.0', platform: 'Linux'}
-  {browserName: 'safari', version: '8.1', platform: 'OS X 10.11'}
-  # TODO: mobile
-]
 
 merge = (objs...) ->
   merged = {}
