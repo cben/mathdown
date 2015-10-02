@@ -127,10 +127,10 @@ The test runs automatically on any commit and pull request.
 I've tried several free services for this, and currently prefer Travis:
 
   * [Travis](https://travis-ci.org/cben/mathdown/branches) - works, open source code.  Controlled by `.travis.yml`.
-  * [Drone](https://drone.io/github.com/cben/mathdown) - Docker-based, [open source](https://github.com/drone/drone) rewrite in progress.  Alas, always times out during test.  Test config on the web.
+  * [Wercker](https://app.wercker.com/#applications/54b6c5a2d9b237dd37003402) - works.  Controlled by `wercker.yml`.
+  * [Drone](https://drone.io/github.com/cben/mathdown) - Docker-based, [open source](https://github.com/drone/drone) rewrite in progress.  Alas, always timed out during test.  Test config on the web.
   * [Shippable](https://app.shippable.com/projects/54b58b855ab6cc13528881c1) - builds history only accessible by me?  Bad, I want public.  Controlled by `.travis.yml`.
   * [Codeship](https://codeship.com/projects/17706) - same, dashboard is private.  Test config on the web.
-  * [Wercker](https://app.wercker.com/#applications/54b6c5a2d9b237dd37003402) - same, dashboard is private.  Controlled by `wercker.yml`.
 
 ## Where it's deployed and how to run your fork
 

@@ -29,14 +29,18 @@ timeouts = {
 }
 
 desiredBrowsers = [
+  # Generated with https://docs.saucelabs.com/reference/platforms-configurator/
+  # Desktop:
   {browserName: 'internet explorer', version: '8.0', platform: 'Windows XP'}
-  {browserName: 'internet explorer', version: '9.0', platform: 'Windows 7'}
+  {browserName: 'internet explorer', version: '11.0', platform: 'Windows 7'}
   {browserName: 'microsoftedge', version: '20.10240', platform: 'Windows 10'}
-  # Arbitrary somewhat old - but not ancient - FF and Chrome versions.
+  # arbitrary somewhat old - but not ancient - FF and Chrome versions.
   {browserName: 'firefox', version: '30.0', platform: 'Linux'}
   {browserName: 'chrome', version: '30.0', platform: 'Linux'}
   {browserName: 'safari', version: '8.1', platform: 'OS X 10.11'}
-  # TODO: mobile
+  # Mobile (doesn't mean it's usable though):
+  {browserName: 'iphone', deviceName: 'iPad Simulator', version: '5.1', platform: 'OS X 10.10'}
+  {browserName: 'android', deviceName: 'Android Emulator', version: '4.0', platform: 'Linux'}
 ]
 
 # Build metadata
@@ -139,7 +143,7 @@ describeBrowserTest = (browserName, getDesired, site) ->
         done()
 
     it 'should load and render math', (done) ->
-      @timeout(30000)
+      @timeout(60000)  # 30s would be enough if not for mobile?
       browser.get site + '?doc=_mathdown_test_smoke', (err) ->
         expect(err).to.be(null)
         browser.waitFor wd.asserters.jsCondition('document.title.match(/smoke test/)'), 10000, (err, value) ->
@@ -155,7 +159,7 @@ describeBrowserTest = (browserName, getDesired, site) ->
 describeAllBrowsers = (getDesired, site) ->
   for b in desiredBrowsers
     do (b) ->
-      name = "#{b.browserName} #{b.version} on #{b.platform}"
+      name = "#{b.browserName} #{b.deviceName} #{b.version} on #{b.platform}"
       describeBrowserTest(name, (-> merge(b, getDesired())), site)
 
 if siteToTest  # Testing existing instance
