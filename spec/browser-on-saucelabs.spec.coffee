@@ -55,17 +55,19 @@ commonDesired = {
 
 desiredBrowsers = [
   {browserName: 'internet explorer', version: '8.0', platform: 'Windows XP'}
-#  {browserName: 'internet explorer', version: '9.0', platform: 'Windows 7'}
-#  {browserName: 'microsoftedge', version: '20.10240', platform: 'Windows 10'}
+  {browserName: 'internet explorer', version: '9.0', platform: 'Windows 7'}
+  {browserName: 'microsoftedge', version: '20.10240', platform: 'Windows 10'}
   # Arbitrary somewhat old - but not ancient - FF and Chrome versions.
-#  {browserName: 'firefox', version: '30.0', platform: 'Linux'}
-#  {browserName: 'chrome', version: '30.0', platform: 'Linux'}
-#  {browserName: 'safari', version: '8.1', platform: 'OS X 10.11'}
+  {browserName: 'firefox', version: '30.0', platform: 'Linux'}
+  {browserName: 'chrome', version: '30.0', platform: 'Linux'}
+  {browserName: 'safari', version: '8.1', platform: 'OS X 10.11'}
   # TODO: mobile
 ]
 
 itSlowly = (text, func) -> it(text, func, 30000)
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000  # bleh
+# YIKES: this affects other files, and having a big timeout everywhere
+# hides forgotten done() calls :-(
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000
 
 merge = (objs...) ->
   merged = {}
@@ -87,10 +89,10 @@ describeBrowserTest = (browserName, getDesired, site) ->
     eachPassed = false
     allPassed = true
 
-    beforeEach (done) ->
+    beforeEach ->
       eachPassed = false
 
-    afterEach (done) ->
+    afterEach ->
       if not eachPassed
         allPassed = false
 
