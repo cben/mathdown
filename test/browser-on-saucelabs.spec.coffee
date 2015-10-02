@@ -8,7 +8,7 @@ sauceTunnel = require('sauce-tunnel')
 wd = require('wd')  # TODO: compare vs http://webdriver.io/
 chalk = require('chalk')
 expect = require('expect.js')
-execSync = require('exec-sync')
+execSync = require('sync-exec')
 
 # 'mathdown' is a sub-account I created.
 sauceUser = process.env.SAUCE_USERNAME || 'mathdown'
@@ -73,7 +73,6 @@ buildInfo = ->
   if buildUrl
     "#{buildUrl} [#{branch}] commit #{commit}"
   else
-    # TODO: execSync is ugly FFI.  Use built-in child_process.execSync in newer node versions?  Use mocha delay mode?
     versionInfo = execSync('git describe --always --all --long --dirty')
     timestamp = new Date().toISOString()
     "Local at #{versionInfo} on #{timestamp}"
