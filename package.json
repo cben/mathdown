@@ -8,14 +8,15 @@
     "st": "^0.5.5"
   },
   "devDependencies": {
-    "jasmine": "^2.3.2",
+    "expect.js": "^0.3.1",
+    "mocha": "^2.3.3",
     "sauce-tunnel": "^2.2.3",
     "wd": "^0.3.12"
   },
   "main": "server.coffee",
   "scripts": {
     "start": "coffee server.coffee",
-    "test": "jasmine",
+    "test": "mocha",
     "deploy": "deployment/deploy.sh"
   },
   "repository": {

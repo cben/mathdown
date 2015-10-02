@@ -5,9 +5,9 @@ require('coffee-script/register')
 server = require('../server')
 
 sauceTunnel = require('sauce-tunnel')
-http = require('http')
 wd = require('wd')  # TODO: compare vs http://webdriver.io/
 chalk = require('chalk')
+expect = require('expect.js')
 
 # 'mathdown' is a sub-account I created.
 sauceUser = process.env.SAUCE_USERNAME || 'mathdown'
@@ -20,6 +20,12 @@ sauceConnectOptions = {
   accessKey: sauceKey
   verbose: true
   logger: console.log
+}
+
+timeouts = {
+  tunnel: 60000
+  sauceIdle: 30000  # Waste less Sauce resources than default 90s if this script crashed.
+  sauceSession: 20000
 }
 
 # Build metadata
@@ -49,8 +55,7 @@ tags.push(env.CI_NAME) if env.CI_NAME  # Covers Codeship (could also use env.COD
 commonDesired = {
   build: "#{buildUrl} [#{branch}] commit #{commit}"
   tags: tags
-  # Waste less Sauce resources than default 90s if this script crashed.
-  'idle-timeout': 30
+  'idle-timeout': timeouts.sauceIdle
 }
 
 desiredBrowsers = [
@@ -64,11 +69,6 @@ desiredBrowsers = [
   # TODO: mobile
 ]
 
-itSlowly = (text, func) -> it(text, func, 30000)
-# YIKES: this affects other files, and having a big timeout everywhere
-# hides forgotten done() calls :-(
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000
-
 merge = (objs...) ->
   merged = {}
   for obj in objs
@@ -77,15 +77,16 @@ merge = (objs...) ->
   merged
 
 # I've factored parts of the test suite into "desribeFoo" functions.
-# When I want to pass them values computed in beforeAll/Each blocks,
-# I have to pass "getValue" callables rather than the values themselves
-# (see https://gist.github.com/cben/43fcbbae95019aa73ecd).
+# When I want to pass them values computed in before[Each] blocks, I have to
+# pass "getValue" callables (e.g. `getDesired` here) rather than the values
+# themselves (see https://gist.github.com/cben/43fcbbae95019aa73ecd).
 describeBrowserTest = (browserName, getDesired, site) ->
   describe browserName, ->
     browser = null
 
-    # Theoretically should use a custom reporter to set pass/fail status on Sauce Labs.
-    # Practically this kludge works, as long as test cases set eachPassed to true when done.
+    # KLUDGE: to set pass/fail status on Sauce Labs, I want to know whether tests passed.
+    # Theoretically should use a custom reporter; practically this works, as
+    # long as test cases set eachPassed to true when done.
     eachPassed = false
     allPassed = true
 
@@ -100,7 +101,8 @@ describeBrowserTest = (browserName, getDesired, site) ->
     # From the wd docs reusing one should work but is it isolated enough?
     # I suppose `browser.get()` does reset browser state...
     # Also, seeing individual tests on SauceLabs would be cool: https://youtu.be/Dzplh1tAwIg?t=370
-    beforeAll (done) ->
+    before (done) ->
+      @timeout(timeouts.sauceSession)
       browser = wd.remote('ondemand.saucelabs.com', 80, sauceUser, sauceKey)
       browser.on 'status', (info) ->
         console.log(chalk.cyan(info))
@@ -110,7 +112,7 @@ describeBrowserTest = (browserName, getDesired, site) ->
       #  console.log(' > %s %s %s', chalk.magenta(meth), path, chalk.grey(data))
 
       browser.init getDesired(), (err) ->
-        expect(err).toBeFalsy()
+        expect(err).to.be(null)
         done()
 
     # TODO: inspect browser console log
@@ -123,30 +125,30 @@ describeBrowserTest = (browserName, getDesired, site) ->
     #
     # afterEach (done) ->
     #   browser.logTypes (err, arrayOfLogTypes) ->
-    #     expect(err).toBeFalsy()
+    #     expect(err).to.be(null)
     #     console.log(chalk.yellow('LOG TYPES:'), arrayOfLogTypes)
     #     browser.log 'browser', (err, arrayOfLogs) ->
-    #       expect(err).toBeFalsy()
+    #       expect(err).to.be(null)
     #       console.log(chalk.yellow('LOGS:'), arrayOfLogs)
     #       done()
 
-    afterAll (done) ->
+    after (done) ->
+      @timeout(timeouts.sauceSession)
       browser.sauceJobStatus allPassed, ->
         browser.quit()
         done()
 
-    itSlowly 'should load and render math', (done) ->
+    it 'should load and render math', (done) ->
+      @timeout(30000)
       browser.get site + '?doc=_mathdown_test_smoke', (err) ->
-
-        expect(err).toBeFalsy()
+        expect(err).to.be(null)
         browser.waitFor wd.asserters.jsCondition('document.title.match(/smoke test/)'), 10000, (err, value) ->
-          expect(err).toBeFalsy()
+          expect(err).to.be(null)
           browser.waitForElementByCss '.MathJax_Display', 15000, (err, el) ->
-            expect(err).toBeFalsy()
+            expect(err).to.be(null)
             el.text (err, text) ->
-              expect(err).toBeFalsy()
-              console.log('el.text:', text, 'match:', text.match(/^\s*α\s*$/))
-              expect(text).toMatch(/^\s*α\s*$/)
+              expect(err).to.be(null)
+              expect(text).to.match(/^\s*α\s*$/)
               eachPassed = true
               done()
 
@@ -165,13 +167,14 @@ else  # Run local server, test it via tunnel
   describe 'Served site via Sauce Connect', ->
     tunnel = null
     actualTunnelId = null
+    httpServer = null
     # https://docs.saucelabs.com/reference/sauce-connect/#can-i-access-applications-on-localhost-
     # lists ports we can use.
-    httpServer = null
     port = 8001
     site = 'http://localhost:' + port
 
-    beforeAll (done) ->
+    before (done) ->
+      @timeout(timeouts.tunnel)
       httpServer = server.main(port)
       # TODO: wait until server is actually up
 
@@ -179,23 +182,21 @@ else  # Run local server, test it via tunnel
       tunnel = new sauceTunnel(sauceUser, sauceKey, undefined, true, ['--verbose'])
       console.log(chalk.green('Creating tunnel...'))
       tunnel.start (tunnel_status) ->
-        expect(tunnel_status).toBeTruthy()
-        console.log('tunnel created')
-        # HORRIBLE KLUDGE
+        expect(tunnel_status).to.be.ok()
+        console.log(chalk.green('tunnel created:'), tunnel.identifier)
         actualTunnelId = tunnel.identifier
         done()
 
-    afterAll (done) ->
+    after (done) ->
+      @timeout(timeouts.tunnel)
+      # TODO (in mocha?): run this on SIGINT
       tunnel.stop ->
-        console.log(chalk.green('Tunnel stopped, cleaned up.'))
         httpServer.close()
+        console.log(chalk.green('Tunnel stopped, cleaned up.'))
         done()
 
     describeAllBrowsers(
-      (-> merge(commonDesired, {
-        name: 'smoke test'
-        'tunnel-identifier': actualTunnelId
-      })),
+      (-> merge(commonDesired, {name: 'smoke test', 'tunnel-identifier': actualTunnelId})),
       site)
 
 # TODO: parallelize (at least between different browsers).
