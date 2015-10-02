@@ -14,8 +14,8 @@ cd "$(dirname "$0")"/..  # project root
 # if local gh-pages != origin/gh-pages, only deploy what's on github.
 git fetch
 git push heroku-staging origin/gh-pages:master
-./node_modules/.bin/coffee smoke-test.coffee https://mathdown-staging.herokuapp.com
+env SITE_TO_TEST=https://mathdown-staging.herokuapp.com npm test
 git push rhcloud-staging origin/gh-pages:master
-./node_modules/.bin/coffee smoke-test.coffee https://staging-mathdown.rhcloud.com
+env SITE_TO_TEST=https://staging-mathdown.rhcloud.com npm test
 git push heroku origin/gh-pages:master
 git push rhcloud origin/gh-pages:master

@@ -111,23 +111,26 @@ I'm not sure Firebase never sets cookies.  Things will change once I implement l
 [![Travis test runner](https://img.shields.io/travis/cben/mathdown.svg?label=test)](https://travis-ci.org/cben/mathdown/branches)
 [![Saucelabs browser tests](https://saucelabs.com/browser-matrix/mathdown.svg)](https://saucelabs.com/users/mathdown/tests)
 
-It's pathetic, really.  `smoke-test.coffee` only checks the site loads, the title is set (which means the firepad loaded the document from firebase) and math got rendered.  And it only tests IE8 (well IE *is* fragile; I've managed to break the site completely on IE for a long time, at least twice).
+`test/browser-on-saucelabs.spec.coffee` runs tests on several browsers using free browser testing [courtesy of Sause Labs](https://saucelabs.com/opensauce).
+There are pathetically few tests.
 
-This uses free browser testing [courtesy of Sause Labs](https://saucelabs.com/opensauce).
-
-To run the test:
+To run the tests:
 
     npm install  # once
     npm test
+
+To run only some tests and/or browsers, use:
+
+    ./node_modules/.bin/mocha --grep firefox
 
 The test runs automatically on any commit and pull request.
 I've tried several free services for this, and currently prefer Travis:
 
   * [Travis](https://travis-ci.org/cben/mathdown/branches) - works, open source code.  Controlled by `.travis.yml`.
-  * [Drone](https://drone.io/github.com/cben/mathdown) - Docker-based, [open source](https://github.com/drone/drone) rewrite in progress.  Alas, always times out during test.  Test config on the web.
+  * [Wercker](https://app.wercker.com/#applications/54b6c5a2d9b237dd37003402) - works.  Controlled by `wercker.yml`.
+  * [Drone](https://drone.io/github.com/cben/mathdown) - Docker-based, [open source](https://github.com/drone/drone) rewrite in progress.  Alas, always timed out during test.  Test config on the web.
   * [Shippable](https://app.shippable.com/projects/54b58b855ab6cc13528881c1) - builds history only accessible by me?  Bad, I want public.  Controlled by `.travis.yml`.
   * [Codeship](https://codeship.com/projects/17706) - same, dashboard is private.  Test config on the web.
-  * [Wercker](https://app.wercker.com/#applications/54b6c5a2d9b237dd37003402) - same, dashboard is private.  Controlled by `wercker.yml`.
 
 ## Where it's deployed and how to run your fork
 
