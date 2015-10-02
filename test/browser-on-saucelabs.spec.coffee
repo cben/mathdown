@@ -8,6 +8,7 @@ sauceTunnel = require('sauce-tunnel')
 wd = require('wd')  # TODO: compare vs http://webdriver.io/
 chalk = require('chalk')
 expect = require('expect.js')
+execSync = require('exec-sync')
 
 # 'mathdown' is a sub-account I created.
 sauceUser = process.env.SAUCE_USERNAME || 'mathdown'
@@ -51,6 +52,7 @@ desiredBrowsers = [
 # https://codeship.com/documentation/continuous-integration/set-environment-variables/#default-environment-variables
 # http://devcenter.wercker.com/articles/steps/variables.html
 env = process.env
+
 build = env.CI_BUILD_NUMBER || env.BUILD_ID || env.TRAVIS_BUILD_ID || (env.WERCKER_BUILD_URL || '').replace(/.*\//, '') || env.JOB_ID
 travisBuildUrl = (env.TRAVIS_REPO_SLUG && env.TRAVIS_BUILD_ID && "https://travis-ci.org/#{env.TRAVIS_REPO_SLUG}/builds/#{env.TRAVIS_BUILD_ID}")
 buildUrl = env.CI_BUILD_URL || env.BUILD_URL || env.WERCKER_BUILD_URL || travisBuildUrl || build
@@ -67,8 +69,17 @@ tags.push('drone') if env.DRONE
 tags.push('wercker') if env.WERCKER_BUILD_URL
 tags.push(env.CI_NAME) if env.CI_NAME  # Covers Codeship (could also use env.CODESHIP).
 
+buildInfo = ->
+  if buildUrl
+    "#{buildUrl} [#{branch}] commit #{commit}"
+  else
+    # TODO: execSync is ugly FFI.  Use built-in child_process.execSync in newer node versions?  Use mocha delay mode?
+    versionInfo = execSync('git describe --always --all --long --dirty')
+    timestamp = new Date().toISOString()
+    "Local at #{versionInfo} on #{timestamp}"
+
 commonDesired = {
-  build: "#{buildUrl} [#{branch}] commit #{commit}"
+  build: buildInfo()
   tags: tags
   'idle-timeout': timeouts.sauceIdle
 }
