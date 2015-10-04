@@ -23,10 +23,16 @@ sauceConnectOptions = {
   logger: console.log
 }
 
+sec = 1000
+min = 60*sec
+
 timeouts = {
-  tunnel: 60000
-  sauceSession: 60000  # is normally very fast but sometimes took >20s.
-  sauceIdle: 30000  # waste less Sauce resources than default 90s if this script crashed.
+  tunnel: 60*sec
+  # Is normally fast but some VMs are slow to obtain and running too many concurrent jobs
+  # causes jobs to queue up waiting for a slot.
+  sauceSession: 5*min
+  # Waste less Sauce resources than default 90s if this script crashed.
+  sauceIdle: 30*sec
 }
 
 desiredBrowsers = [
@@ -153,12 +159,12 @@ describeBrowserTest = (browserName, getDesired, getSite) ->
         done()
 
     it 'should load and render math', (done) ->
-      @timeout(60000)  # 30s would be enough if not for mobile?
+      @timeout(60*sec)  # 30s would be enough if not for mobile?
       browser.get getSite() + '?doc=_mathdown_test_smoke', (err) ->
         expect(err).to.be(null)
-        browser.waitFor wd.asserters.jsCondition('document.title.match(/smoke test/)'), 10000, (err, value) ->
+        browser.waitFor wd.asserters.jsCondition('document.title.match(/smoke test/)'), 10*sec, (err, value) ->
           expect(err).to.be(null)
-          browser.waitForElementByCss '.MathJax_Display', 15000, (err, el) ->
+          browser.waitForElementByCss '.MathJax_Display', 15*sec, (err, el) ->
             expect(err).to.be(null)
             el.text (err, text) ->
               expect(err).to.be(null)
