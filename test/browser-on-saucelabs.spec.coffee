@@ -205,8 +205,10 @@ else  # Run local server, test it via tunnel
       @timeout(timeouts.tunnel)
       # TODO (in mocha?): run this on SIGINT
       tunnel.stop ->
-        httpServer.close()
         console.log(chalk.green('Tunnel stopped, cleaned up.'))
+        # Not waiting for server to close - won't happen if the client kept open
+        # connections, https://github.com/nodejs/node-v0.x-archive/issues/5052
+        httpServer.close()
         done()
 
     describeAllBrowsers(

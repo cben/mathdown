@@ -31,8 +31,8 @@ handleRequest = (req, res) ->
   else
     handleStatic(req, res)
 
-exports.main = (port) ->
-  port = port || process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080
+# port is required, callback is optional
+exports.main = (port, callback) ->
   listen_on_address = process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0'  # INADDR_ANY
   httpServer = http.createServer()
   # TODO: Use Express to chain handlers.
@@ -40,9 +40,11 @@ exports.main = (port) ->
   httpServer.on 'request', handleRequest
 
   httpServer.on 'listening', ->
-    console.log('HttpServer up, e.g. http://localhost:' + port + '/?doc=demo');
+    console.log("HttpServer up, e.g. http://localhost:#{httpServer.address().port}/?doc=demo");
+  if callback?
+    httpServer.on 'listening', callback
   httpServer.listen(port, listen_on_address)
   return httpServer
 
 if module is require.main
-  exports.main()
+  exports.main(process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080)
