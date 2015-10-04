@@ -1,14 +1,14 @@
 # Usage: By default runs local server, tests it via tunnel;
 # if SITE_TO_TEST env var is set to a publicly accessible URL, tests that skipping server & tunnel.
 
+sauceTunnel = require('sauce-tunnel')
+wd = require('wd')  # TODO: compare vs http://webdriver.io/ vs webdriverJS
+chalk = require('chalk')
+execSync = require('sync-exec')
+expect = require('expect.js')
+
 require('coffee-script/register')
 server = require('../server')
-
-sauceTunnel = require('sauce-tunnel')
-wd = require('wd')  # TODO: compare vs http://webdriver.io/
-chalk = require('chalk')
-expect = require('expect.js')
-execSync = require('sync-exec')
 
 # 'mathdown' is a sub-account I created.
 sauceUser = process.env.SAUCE_USERNAME || 'mathdown'
@@ -94,7 +94,7 @@ merge = (objs...) ->
 # When I want to pass them values computed in before[Each] blocks, I have to
 # pass "getValue" callables (e.g. `getDesired` here) rather than the values
 # themselves (see https://gist.github.com/cben/43fcbbae95019aa73ecd).
-describeBrowserTest = (browserName, getDesired, site) ->
+describeBrowserTest = (browserName, getDesired, getSite) ->
   describe browserName, ->
     browser = null
 
@@ -154,7 +154,7 @@ describeBrowserTest = (browserName, getDesired, site) ->
 
     it 'should load and render math', (done) ->
       @timeout(60000)  # 30s would be enough if not for mobile?
-      browser.get site + '?doc=_mathdown_test_smoke', (err) ->
+      browser.get getSite() + '?doc=_mathdown_test_smoke', (err) ->
         expect(err).to.be(null)
         browser.waitFor wd.asserters.jsCondition('document.title.match(/smoke test/)'), 10000, (err, value) ->
           expect(err).to.be(null)
@@ -166,52 +166,53 @@ describeBrowserTest = (browserName, getDesired, site) ->
               eachPassed = true
               done()
 
-describeAllBrowsers = (getDesired, site) ->
+describeAllBrowsers = (getDesired, getSite) ->
   for b in desiredBrowsers
     do (b) ->
       name = "#{b.browserName} #{b.deviceName} #{b.version} on #{b.platform}"
-      describeBrowserTest(name, (-> merge(b, getDesired())), site)
+      describeBrowserTest(name, (-> merge(b, getDesired())), getSite)
 
 if siteToTest  # Testing existing instance
   describe "#{siteToTest}", ->
     describeAllBrowsers(
       (-> merge(commonDesired, {name: 'smoke test of ' + siteToTest})),
-      siteToTest)
+      (-> siteToTest))
 else  # Run local server, test it via tunnel
   describe 'Served site via Sauce Connect', ->
     tunnel = null
     actualTunnelId = null
     httpServer = null
-    # https://docs.saucelabs.com/reference/sauce-connect/#can-i-access-applications-on-localhost-
-    # lists ports we can use.
-    port = 8001
-    site = 'http://localhost:' + port
 
     before (done) ->
       @timeout(timeouts.tunnel)
-      httpServer = server.main(port)
-      # TODO: wait until server is actually up
 
-      # undefined => unique tunnel id will be automatically chosen
-      tunnel = new sauceTunnel(sauceUser, sauceKey, undefined, true, ['--verbose'])
-      console.log(chalk.green('Creating tunnel...'))
-      tunnel.start (tunnel_status) ->
-        expect(tunnel_status).to.be.ok()
-        console.log(chalk.green('tunnel created:'), tunnel.identifier)
-        actualTunnelId = tunnel.identifier
-        done()
+      # https://docs.saucelabs.com/reference/sauce-connect/#can-i-access-applications-on-localhost-
+      # lists ports we can use.  TODO: try other ports if in use.
+      port = 8001
+      httpServer = server.main port, ->
+
+        # undefined => unique tunnel id will be automatically chosen
+        tunnel = new sauceTunnel(sauceUser, sauceKey, undefined, true, ['--verbose'])
+        console.log(chalk.green('Creating tunnel...'))
+        tunnel.start (tunnel_status) ->
+          expect(tunnel_status).to.be.ok()
+          console.log(chalk.green('tunnel created:'), tunnel.identifier)
+          actualTunnelId = tunnel.identifier
+          done()
 
     after (done) ->
       @timeout(timeouts.tunnel)
       # TODO (in mocha?): run this on SIGINT
       tunnel.stop ->
-        httpServer.close()
         console.log(chalk.green('Tunnel stopped, cleaned up.'))
+        # Not waiting for server to close - won't happen if the client kept open
+        # connections, https://github.com/nodejs/node-v0.x-archive/issues/5052
+        httpServer.close()
         done()
 
     describeAllBrowsers(
       (-> merge(commonDesired, {name: 'smoke test', 'tunnel-identifier': actualTunnelId})),
-      site)
+      (-> "http://localhost:#{httpServer.address().port}"))
 
 # TODO: parallelize (at least between different browsers).
 # I probably want Vows instead of Jasmine, see https://github.com/jlipps/sauce-node-demo example?
