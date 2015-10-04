@@ -28,6 +28,8 @@ canonicalDomains = {
 exports.computeRedirect = function computeRedirect(method, protocol, host, path) {
   method = method.toUpperCase();
   protocol = protocol.toLowerCase();
+  if(!host)
+    return null;  // assuming I don't do any same-host redirects here.
   host = host.toLowerCase();
 
   var redir = false;

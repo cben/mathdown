@@ -40,7 +40,7 @@ describe 'redirects server behavior', ->
 
   it 'should redirect to https and www', (done) ->
     reqOptions = {
-      host: 'localhost'
+      hostname: 'localhost'
       port: httpServer.address().port
       path: '/?doc=about'
       headers: {Host: 'mathdown.net'}
@@ -53,11 +53,26 @@ describe 'redirects server behavior', ->
 
   it 'should not have a redirect loop', (done) ->
     reqOptions = {
-      host: 'localhost'
+      hostname: 'localhost'
       port: httpServer.address().port
       path: '/?doc=about'
       headers: {Host: 'Www.mathdown.NET', 'x-forwarded-proto': 'hTTps'}
     }
     http.get reqOptions, (res) ->
+      expect(res.statusCode).to.equal(200)
+      done()
+
+  it 'should handle missing Host: header', (done) ->
+    reqOptions = {
+      hostname: 'localhost'
+      port: httpServer.address().port
+      path: '/?doc=about'
+    }
+    getWithoutHost = (reqOptions, callback) ->
+      # http module adds 'Host: localhost:42' header if omitted, have to actively remove it.
+      req = http.request(reqOptions, callback)
+      req.removeHeader('host')
+      req.end()
+    getWithoutHost reqOptions, (res) ->
       expect(res.statusCode).to.equal(200)
       done()
