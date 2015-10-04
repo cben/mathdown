@@ -1,6 +1,7 @@
-st = require('st')
 http = require('http')
 assert = require('assert')
+
+st = require('st')
 
 redirects = require('./redirects')
 

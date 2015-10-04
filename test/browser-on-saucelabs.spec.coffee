@@ -1,14 +1,14 @@
 # Usage: By default runs local server, tests it via tunnel;
 # if SITE_TO_TEST env var is set to a publicly accessible URL, tests that skipping server & tunnel.
 
+sauceTunnel = require('sauce-tunnel')
+wd = require('wd')  # TODO: compare vs http://webdriver.io/ vs webdriverJS
+chalk = require('chalk')
+execSync = require('sync-exec')
+expect = require('expect.js')
+
 require('coffee-script/register')
 server = require('../server')
-
-sauceTunnel = require('sauce-tunnel')
-wd = require('wd')  # TODO: compare vs http://webdriver.io/
-chalk = require('chalk')
-expect = require('expect.js')
-execSync = require('sync-exec')
 
 # 'mathdown' is a sub-account I created.
 sauceUser = process.env.SAUCE_USERNAME || 'mathdown'
