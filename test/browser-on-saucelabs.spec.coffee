@@ -73,7 +73,7 @@ buildInfo = ->
   if buildUrl
     "#{buildUrl} [#{branch}] commit #{commit}"
   else
-    versionInfo = execSync('git describe --always --all --long --dirty')
+    versionInfo = execSync('git describe --always --all --long --dirty').stdout.trim()
     timestamp = new Date().toISOString()
     "Local at #{versionInfo} on #{timestamp}"
 
