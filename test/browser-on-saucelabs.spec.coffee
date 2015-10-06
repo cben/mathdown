@@ -85,11 +85,15 @@ buildInfo = ->
     timestamp = new Date().toISOString()
     "Local at #{versionInfo} on #{timestamp}"
 
-commonDesired = {
-  build: buildInfo()
-  tags: tags
-  'idle-timeout': timeouts.sauceIdle
-}
+commonDesired = null
+getCommonDesired = ->
+  if not commonDesired?
+    commonDesired = {
+      build: buildInfo()
+      tags: tags
+      'idle-timeout': timeouts.sauceIdle
+    }
+  commonDesired
 
 merge = (objs...) ->
   merged = {}
@@ -183,7 +187,7 @@ describeAllBrowsers = (getDesired, getSite) ->
 if siteToTest  # Testing existing instance
   describe "#{siteToTest}", ->
     describeAllBrowsers(
-      (-> merge(commonDesired, {name: 'smoke test of ' + siteToTest})),
+      (-> merge(getCommonDesired(), {name: 'smoke test of ' + siteToTest})),
       (-> siteToTest))
 else  # Run local server, test it via tunnel
   describe 'Served site via Sauce Connect', ->
@@ -219,7 +223,7 @@ else  # Run local server, test it via tunnel
         done()
 
     describeAllBrowsers(
-      (-> merge(commonDesired, {name: 'smoke test', 'tunnel-identifier': actualTunnelId})),
+      (-> merge(getCommonDesired(), {name: 'smoke test', 'tunnel-identifier': actualTunnelId})),
       (-> "http://localhost:#{httpServer.address().port}"))
 
 # TODO: parallelize (at least between different browsers).
