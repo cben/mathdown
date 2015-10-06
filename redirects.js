@@ -58,7 +58,10 @@ exports.computeRedirect = function computeRedirect(method, protocol, host, path)
     return {
       status: status,
       headers: {
-	Location: (redirProtocol ? protocol + "://" : "//") + host + path
+	Location: (redirProtocol ? protocol + "://" : "//") + host + path,
+	// Node.js doesn't by default send length (nor chunked encoding) for HEAD requests.
+	// Browsers don't care but we SHOULD: http://stackoverflow.com/a/18925736.
+	'Content-Length': 0
       }
     };
   } else {
