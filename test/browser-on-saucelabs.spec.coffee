@@ -28,9 +28,11 @@ min = 60*sec
 
 timeouts = {
   tunnel: 60*sec
-  # Is normally fast but some VMs are slow to obtain and running too many concurrent jobs
-  # causes jobs to queue up waiting for a slot.
+  tunnelClose: 10*sec
+  # Sauce normally gives a VM in seconds but sometimes it's slow
+  # and running too many concurrent jobs causes jobs to queue up waiting for a slot.
   sauceSession: 5*min
+  sauceSessionClose: 10*sec
   # Waste less Sauce resources than default 90s if this script crashed.
   sauceIdle: 30*sec
 }
@@ -153,7 +155,7 @@ describeBrowserTest = (browserName, getDesired, getSite) ->
     #       done()
 
     after (done) ->
-      @timeout(timeouts.sauceSession)
+      @timeout(timeouts.sauceSessionClose)
       browser.sauceJobStatus allPassed, ->
         browser.quit()
         done()
@@ -207,7 +209,7 @@ else  # Run local server, test it via tunnel
           done()
 
     after (done) ->
-      @timeout(timeouts.tunnel)
+      @timeout(timeouts.tunnelClose)
       # TODO (in mocha?): run this on SIGINT
       tunnel.stop ->
         console.log(chalk.green('Tunnel stopped, cleaned up.'))
