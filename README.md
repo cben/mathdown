@@ -30,6 +30,7 @@ Issues:
 ## License
 
 My code is under [MIT License](LICENSE).
+Exception: font/ contains a subsetted Bitstream Charter font under a permissive license - see [fonts/LICENSE](fonts/LICENSE).
 
 Dependencies:
 
