@@ -1,8 +1,6 @@
 https://www.mathdown.net
 ========================
 
-## ⚠ Currently mathdown.net may be inaccessible due to DNS issues (#104).  Use *www.*mathdown.net.
-
 Collaborative markdown with math.  Main features:
 
 - Markdown is styled in-place, no source/preview separation.
