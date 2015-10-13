@@ -66,8 +66,10 @@ body { height: 80%; width: 95%; }
   form { display: table-row; } */
 
 /* Font choices based on Math.SE: http://graphicdesign.stackexchange.com/a/12961 */
+/* "lining_numerals_charter" replaces only the digits 0-9, comes from fonts/ subdir.
+   See https://github.com/cben/mathdown/issues/95 */
 .CodeMirror {
-  font-family: "Georgia", "Bitstream Charter", "David", "David CLM", "Times New Roman", "Times", serif;
+  font-family: "lining_numerals_charter", "Georgia", "Bitstream Charter", "David", "David CLM", "Times New Roman", "Times", serif;
 }
 /* markdown mode styles `...` and indented code blocks as "comment". */
 .cm-comment, .cm-leadingspace, .cm-formatting-list, .cm-formatting-quote {
