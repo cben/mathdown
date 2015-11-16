@@ -16,11 +16,16 @@ sauceUser = process.env.SAUCE_USERNAME || 'mathdown'
 # is free anyway.  Can always revoke if needed...
 sauceKey = process.env.SAUCE_ACCESS_KEY || '23056294-abe8-4fe9-8140-df9a59c45c7d'
 
+# Try to keep all logging indented deeper than Mocha test tree.
+indentation = '          '
+log = (fmt, args...) ->
+  console.log(indentation + fmt, args...)
+
 sauceConnectOptions = {
   username: sauceUser
   accessKey: sauceKey
   verbose: true
-  logger: console.log
+  logger: log
 }
 
 sec = 1000
@@ -96,12 +101,13 @@ describeBrowserTest = (browserName, getDesired, getSite) ->
       @timeout(timeouts.sauceSession)
       browser = wd.remote('ondemand.saucelabs.com', 80, sauceUser, sauceKey)
       browser.on 'status', (info) ->
-        console.log(chalk.cyan(info))
+        log(chalk.cyan(info))
       browser.on 'command', (meth, path) ->
-        console.log(' > %s: %s', chalk.yellow(meth), path)
+        log('> %s: %s', chalk.yellow(meth), path)
       #browser.on 'http', (meth, path, data) ->
-      #  console.log(' > %s %s %s', chalk.magenta(meth), path, chalk.grey(data))
+      #  log('> %s %s %s', chalk.magenta(meth), path, chalk.grey(data))
 
+      log('')  # blank line before lots of noise
       browser.init getDesired(), (err) ->
         expect(err).to.be(null)
         done()
@@ -117,17 +123,18 @@ describeBrowserTest = (browserName, getDesired, getSite) ->
     # afterEach (done) ->
     #   browser.logTypes (err, arrayOfLogTypes) ->
     #     expect(err).to.be(null)
-    #     console.log(chalk.yellow('LOG TYPES:'), arrayOfLogTypes)
+    #     log(chalk.yellow('LOG TYPES:'), arrayOfLogTypes)
     #     browser.log 'browser', (err, arrayOfLogs) ->
     #       expect(err).to.be(null)
-    #       console.log(chalk.yellow('LOGS:'), arrayOfLogs)
+    #       log(chalk.yellow('LOGS:'), arrayOfLogs)
     #       done()
 
     after (done) ->
       @timeout(timeouts.sauceSessionClose)
       browser.sauceJobStatus allPassed, ->
-        browser.quit()
-        done()
+        browser.quit ->
+          log('')  # blank line after lots of noise
+          done()
 
     it 'should load and render math', (done) ->
       @timeout(60*sec)  # 30s would be enough if not for mobile?
@@ -172,10 +179,10 @@ else  # Run local server, test it via tunnel
 
         # undefined => unique tunnel id will be automatically chosen
         tunnel = new sauceTunnel(sauceUser, sauceKey, undefined, true, ['--verbose'])
-        console.log(chalk.green('Creating tunnel...'))
+        log(chalk.green('Creating tunnel...'))
         tunnel.start (tunnel_status) ->
           expect(tunnel_status).to.be.ok()
-          console.log(chalk.green('tunnel created:'), tunnel.identifier)
+          log(chalk.green('tunnel created:'), tunnel.identifier)
           actualTunnelId = tunnel.identifier
           done()
 
@@ -183,7 +190,7 @@ else  # Run local server, test it via tunnel
       @timeout(timeouts.tunnelClose)
       # TODO (in mocha?): run this on SIGINT
       tunnel.stop ->
-        console.log(chalk.green('Tunnel stopped, cleaned up.'))
+        log(chalk.green('Tunnel stopped, cleaned up.'))
         # Not waiting for server to close - won't happen if the client kept open
         # connections, https://github.com/nodejs/node-v0.x-archive/issues/5052
         httpServer.close()
