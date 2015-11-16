@@ -46,7 +46,7 @@ desiredBrowsers = [
   # arbitrary somewhat old - but not ancient - FF and Chrome versions.
   {browserName: 'firefox', version: '30.0', platform: 'Linux'}
   {browserName: 'chrome', version: '30.0', platform: 'Linux'}
-  {browserName: 'safari', version: '8.1', platform: 'OS X 10.11'}
+  {browserName: 'safari', version: '9.0', platform: 'OS X 10.11'}
   # Mobile (doesn't mean it's usable though):
   {browserName: 'iphone', deviceName: 'iPad Simulator', version: '5.1', platform: 'OS X 10.10'}
   {browserName: 'android', deviceName: 'Android Emulator', version: '4.0', platform: 'Linux'}
