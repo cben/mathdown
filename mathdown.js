@@ -124,7 +124,8 @@ CodeMirror.keyMap["default"]["Shift-Tab"] = "indentLess";
 
 function createEditor(docDirection) {
   return CodeMirror.fromTextArea(document.getElementById("code"),
-                                 {foldGutter: true,
+                                 {flattenSpans: true, // important e.g. for .cm-formatting-task.
+                                  foldGutter: true,
                                   gutters: ["CodeMirror-foldgutter"],
                                   indentUnit: 4,
                                   lineNumbers: false,
@@ -169,6 +170,46 @@ function setupEditor(editor) {
     }
   });
   editor.refresh();
+
+  // Clickable `[ ]` <-> `[x]` task lists.
+  editor.on("mousedown", function(cm, event) {
+    var pos = editor.coordsChar({left: event.clientX, top: event.clientY});
+    // getToken returns token to the left of given pos, so clicking at right
+    // edge ("[x]|") works and left edge ("|[x]") doesn't.  Try one to the
+    // right.
+    var nextPos = {line: pos.line, ch: pos.ch + 1};
+    if (/\bformatting-task\b/.test(cm.getTokenTypeAt(nextPos))) {
+      pos = nextPos;
+    }
+
+    var token = editor.getTokenAt(pos, true);  // precise=true
+    if (token.type && /\bformatting-task\b/.test(token.type)) {
+      var from = {line: pos.line, ch: token.start};
+      var to = {line: pos.line, ch: token.end};
+      // CM renders one "[ ]" or "[x]" span due to flattenSpans but
+      // markdown mode actually returns 3 separate tokens: "[", " ", "]".
+      // This code should deal with it either way.
+      if (token.string === "[") {
+        to.ch += 2;
+      } else if (token.string === "]") {
+        from.ch -= 2;
+      }
+
+      var text = editor.getRange(from, to);
+      if (/ /.test(text)) {
+        cm.replaceRange(text.replace(" ", "x"), from, to);
+      } else if (/x/.test(text)) {
+        cm.replaceRange(text.replace("x", " "), from, to);
+      } else {
+        log("unxepected formatting-task token:", token, "adjusted to:", from, to, text);
+      }
+      // Is preventDefault (CM moving the cursor) desired?
+      // It might be convenient to toggle checkboxes without moving the cursor,
+      // but it might create impression it's some "magic" widget; I think
+      // letting the cursor move into e.g. "[x|]" clarifies it's editable text.
+      //event.preventDefault();
+    }
+  });
 
   // Keep title and url #hash part in sync with first line of document.
   function updateTitle() {

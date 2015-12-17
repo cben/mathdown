@@ -72,7 +72,7 @@ body { height: 80%; width: 95%; }
   font-family: "lining_numerals_charter", "Georgia", "Bitstream Charter", "David", "David CLM", "Times New Roman", "Times", serif;
 }
 /* markdown mode styles `...` and indented code blocks as "comment". */
-.cm-comment, .cm-leadingspace, .cm-formatting-list, .cm-formatting-quote {
+.cm-comment, .cm-leadingspace, .cm-formatting-list, .cm-formatting-quote, .cm-formatting-task {
   /* Prefer Courier and similar serif monospaced fonts.
      Prefer Nimbus Mono L to Courier New -> Liberation Mono substitution
      on linux (it's metrically compatible but sans-serif). */
@@ -86,9 +86,9 @@ pre.cm-header-3 { font-size: 1.17em; }
 pre.cm-header-4 { font-size: 1.00em; }
 pre.cm-header-5 { font-size: 0.83em; }
 pre.cm-header-6 { font-size: 0.67em; }
-/* Arbitrary margins for headers (non-hegligible but not too big). */
+/* Arbitrary margins for headers (non-negligible but not too big). */
 pre.cm-header { padding-top: 0.5em; padding-bottom: 0.5em; }
-/* De-emphasize markup characters.  Whitewash colors by *0.4 factor. */
+/* De-emphasize markup characters.  Whitewash colors by *0.4 factor. TODO: opacity? */
 .cm-s-default .cm-formatting-header { color: #66F; }
 .cm-s-default .cm-formatting-em { color: #666; }
 .cm-s-default .cm-formatting-strong { color: #666; }
@@ -104,6 +104,9 @@ pre.cm-header { padding-top: 0.5em; padding-bottom: 0.5em; }
 .cm-s-default .cm-keyword { color: #470052; }
 .cm-s-default .cm-keyword.cm-formatting-list { color: #708; }
 */
+
+/* Poor man's checkbox. */
+.cm-formatting-task { border: 1px inset; }
 
 /* exclude math from monospace style to avoid mathjax vertically
    squishing formulas, especially display. */
