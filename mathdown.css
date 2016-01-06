@@ -9,9 +9,9 @@
 #logo {
   font-size: 50%;  /* Fit 2-line math within single-line header */
   color: black; text-decoration: none;  /* Don't look like a link */
-  display: inline-block; width: 4em;
+  display: inline-block; width: 4em; white-space: nowrap;
 }
-.warning { color: orange; }
+.warning { color: #ff7f50; /* coral */ }
 .call_to_action {
   font-weight: bold;
   font-size: inherit; font-family: inherit; /* avoid parts of browser <button> styling */
