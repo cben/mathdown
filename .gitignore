@@ -1,1 +1,3 @@
 node_modules/
+deployment/tls-certs-letsencrypt/venv/
+deployment/tls-certs-letsencrypt/www.mathdown.net/privkey*

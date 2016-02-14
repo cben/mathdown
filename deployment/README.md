@@ -111,6 +111,8 @@ As of these writing, I've used these procedures (it's useful to timestamp by pip
 
 	./deployment/tls-certs-startcom/rhc-set-certs.sh 'prod -n mathdown' ~/StartSSL/my-private-decrypted.key
 
+> TODO: re-test, update the above.
+
 ## Heroku
 
 The primary reason Heroku is not my main hosting (beyond open source allegiance) is SSL (see below).
@@ -147,6 +149,8 @@ Performance (I installed various addons but haven't really instrumented anything
 
 ### SSL on Heroku
 
+> TODO: update - easier with Let's Encrypt giving 1 cert for all 4 domains.
+
 The wildcard cert on https://mathdown.herokuapp.com/ is free.
 For custom domain cert, Heroku charges $20/mo for the [SSL addon][] and it only accepts *one* cert.
 Since I haven't bought a multi-domain cert for both .net and .com, I'd need $40/mo and [hackish config](http://stackoverflow.com/a/18982770/239657).
@@ -171,7 +175,9 @@ Provisioning the cert:
 
 ## HTTPS (TLS/SSL) certificates
 
-I got free certificates from [StartCom][] following [Eric Mill's tutorial][] for:
+> TODO: UPDATE
+
+I got free certificates from [Let's Encrypt][] based on [Jason Kulatunga's tutorial][] for:
 
 - www.mathdown.com & mathdown.com (expires 2016 Feb 12)
 - www.mathdown.net & mathdown.net (expires 2016 Feb 15)
@@ -182,10 +188,14 @@ The non-secret files are in this directory.
 
 Note: Both RHcloud and Heroku can only support custom-domain certs with SNI (client sending requested host during TLS handshake).  The main group this leaves in the dark is Android 2.x default browser, and IE8 on XP.
 
-[Eric Mill's tutorial]: https://konklone.com/post/switch-to-https-now-for-free
-[StartCom]: https://StartSSL.com
+[Jason Kulatunga's tutorial]: http://blog.thesparktree.com/post/138999997429/generating-intranet-and-private-network-ssl
+[Let's Encrypt]: https://letsencrypt.org/
 
-Configuring the domains and certs on RHcloud can be repeated with `tls-certs-startcom/rhc-set-certs.sh` script.
+Configuring the domains and certs on RHcloud can be repeated with `tls-certs-letsencrypt/rhc-set-certs.sh` script.
+
+P.S. [Tip to inspect a chained (concatenated) certs file](http://comments.gmane.org/gmane.comp.encryption.openssl.user/43587):
+
+    openssl crl2pkcs7 -nocrl -certfile fullchain.pem | openssl pkcs7 -print_certs -text
 
 ## DNS
 
@@ -202,7 +212,8 @@ Using an apex domain (with www. subdomain) turns out to be a pain, but I'm stick
 I've switched to DNSimple as my DNS, with TTL of 1-10min.
 mathdown.net, www.mathdown.net, mathdown.com, www.mathdown.com usually all point at RHcloud, though .net may be shunted to Heroku sometimes.
 
-I also might switch back to `www.mathdown.net` as the primary domain?
+I ~~also might~~ have switched back to `www.mathdown.net` as the primary domain.
+> TODO: UPDATE
 
 Quick way to download current DNSimple settings (in a logged-in browser):
 https://dnsimple.com/domains/mathdown.net/zone.txt
@@ -214,6 +225,8 @@ https://dnsimple.com/domains/mathdown.com/zone.txt
 
 ## TODO: Monitoring/alerting [#78](https://github.com/cben/mathdown/issues/78)
 
+> TODO: complete switch to StatusCake (unlimited free checks, doesn't think my redirects are down).  [Public summary](http://uptime.statuscake.com/?TestID=Q28S2gZ42e)
+
 Extremely rudimentary monitoring at
 
 - Pingdom: [private](https://my.pingdom.com/dashboard/checks) — public summary at http://stats.pingdom.com/imb1lncuugx2
@@ -221,7 +234,7 @@ Extremely rudimentary monitoring at
   On errors it provides useful details (Reports => Uptime Reports) - IP tried, traceroute, full HTTP exchange.
 
 - UptimeRobot: [private dashboard](https://uptimerobot.com/dashboard), [public RSS link](http://rss.uptimerobot.com/u161856-2938762f077934131eb64592ffd2e8f9).  [Handy Chrome extension (needs private API key)](http://shreyaspurohit.github.io/chrome.extension.uptimeRobotMonitor/).
-  Checks that https://{www.,}mathdown.{net,com}, http://mathdown.net, and directly accessed rhcloud, heroku, gh-paes respond.  No details if they don't.
+  Checks that https://{www.,}mathdown.{net,com}, http://mathdown.net, and directly accessed rhcloud, heroku, gh-pages respond.  No details if they don't.
 
 If the server is down I will get mails, but I'm not tracking server-side load/error, especially on RHcloud.
 
