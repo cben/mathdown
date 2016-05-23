@@ -47,7 +47,7 @@ desiredBrowsers = [
   # Desktop:
   {browserName: 'internet explorer', version: '8.0', platform: 'Windows XP'}
   {browserName: 'internet explorer', version: '11.0', platform: 'Windows 10'}
-  {browserName: 'microsoftedge', version: '20.10240'}
+  {browserName: 'MicrosoftEdge'}
   # arbitrary somewhat old - but not ancient - FF and Chrome versions.
   {browserName: 'firefox', version: '30.0', platform: 'Linux'}
   {browserName: 'chrome', version: '30.0', platform: 'Linux'}
