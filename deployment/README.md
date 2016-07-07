@@ -1,7 +1,7 @@
 # Deployment — details & procedures
 
 This app *mostly* works as static pages, and I intend to keep it this way.
-(To run simply open index.html.  Or fork on github and immediately use your gh-pages branch at https://YOUR-GITHUB-USERNAME.github.io/mathdown/ (note: this is **insecure**, the HTTPS is not end-to-end).  See top-level README.md.)
+(To run simply open index.html.  Or fork on github and immediately use your gh-pages branch at https://YOUR-GITHUB-USERNAME.github.io/mathdown/.  See top-level README.md.)
 
 But for HTTPS on custom domain and some future features, I've switched to a Node.js server and the main hosting to RHcloud.
 
