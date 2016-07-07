@@ -158,14 +158,9 @@ This app *mostly* works as pure static pages, and I intend to keep it this way.
   * From a checkout, **just open `index.html` in your browser**.
 
   * Github Pages serves the gh-pages branch at https://cben.github.io/mathdown.
-    Note that Github Pages is **insecure** (the HTTPS encryption is [not end-to-end][]),
-    so your doc IDs could be snooped giving full read & edit access to your docs.
-
-    [not end-to-end]: https://konklone.com/post/github-pages-now-sorta-supports-https-so-use-it#comment-54d648a969702d6be8110a00
 
       * If you fork this repo, you can immediately use your version at https://YOUR-GITHUB-USERNAME.github.io/mathdown/!
       Or maybe not immediately but [after you push something](http://stackoverflow.com/q/8587321/239657).
-	  See above how it's **insecure**.
 
   * For other branches/commits, there is no trivial solution - rawgit.com would be great but doesn't currently support submodules.
 
