@@ -1,11 +1,16 @@
 #!/bin/bash
 set -e -u -o pipefail  # also set -x below
 
+# One cert for all 4 domains.
+main_domain='mathdown.net'
+alt_domains=('www.mathdown.net' 'www.mathdown.com' 'mathdown.com')
+domains=("$main_domain" "${alt_domains[@]}")
+
 if [ $# -lt 2 -o $# -gt 3 ]; then
     echo "Usage: $0 APP NAMESPACE KEYFILE [PASSPHRASE]"
     echo "  (\"NAMESPACE\" is what openshift also calls \"domain\")"
     echo "Examples:"
-    echo "  $0 prod mathdown www.mathdown.net/privkey.pem"
+    echo "  $0 prod mathdown certs/$main_domain/privkey.pem"
     echo "use encrypted keyfile (unsecure on multi-user systems):"
     echo "  read -s -p 'Passphrase: ' passphrase"
     echo "  $0 prod mathdown path/to/encrypted-privkey.pem \"\$passphrase\""
@@ -19,12 +24,10 @@ set -x
 cd "$(dirname "$0")"
 
 appopts=(--app="$1" --namespace="$2")
-# One cert for all 4 domains.
-domains=(www.mathdown.net mathdown.net www.mathdown.com mathdown.com)
 if [ -z "${4:-}" ]; then
-  keyopts=(--certificate=www.mathdown.net/fullchain.pem --private-key="$3")
+  keyopts=(--certificate="certs/$main_domain"/fullchain.pem --private-key="$3")
 else
-  keyopts=(--certificate=www.mathdown.net/fullchain.pem --private-key="$3" --passphrase="$4")
+  keyopts=(--certificate="certs/$main_domain"/fullchain.pem --private-key="$3" --passphrase="$4")
 fi
 
 # <rant>In fish $X does the right thing, in bash I need "${X[@]}" and it only comes close.</rant>
@@ -42,3 +45,8 @@ done
 
 echo '== after: =='
 rhc alias list "${appopts[@]}"
+
+curl --head "https://$main_domain/"
+
+echo 'Try:'
+printf '  https://www.ssllabs.com/ssltest/analyze.html?d=%s&latest\n' "${domains[@]}"

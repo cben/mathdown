@@ -11,33 +11,50 @@ set -e -u -o pipefail
 set -x
 
 # Create one combined cert for all domains - best for Heroku.
-MAIN_DOMAIN='www.mathdown.net'
-ALT_DOMAINS='mathdown.net www.mathdown.com mathdown.com'
+MAIN_DOMAIN='mathdown.net'
+ALT_DOMAINS='www.mathdown.net www.mathdown.com mathdown.com'
+
+CERTS_DIR="./certs"
+BASH=(bash)
+
+## DEBUG - TODO MAKE OPTIONS
+## TODO: $CA IS IGNORED, ALWAYS USES acme-v01 ?
+## POSSIBLY https://github.com/lukas2511/letsencrypt.sh/blob/master/docs/troubleshooting.md#no-registration-exists-matching-provided-key
+#CERTS_DIR="./certs-acme-staging"
+#set -x CA "https://acme-staging.api.letsencrypt.org/directory"
+#BASH=(bash -x)
 
 export PROVIDER=dnsimple
 export LEXICON_DNSIMPLE_USERNAME=beni.cherniavsky@gmail.com
 # Note: dnsimple supports sub-accounts.  I've created a 'mathdown' sub-account
 # but so far kept the domains under beni.cherniavsky, don't remember why.
-if [[ -z "$LEXICON_DNSIMPLE_TOKEN" ]]; then
-    echo Error: LEXICON_DNSIMPLE_TOKEN env var must be set
+if [[ -z "${LEXICON_DNSIMPLE_TOKEN:-}" ]]; then
+    echo 'Error: LEXICON_DNSIMPLE_TOKEN env var must be set (https://dnsimple.com/user)'
     exit 1
 fi
 # TODO: will token work if I enable DNSimple 2FA?
 
 cd "$(dirname "$0")"
 
-#virtualenv -p python2 ./venv/
-#export PATH="$PWD/venv/bin/:$PATH"
+echo $'\n== INSTALLING =='
+virtualenv -p python2 ./lexicon_venv/
+export PATH="$PWD/lexicon_venv/bin/:$PATH"
 
-#pip install dns-lexicon
-#pip install 'requests[security]'
-#(cd lexicon; python setup.py install)
-#exit
+pip install --upgrade ./lexicon/
 
-# letsencrypt.sh puts outputs inside its directory, but I prefer it unhere so I
-# can commit them (except for privkey*) into my git.
-ln -sfn ../../$MAIN_DOMAIN/ letsencrypt.sh/certs/$MAIN_DOMAIN
+echo $'\n== TESTING DNS CONTROL =='
+lexicon "$PROVIDER" list "$MAIN_DOMAIN" CNAME
 
-#chmod +x ./lexicon-hook.sh
-#cp ./lexicon/examples/letsencrypt.default.sh ./lexicon-hook.sh
-./letsencrypt.sh/letsencrypt.sh --cron --challenge dns-01 --hook ./lexicon-hook.sh --domain "$MAIN_DOMAIN $ALT_DOMAINS"
+echo $'\n== OBTAINING CERTS =='
+
+mkdir -p "$CERTS_DIR"
+"${BASH[@]}" ./letsencrypt.sh/letsencrypt.sh --cron --challenge dns-01 --hook ./lexicon/examples/letsencrypt.default.sh --domain "$MAIN_DOMAIN $ALT_DOMAINS" --out "$CERTS_DIR" | tee -a "$CERTS_DIR/letsencrypt.out"
+
+echo '$\n== RESULTS =='
+
+# Summarize all certs in chain: http://serverfault.com/a/755815
+openssl crl2pkcs7 -nocrl -certfile "$CERTS_DIR/$MAIN_DOMAIN/fullchain.pem" |
+  openssl pkcs7 -print_certs -noout -text |
+  egrep --color 'Certificate:|Issuer|Validity|Before|After|Subject|DNS'
+
+ls -ltr "$CERTS_DIR/$MAIN_DOMAIN/" "$CERTS_DIR/letsencrypt.out"
