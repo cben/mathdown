@@ -16,9 +16,9 @@
 	path = MathJax
 	url = https://github.com/mathjax/MathJax.git
 	branch = master
-[submodule "deployment/tls-certs-letsencrypt/letsencrypt.sh"]
-	path = deployment/tls-certs-letsencrypt/letsencrypt.sh
-	url = https://github.com/lukas2511/letsencrypt.sh
+[submodule "deployment/tls-certs-letsencrypt/dehydrated"]
+	path = deployment/tls-certs-letsencrypt/dehydrated
+	url = https://github.com/lukas2511/dehydrated
 [submodule "deployment/tls-certs-letsencrypt/lexicon"]
 	path = deployment/tls-certs-letsencrypt/lexicon
 	url = https://github.com/AnalogJ/lexicon
