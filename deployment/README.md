@@ -45,6 +45,11 @@ Read logs [[more info](https://developers.openshift.com/en/managing-log-files.ht
 
     rhc ssh prod -n mathdown --gears 'cd app-root/logs/; ls -ltr; tail -f -n 100 *.log'
 
+    # To download them all locally:
+    for GEAR_AT_HOST in $(rhc show-app prod -n mathdown --gears=ssh); do
+      rsync -r $GEAR_AT_HOST:app-root/logs/ logs-$(date -I)-gear-$GEAR_AT_HOST/
+    done
+
 SSH directly into the main "gear":
 
     rhc ssh prod -n mathdown
@@ -53,7 +58,7 @@ or use direct command as shown on admin page.
 
 Other gears are similarly accessible by direct SSH but you need to check the host names:
 
-    rhc show-app -a mathdown --gears
+    rhc show-app prod -n mathdown --gears
 
 Performance: TODO
 
@@ -214,16 +219,28 @@ https://dnsimple.com/domains/mathdown.com/zone.txt
 
 ## TODO: Monitoring/alerting [#78](https://github.com/cben/mathdown/issues/78)
 
+<a href="https://www.statuscake.com" title="Website Uptime Monitoring"><img src="" /></a>
+
 Extremely rudimentary monitoring at
 
 - Pingdom: [private](https://my.pingdom.com/dashboard/checks) — public summary at http://stats.pingdom.com/imb1lncuugx2
   Only checks that https://mathdown.net/ responds & includes the string "MathJax".
   On errors it provides useful details (Reports => Uptime Reports) - IP tried, traceroute, full HTTP exchange.
+  Free plan will disappear in 2017.
 
 - UptimeRobot: [private dashboard](https://uptimerobot.com/dashboard), [public RSS link](http://rss.uptimerobot.com/u161856-2938762f077934131eb64592ffd2e8f9).  [Handy Chrome extension (needs private API key)](http://shreyaspurohit.github.io/chrome.extension.uptimeRobotMonitor/).
-  Checks that https://{www.,}mathdown.{net,com}, http://mathdown.net, and directly accessed rhcloud, heroku, gh-paes respond.  No details if they don't.
+  Checks that https://{www.,}mathdown.{net,com}, http://mathdown.net, and directly accessed rhcloud, heroku, gh-pages respond.  No details if they don't.
+
+- StatusCake WIP.
+  Private dashboard: https://www.statuscake.com/App/YourStatus.php
+  Public dashboard: http://uptime.statuscake.com/?TestID=Q28S2gZ42e
+  Monthly uptime: ![StatusCake uptime](https://www.statuscake.com/App/button/index.php?Track=UFzBR9YWzA&Days=30&Design=1)
 
 If the server is down I will get mails, but I'm not tracking server-side load/error, especially on RHcloud.
 
+TODO: I had expired TLS cert for about a day this summer, and I don't think any of these 3 monitoring services reported downtime?!
+
 My Firebase usage graph: https://mathdown.firebaseio.com/?page=Analytics
 Firebase uptime: http://status.firebase.com/ (as of May 2015 my data is on [s-dal5-nss-33](http://status.firebase.com/1502938) but could move).
+
+OpenShift status: https://openshift.redhat.com/app/status/ but more details on twitter: https://twitter.com/openshift_ops
