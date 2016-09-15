@@ -96,25 +96,28 @@ Note that when `rhc app create` tells you timed out, sometimes the app still get
 
 As of these writing, I've used these procedures (it's useful to timestamp by piping to `| ts -s` from moreutils):
 
-	rhc app create -a staging -n mathdown -t nodejs-0.10 --scaling --debug --trace
-	git remote remove rhcloud-staging
-	git remote add -f rhcloud-staging $(rhc app show staging -n mathdown | sed -n 's/^\s*git url:\s*\(\S*\)/\1/ip')
-	git push -f rhcloud-staging gh-pages:master
-	rm ./staging -rf
+    rhc setup  # Once per computer
 
-	rhc app create -a prod -n mathdown --from-code https://github.com/cben/mathdown\#gh-pages -t nodejs-0.10 --scaling --gear-size small.highcpu --debug --trace
-	rhc cartridge storage nodejs-0.10 -a prod -n mathdown --set 1gb  # additional, 2gb total.
-	rhc cartridge scale nodejs-0.10 -a prod -n mathdown --min 2 --max 5 --debug --trace
-	git remote remove rhcloud
-	git remote add -f rhcloud $(rhc app show prod -n mathdown | sed -n 's/^\s*git url:\s*\(\S*\)/\1/ip')
+    rhc app create -a staging -n mathdown -t nodejs-0.10 --scaling --debug --trace
+    rm ./staging -rf
+
+    rhc app create -a prod -n mathdown --from-code https://github.com/cben/mathdown\#gh-pages -t nodejs-0.10 --scaling --gear-size small.highcpu --debug --trace
+    rhc cartridge storage nodejs-0.10 -a prod -n mathdown --set 1gb  # additional, 2gb total.
+    rhc cartridge scale nodejs-0.10 -a prod -n mathdown --min 2 --max 5 --debug --trace
 
     # Configure rhc commands that don't specify an app to access the prod app:
-	git config -f prod/.git/config --get-regexp '^rhc\.' | xargs -n 2 git config
-	rm ./prod -rf
+    git config -f prod/.git/config --get-regexp '^rhc\.' | xargs -n 2 git config
+    rm ./prod -rf
 
     # See https://github.com/openshift/rhc/issues/513 about making the above less awkward.
 
-	./deployment/tls-certs-startcom/rhc-set-certs.sh 'prod -n mathdown' ~/StartSSL/my-private-decrypted.key
+    deployment/git-remotes.sh
+    git push -f rhcloud-staging gh-pages:master
+    git push -f rhcloud gh-pages:master
+
+    ./deployment/tls-certs-startcom/rhc-set-certs.sh 'prod -n mathdown' ~/StartSSL/my-private-decrypted.key
+
+> TODO: re-test, update the above.
 
 ## Heroku
 
@@ -122,8 +125,10 @@ The primary reason Heroku is not my main hosting (beyond open source allegiance)
 
 There is also a deployment at https://mathdown.herokuapp.com/.  To deploy:
 
+    heroku login  # Once per computer
+
+    deployment/git-remotes.sh
     # Don't run this directly - use deployment/deploy.sh
-    git remote add heroku https://git.heroku.com/mathdown.git  # once
     git push heroku gh-pages:master
 
 (Heroku have an option to automatically deploy from github but that [doesn't support submodules](https://github.com/cben/mathdown/issues/57#issuecomment-74395026).)
@@ -152,6 +157,8 @@ Performance (I installed various addons but haven't really instrumented anything
 
 ### SSL on Heroku
 
+> TODO: update - easier with Let's Encrypt giving 1 cert for all 4 domains.
+
 The wildcard cert on https://mathdown.herokuapp.com/ is free.
 For custom domain cert, Heroku charges $20/mo for the [SSL addon][] and it only accepts *one* cert.
 Since I haven't bought a multi-domain cert for both .net and .com, I'd need $40/mo and [hackish config](http://stackoverflow.com/a/18982770/239657).
@@ -176,7 +183,9 @@ Provisioning the cert:
 
 ## HTTPS (TLS/SSL) certificates
 
-I got free certificates from [StartCom][] following [Eric Mill's tutorial][] for:
+> TODO: UPDATE
+
+I got free certificates from [Let's Encrypt][] based on [Jason Kulatunga's tutorial][] for:
 
 - www.mathdown.com & mathdown.com (expires 2016 Feb 12)
 - www.mathdown.net & mathdown.net (expires 2016 Feb 15)
@@ -187,16 +196,20 @@ The non-secret files are in this directory.
 
 Note: Both RHcloud and Heroku can only support custom-domain certs with SNI (client sending requested host during TLS handshake).  The main group this leaves in the dark is Android 2.x default browser, and IE8 on XP.
 
-[Eric Mill's tutorial]: https://konklone.com/post/switch-to-https-now-for-free
-[StartCom]: https://StartSSL.com
+[Jason Kulatunga's tutorial]: http://blog.thesparktree.com/post/138999997429/generating-intranet-and-private-network-ssl
+[Let's Encrypt]: https://letsencrypt.org/
 
-Configuring the domains and certs on RHcloud can be repeated with `tls-certs-startcom/rhc-set-certs.sh` script.
+Configuring the domains and certs on RHcloud can be repeated with `tls-certs-letsencrypt/rhc-set-certs.sh` script.
+
+P.S. [Tip to inspect a chained (concatenated) certs file](http://comments.gmane.org/gmane.comp.encryption.openssl.user/43587):
+
+    openssl crl2pkcs7 -nocrl -certfile fullchain.pem | openssl pkcs7 -print_certs -text
 
 ## DNS
 
 mathdown.net and mathdown.com domains are registered at https://www.gandi.net/ (expire 2016 Sep 10).
 
-Using an apex domain (with www. subdomain) turns out to be a pain, but I'm sticking with it for now(?).
+Using an apex domain (with www. subdomain) turns out to be a pain, but I'm ~~sticking with it for now(?)~~.
 
   - Can't do normal CNAME; [some DNS providers][] can simulate it, notably [Cloudflare claim to have done it well][] (and free unlike DNSimple).
   - Without CNAME, Github Pages do provide fixed IPs that are slower ([extra 302 redirect][]).
@@ -207,7 +220,8 @@ Using an apex domain (with www. subdomain) turns out to be a pain, but I'm stick
 I've switched to DNSimple as my DNS, with TTL of 1-10min.
 mathdown.net, www.mathdown.net, mathdown.com, www.mathdown.com usually all point at RHcloud, though .net may be shunted to Heroku sometimes.
 
-I also might switch back to `www.mathdown.net` as the primary domain?
+I ~~also might~~ have switched back to `www.mathdown.net` as the primary domain.
+> TODO: UPDATE
 
 Quick way to download current DNSimple settings (in a logged-in browser):
 https://dnsimple.com/domains/mathdown.net/zone.txt
@@ -232,6 +246,7 @@ Extremely rudimentary monitoring at
   Checks that https://{www.,}mathdown.{net,com}, http://mathdown.net, and directly accessed rhcloud, heroku, gh-pages respond.  No details if they don't.
 
 - StatusCake WIP.
+  Unlimited free checks, doesn't think my redirects are down.
   Private dashboard: https://www.statuscake.com/App/YourStatus.php
   Public dashboard: http://uptime.statuscake.com/?TestID=Q28S2gZ42e
   Monthly uptime: ![StatusCake uptime](https://www.statuscake.com/App/button/index.php?Track=UFzBR9YWzA&Days=30&Design=1)
