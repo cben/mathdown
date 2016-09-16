@@ -52,9 +52,6 @@ mkdir -p "$CERTS_DIR"
 
 echo '$\n== RESULTS =='
 
-# Summarize all certs in chain: http://serverfault.com/a/755815
-openssl crl2pkcs7 -nocrl -certfile "$CERTS_DIR/$MAIN_DOMAIN/fullchain.pem" |
-  openssl pkcs7 -print_certs -noout -text |
-  egrep --color 'Certificate:|Issuer|Validity|Before|After|Subject|DNS'
+./show-cert.sh "$CERTS_DIR/$MAIN_DOMAIN/fullchain.pem"
 
 ls -ltr "$CERTS_DIR/$MAIN_DOMAIN/" "$CERTS_DIR/letsencrypt.out"
