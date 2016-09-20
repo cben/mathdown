@@ -24,6 +24,10 @@ then runs the test against those copies, and only then deploys the real Rhcloud 
 
 The main deployment runs on https://prod-mathdown.rhcloud.com/, and mathdown.{net,com} point to it (see DNS section).  To deploy:
 
+    # Once per computer
+    rhc setup
+    deployment/git-remotes.sh
+
     # Don't run this directly - use deployment/deploy.sh
     git push rhcloud gh-pages:master
 
@@ -183,16 +187,17 @@ Provisioning the cert:
 
 ## HTTPS (TLS/SSL) certificates
 
-> TODO: UPDATE
+I'm getting free certificates from [Let's Encrypt][] based on [Jason Kulatunga's tutorial][].
 
-I got free certificates from [Let's Encrypt][] based on [Jason Kulatunga's tutorial][] for:
+To obtain new certs:
 
-- www.mathdown.com & mathdown.com (expires 2016 Feb 12)
-- www.mathdown.net & mathdown.net (expires 2016 Feb 15)
+    # get token from https://dnsimple.com/user
+    env LEXICON_DNSIMPLE_USERNAME=beni.cherniavsky \
+        LEXICON_DNSIMPLE_TOKEN=... \
+        tls-certs-letsencrypt/obtain-certs.sh
 
-(Class 1 Validation, sha256WithRSAEncryption signature, 2048 bit key).
-
-The non-secret files are in this directory.
+The certs are under `tls-certs-letsencrypt/certs/` subdirectory (non-secret parts in git).
+To inspect the certs, including **expiration date**, run `tls-certs-letsencrypt/show-cert.sh`.
 
 Note: Both RHcloud and Heroku can only support custom-domain certs with SNI (client sending requested host during TLS handshake).  The main group this leaves in the dark is Android 2.x default browser, and IE8 on XP.
 
@@ -201,13 +206,9 @@ Note: Both RHcloud and Heroku can only support custom-domain certs with SNI (cli
 
 Configuring the domains and certs on RHcloud can be repeated with `tls-certs-letsencrypt/rhc-set-certs.sh` script.
 
-P.S. [Tip to inspect a chained (concatenated) certs file](http://comments.gmane.org/gmane.comp.encryption.openssl.user/43587):
-
-    openssl crl2pkcs7 -nocrl -certfile fullchain.pem | openssl pkcs7 -print_certs -text
-
 ## DNS
 
-mathdown.net and mathdown.com domains are registered at https://www.gandi.net/ (expire 2016 Sep 10).
+mathdown.net and mathdown.com domains are registered at https://www.gandi.net/ (expire 2019 Sep 10).
 
 Using an apex domain (with www. subdomain) turns out to be a pain, but I'm ~~sticking with it for now(?)~~.
 
@@ -233,8 +234,6 @@ https://dnsimple.com/domains/mathdown.com/zone.txt
 
 ## TODO: Monitoring/alerting [#78](https://github.com/cben/mathdown/issues/78)
 
-<a href="https://www.statuscake.com" title="Website Uptime Monitoring"><img src="" /></a>
-
 Extremely rudimentary monitoring at
 
 - Pingdom: [private](https://my.pingdom.com/dashboard/checks) — public summary at http://stats.pingdom.com/imb1lncuugx2
@@ -253,7 +252,7 @@ Extremely rudimentary monitoring at
 
 If the server is down I will get mails, but I'm not tracking server-side load/error, especially on RHcloud.
 
-TODO: I had expired TLS cert for about a day this summer, and I don't think any of these 3 monitoring services reported downtime?!
+> TODO: I had expired TLS cert for about a day this summer, and I don't think any of these 3 monitoring services reported downtime?!
 
 My Firebase usage graph: https://mathdown.firebaseio.com/?page=Analytics
 Firebase uptime: http://status.firebase.com/ (as of May 2015 my data is on [s-dal5-nss-33](http://status.firebase.com/1502938) but could move).
