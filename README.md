@@ -107,7 +107,7 @@ I'm not sure Firebase never sets cookies.  Things will change once I implement l
 
 ## Test(s)
 
-[![Travis test runner](https://img.shields.io/travis/cben/mathdown.svg?label=test)](https://travis-ci.org/cben/mathdown/branches)
+[![Travis test runner](https://img.shields.io/travis/cben/mathdown/gh-pages.svg?label=test)](https://travis-ci.org/cben/mathdown/branches)
 [![Saucelabs browser tests](https://saucelabs.com/browser-matrix/mathdown.svg)](https://saucelabs.com/users/mathdown/tests)
 
 `test/browser-on-saucelabs.spec.coffee` runs tests on several browsers using free browser testing [courtesy of Sause Labs](https://saucelabs.com/opensauce).
