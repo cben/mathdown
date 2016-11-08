@@ -217,7 +217,8 @@ Using an apex domain (with www. subdomain) turns out to be a pain, but I'm ~~sti
   - Without CNAME, Heroku can't work at all!
 
 ~~That's why DNS was served by Cloudflare (free plan, just DNS "bypassing" their CDN).~~
-**Alas, Cloudflare serves the apex mathdown.{net,com} with a TTL of 7 days**, which means a long outage for some users when the server IP changes [https://github.com/cben/mathdown/issues/104].
+**Alas, Cloudflare served the apex mathdown.{net,com} with a TTL of 7 days**, which means a long outage for some users when the server IP changes [https://github.com/cben/mathdown/issues/104].  UPDATE 2016-10: a CloudFlare engineer wrote back saying they fixed something so this might work fine now.
+
 I've switched to DNSimple as my DNS, with TTL of 1-10min.
 mathdown.net, www.mathdown.net, mathdown.com, www.mathdown.com usually all point at RHcloud, though .net may be shunted to Heroku sometimes.
 
