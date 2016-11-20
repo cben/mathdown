@@ -33,7 +33,7 @@ min = 60*sec
 
 timeouts = {
   tunnel: 60*sec
-  tunnelClose: 10*sec
+  tunnelClose: 20*sec
   # Sauce normally gives a VM in seconds but sometimes it's slow
   # and running too many concurrent jobs causes jobs to queue up waiting for a slot.
   sauceSession: 5*min
