@@ -50,7 +50,7 @@ echo $'\n== OBTAINING CERTS =='
 mkdir -p "$CERTS_DIR"
 "${BASH[@]}" ./dehydrated/dehydrated --cron --challenge dns-01 --hook ./lexicon/examples/letsencrypt.default.sh --domain "$MAIN_DOMAIN $ALT_DOMAINS" --out "$CERTS_DIR" | tee -a "$CERTS_DIR/letsencrypt.out"
 
-echo '$\n== RESULTS =='
+echo $'\n== RESULTS =='
 
 ./show-cert.sh "$CERTS_DIR/$MAIN_DOMAIN/fullchain.pem"
 
