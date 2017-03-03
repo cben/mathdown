@@ -48,5 +48,5 @@ rhc alias list "${appopts[@]}"
 
 curl --head "https://$main_domain/"
 
-echo 'Try:'
+echo 'To analyze certs & security:'
 printf '  https://www.ssllabs.com/ssltest/analyze.html?d=%s&latest\n' "${domains[@]}"
