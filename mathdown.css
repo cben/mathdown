@@ -71,6 +71,12 @@ body { height: 80%; width: 95%; }
 .CodeMirror {
   font-family: "lining_numerals_charter", "Georgia", "Bitstream Charter", "David", "David CLM", "Times New Roman", "Times", serif;
 }
+/* BUG: lining_numerals_charter somehow confuses MJ measurements when done in CM-MJ's typesetting div.
+   KLUDGE: I don't really care why, dropping this font from styles MJ uses for measurements works.
+   This is safe because these digits are about normal size anyway, and MJ uses its own fonts. */
+.CodeMirror .CodeMirror-MathJax-typesetting {
+  font-family: "Georgia", "Bitstream Charter", "David", "David CLM", "Times New Roman", "Times", serif;
+}
 /* markdown mode styles `...` and indented code blocks as "comment". */
 .cm-comment, .cm-leadingspace, .cm-formatting-list, .cm-formatting-quote, .cm-formatting-task {
   /* Prefer Courier and similar serif monospaced fonts.
