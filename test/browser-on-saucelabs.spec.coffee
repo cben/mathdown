@@ -50,7 +50,7 @@ desiredBrowsers = [
   {browserName: 'MicrosoftEdge'}
   # arbitrary somewhat old - but not ancient - FF and Chrome versions.
   {browserName: 'firefox', version: '30.0', platform: 'Linux'}
-  {browserName: 'chrome', version: '30.0', platform: 'Linux'}
+  {browserName: 'chrome', version: '35.0', platform: 'Linux'}
   {browserName: 'safari', version: '9.0'}
   {browserName: 'safari', version: '6.0'}
   # Mobile (doesn't mean it's usable though):
