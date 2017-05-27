@@ -142,7 +142,7 @@ describeBrowserTest = (browserName, getDesired, getSite) ->
         expect(err).to.be(null)
         browser.waitFor wd.asserters.jsCondition('document.title.match(/smoke test/)'), 10*sec, (err, value) ->
           expect(err).to.be(null)
-          browser.waitForElementByCss '.MathJax_Display', 15*sec, (err, el) ->
+          browser.waitForElementByCss '.MathJax_Display', 30*sec, (err, el) ->
             expect(err).to.be(null)
             el.text (err, text) ->
               expect(err).to.be(null)
