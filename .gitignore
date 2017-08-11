@@ -1,5 +1,5 @@
 node_modules/
 /deployment/tls-certs-letsencrypt/lexicon_venv/
-/deployment/tls-certs-letsencrypt/**/letsencrypt.out
+/deployment/tls-certs-letsencrypt/**/dehydrated.out
 /deployment/tls-certs-letsencrypt/certs-acme-staging/
 /deployment/tls-certs-letsencrypt/*certs*/**/priv*
