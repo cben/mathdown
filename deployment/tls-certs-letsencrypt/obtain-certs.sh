@@ -22,14 +22,18 @@ BASH=(bash)
 ## POSSIBLY https://github.com/lukas2511/dehydrated/blob/master/docs/troubleshooting.md#no-registration-exists-matching-provided-key
 #CERTS_DIR="./certs-acme-staging"
 #set -x CA "https://acme-staging.api.letsencrypt.org/directory"
+#set -x CA_TERMS "https://acme-staging.api.letsencrypt.org/terms"
 #BASH=(bash -x)
 
 export PROVIDER=dnsimple
+# Note: dnsimple supports multiple accounts.  I've created a 2nd 'mathdown'
+# account but so far kept the domains under beni.cherniavsky.  Seems 2nd
+# account needs extra payment; to avoid "Payment Required" status, use API v2
+# account-specific token for beni.cherniavsky, not my global token.
 export LEXICON_DNSIMPLE_USERNAME=beni.cherniavsky@gmail.com
-# Note: dnsimple supports sub-accounts.  I've created a 'mathdown' sub-account
-# but so far kept the domains under beni.cherniavsky, don't remember why.
+LEXICON_ACCOUNT_NAME=beni.cherniavsky
 if [[ -z "${LEXICON_DNSIMPLE_TOKEN:-}" ]]; then
-    echo 'Error: LEXICON_DNSIMPLE_TOKEN env var must be set (https://dnsimple.com/user)'
+    echo "Error: LEXICON_DNSIMPLE_TOKEN env var must be set (https://dnsimple.com/user -> account $LEXICON_ACCOUNT_NAME -> Access tokens)"
     exit 1
 fi
 # TODO: will token work if I enable DNSimple 2FA?
