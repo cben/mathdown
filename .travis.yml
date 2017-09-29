@@ -11,8 +11,12 @@ branches:
     - /.*/
 
 language: node_js
+# Should test the Node version that runs in production.
+# https://docs.travis-ci.com/user/languages/javascript-with-nodejs/#Specifying-Node.js-versions
+# https://devcenter.heroku.com/articles/nodejs-support#specifying-a-node-js-version
+# I believe RHcloud (openshift 2) was running 0.11 but it's being sunset anyway.
 node_js:
-  - "0.11"  # Latest http://docs.travis-ci.com/user/languages/javascript-with-nodejs/#Provided-Node.js-Versions
+  - "8"
 
 # http://blog.travis-ci.com/2013-12-05-speed-up-your-builds-cache-your-dependencies/
 cache:
