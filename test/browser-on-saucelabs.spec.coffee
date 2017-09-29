@@ -55,7 +55,7 @@ desiredBrowsers = [
   {browserName: 'Safari', version: '7.0', platform: 'OS X 10.9'}
   # Mobile (doesn't mean it's usable though):
   {browserName: 'Safari', deviceName: 'iPad Simulator', platformName: 'iOS', platformVersion: '8.4'}
-  {browserName: 'Browser', deviceName: 'Android Emulator', platformName: 'Android', platformVersion: '4.4'}
+#  {browserName: 'Browser', deviceName: 'Android Emulator', platformName: 'Android', platformVersion: '4.4'}
 ]
 
 getCommonDesired = ->
