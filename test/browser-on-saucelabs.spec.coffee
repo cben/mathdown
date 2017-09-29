@@ -45,17 +45,17 @@ timeouts = {
 desiredBrowsers = [
   # Generated with https://docs.saucelabs.com/reference/platforms-configurator/
   # Desktop:
-  {browserName: 'internet explorer', version: '8.0', platform: 'Windows XP'}
+  {browserName: 'internet explorer', version: '8.0', platform: 'Windows 7'}
   {browserName: 'internet explorer', version: '11.0', platform: 'Windows 10'}
   {browserName: 'MicrosoftEdge'}
   # arbitrary somewhat old - but not ancient - FF and Chrome versions.
   {browserName: 'firefox', version: '30.0', platform: 'Linux'}
   {browserName: 'chrome', version: '35.0', platform: 'Linux'}
-  {browserName: 'safari', version: '9.0'}
-  {browserName: 'safari', version: '6.0'}
+  {browserName: 'Safari', version: '10.0', platform: 'macOS 10.12'}
+  {browserName: 'Safari', version: '7.0', platform: 'OS X 10.9'}
   # Mobile (doesn't mean it's usable though):
-  {browserName: 'safari', deviceName: 'iPad Simulator', platformVersion: '8.4'}
-  {browserName: 'android', deviceName: 'Android Emulator', platformVersion: '4.0'}
+  {browserName: 'Safari', deviceName: 'iPad Simulator', platformName: 'iOS', platformVersion: '8.4'}
+  {browserName: 'Browser', deviceName: 'Android Emulator', platformName: 'Android', platformVersion: '4.4'}
 ]
 
 getCommonDesired = ->
