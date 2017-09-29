@@ -30,7 +30,7 @@ else
   keyopts=(--certificate="certs/$main_domain"/fullchain.pem --private-key="$3" --passphrase="$4")
 fi
 
-# <rant>In fish $X does the right thing, in bash I need "${X[@]}" and it only comes close.</rant>
+# <rant>In fish $ARRAY does the right thing, in bash I need "${ARRAY[@]}" and it only comes close.</rant>
 
 echo '== before: =='
 rhc alias list "${appopts[@]}"
