@@ -4,7 +4,7 @@
   "description": "http://mathdown.net",
   "dependencies": {
     "chalk": "~1.1.3",
-    "coffee-script": "~1.11.1",
+    "coffee-script": "~1.12.6",
     "st": "~1.2.0"
   },
   "devDependencies": {
