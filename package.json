@@ -9,7 +9,7 @@
   },
   "devDependencies": {
     "expect.js": "~0.3.1",
-    "mocha": "~3.1.2",
+    "mocha": "~3.2.0",
     "sauce-tunnel": "~2.5.0",
     "sync-exec": "~0.6.2",
     "wd": "~1.0.0"
