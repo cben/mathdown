@@ -11,11 +11,13 @@ originalProtocol = (req) ->
   # https://help.openshift.com/hc/en-us/articles/202398810-How-to-redirect-traffic-to-HTTPS-
   return req.headers['x-forwarded-proto'] || 'http'
 
+# Note: full URLs might still appear in other platform logs, e.g. heroku[router]
+anonimizeUrl = (url) ->
+  url.replace(/([?&])doc=[^&]*/, '$1doc=...')
+
 logRequest = (req, res) ->
-  # Note: full URLs might still appear in other platform logs, e.g. heroku[router]
-  anonimizedUrl = req.url.replace(/([?&])doc=[^&]*/, '$1doc=...')
   # TODO: also log our responses, especially errors.
-  console.log('[%s] %s %s %s %s < %s %s', new Date().toISOString(), req.method, originalProtocol(req), req.headers.host, anonimizedUrl, req.socket.remoteAddress, req.headers['user-agent'])
+  console.log('[%s] %s %s %s %s < %s %s', new Date().toISOString(), req.method, originalProtocol(req), req.headers.host, anonimizeUrl(req.url), req.socket.remoteAddress, req.headers['user-agent'])
 
 handleStatic = st({
   path: process.cwd()
@@ -27,7 +29,7 @@ handleRequest = (req, res) ->
   redir = redirects.computeRedirect(req.method, originalProtocol(req), req.headers.host, req.url)
   if redir?
     res.writeHead(redir.status, redir.headers)
-    console.log('[%s]   %s %s > %s', new Date().toISOString(), redir.status, JSON.stringify(redir.headers), req.socket.remoteAddress)
+    console.log('[%s]   %s %s > %s', new Date().toISOString(), redir.status, anonimizeUrl(JSON.stringify(redir.headers)), req.socket.remoteAddress)
     res.end()
   else
     handleStatic(req, res)
