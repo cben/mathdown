@@ -1,6 +1,8 @@
 https://www.mathdown.net
 ========================
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/cben/mathdown.svg)](https://greenkeeper.io/)
+
 Collaborative markdown with math.  Main features:
 
 - Markdown is styled in-place, no source/preview separation.
