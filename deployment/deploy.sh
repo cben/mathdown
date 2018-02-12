@@ -15,9 +15,5 @@ cd "$(dirname "$0")"/..  # project root
 git fetch
 time git push heroku-staging origin/gh-pages:master
 env SITE_TO_TEST=https://mathdown-staging.herokuapp.com npm test
-time git push rhcloud-staging origin/gh-pages:master
-env SITE_TO_TEST=https://staging-mathdown.rhcloud.com npm test
 time git push heroku origin/gh-pages:master
-date -Isec --utc
-time git push rhcloud origin/gh-pages:master
 date -Isec --utc
