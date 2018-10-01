@@ -51,12 +51,12 @@ desiredBrowsers = [
 #  {browserName: 'Browser', deviceName: 'Android Emulator', platformName: 'Android', platformVersion: '4.4'}
 ]
 
-getCommonDesired = ->
-  commonDesired = {
-    build: testMetadata.getBuildInfo()
-    tags: testMetadata.getTags()
-    'idle-timeout': timeouts.sauceIdle
-  }
+commonDesired = {
+  build: testMetadata.getBuildInfo()
+  tags: testMetadata.getTags()
+  'idle-timeout': timeouts.sauceIdle
+}
+console.log("commonDesired =", commonDesired)
 
 merge = (objs...) ->
   merged = {}
@@ -154,7 +154,7 @@ siteToTest = process.env.SITE_TO_TEST
 if siteToTest  # Testing existing instance
   describe "#{siteToTest}", ->
     describeAllBrowsers(
-      (-> merge(getCommonDesired(), {name: 'smoke test of ' + siteToTest})),
+      (-> merge(commonDesired, {name: 'smoke test of ' + siteToTest})),
       (-> siteToTest))
 else  # Run local server, test it via tunnel
   describe 'Served site via Sauce Connect', ->
@@ -190,7 +190,7 @@ else  # Run local server, test it via tunnel
         done()
 
     describeAllBrowsers(
-      (-> merge(getCommonDesired(), {name: 'smoke test', 'tunnel-identifier': actualTunnelId})),
+      (-> merge(commonDesired, {name: 'smoke test', 'tunnel-identifier': actualTunnelId})),
       (-> "http://localhost:#{httpServer.address().port}"))
 
 # TODO: parallelize (at least between different browsers).
