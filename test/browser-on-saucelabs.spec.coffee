@@ -51,10 +51,10 @@ desiredBrowsers = [
   # arbitrary somewhat old - but not ancient - FF and Chrome versions.
   {browserName: 'firefox', version: '30.0', platform: 'Linux'}
   {browserName: 'chrome', version: '35.0', platform: 'Linux'}
-  {browserName: 'Safari', version: '7.0', platform: 'OS X 10.9'}
-  {browserName: 'Safari', version: 'latest', platform: 'macOS 10.12'}
+  {browserName: 'Safari', version: '8.0', platform: 'OS X 10.10'}
+  {browserName: 'Safari', version: 'latest', platform: 'macOS 10.13'}
   # Mobile (doesn't mean it's usable though):
-  {browserName: 'Safari', deviceName: 'iPad Simulator', platformName: 'iOS', platformVersion: '8.4'}
+  {browserName: 'Safari', deviceName: 'iPad Simulator', platformName: 'iOS', platformVersion: '9.3'}
 #  {browserName: 'Browser', deviceName: 'Android Emulator', platformName: 'Android', platformVersion: '4.4'}
 ]
 
