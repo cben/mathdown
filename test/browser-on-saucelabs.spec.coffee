@@ -21,13 +21,6 @@ indentation = '          '
 log = (fmt, args...) ->
   console.log(indentation + fmt, args...)
 
-sauceConnectOptions = {
-  username: sauceUser
-  accessKey: sauceKey
-  verbose: true
-  logger: log
-}
-
 sec = 1000
 min = 60*sec
 
