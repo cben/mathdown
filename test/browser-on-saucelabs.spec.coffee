@@ -47,7 +47,7 @@ desiredBrowsers = [
   {browserName: 'Safari', version: '8.0', platform: 'OS X 10.10'}
   {browserName: 'Safari', version: 'latest', platform: 'macOS 10.13'}
   # Mobile (doesn't mean it's usable though):
-  {browserName: 'Safari', deviceName: 'iPad Simulator', platformName: 'iOS', platformVersion: '9.3'}
+#  {browserName: 'Safari', deviceName: 'iPad Simulator', platformName: 'iOS', platformVersion: '9.3'}
 #  {browserName: 'Browser', deviceName: 'Android Emulator', platformName: 'Android', platformVersion: '4.4'}
 ]
 
