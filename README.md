@@ -78,6 +78,7 @@ I'm not sure Firebase never sets cookies.  Things will change once I implement l
 
 [![Dependency Status](https://david-dm.org/cben/mathdown.svg)](https://david-dm.org/cben/mathdown)
 [![devDependency Status](https://david-dm.org/cben/mathdown/dev-status.svg)](https://david-dm.org/cben/mathdown#info=devDependencies)
+[![Greenkeeper badge](https://badges.greenkeeper.io/cben/mathdown.svg)](https://greenkeeper.io/)
 
  1. After checking out, run this to materialize client-side dependencies:
 
@@ -139,7 +140,7 @@ The main deployment runs on https://mathdown-cben.rhcloud.com/ (Openshift hostin
 
 Quick ways to run:
 
-[![Launch on OpenShift](https://launch-shifter.rhcloud.com/launch/LAUNCH ON.svg)](https://openshift.redhat.com/app/console/application_type/custom?&cartridges[]=nodejs-0.10&initial_git_url=https://github.com/cben/mathdown.git&initial_git_branch=gh-pages&name=mathdown) [![Greenkeeper badge](https://badges.greenkeeper.io/cben/mathdown.svg)](https://greenkeeper.io/) — make sure to replace with your fork & branch as needed.  Don't enable scaling without reading "Creating an app" in [deployment/README.md](deployment/README.md).  Grab a tea - takes up to 10 minutes.  (Remember it'll not auto-update, it'll be up to you to git push newer versions...)
+[![Launch on OpenShift](https://launch-shifter.rhcloud.com/launch/LAUNCH ON.svg)](https://openshift.redhat.com/app/console/application_type/custom?&cartridges[]=nodejs-0.10&initial_git_url=https://github.com/cben/mathdown.git&initial_git_branch=gh-pages&name=mathdown) — make sure to replace with your fork & branch as needed.  Don't enable scaling without reading "Creating an app" in [deployment/README.md](deployment/README.md).  Grab a tea - takes up to 10 minutes.  (Remember it'll not auto-update, it'll be up to you to git push newer versions...)
 
 Deploy on Heroku:
 
