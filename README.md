@@ -78,6 +78,7 @@ I'm not sure Firebase never sets cookies.  Things will change once I implement l
 
 [![Dependency Status](https://david-dm.org/cben/mathdown.svg)](https://david-dm.org/cben/mathdown)
 [![devDependency Status](https://david-dm.org/cben/mathdown/dev-status.svg)](https://david-dm.org/cben/mathdown#info=devDependencies)
+[![Greenkeeper badge](https://badges.greenkeeper.io/cben/mathdown.svg)](https://greenkeeper.io/)
 
  1. After checking out, run this to materialize client-side dependencies:
 
