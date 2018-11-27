@@ -12,7 +12,7 @@
     "mocha": "~5.2.0",
     "sauce-tunnel": "~2.5.0",
     "sync-exec": "~0.6.2",
-    "wd": "~1.10.3"
+    "wd": "~1.11.1"
   },
   "engines": {
     "node": "8.x"
