@@ -69,7 +69,6 @@ You can't even read documents without JavaScript; reading won't be hard to fix (
 
 The only cookies I'm aware of:
 
-  - `GEAR` session cookie set by OpenShift hosting (I presume for server stickiness, which I don't actually need).
   - `mjx.menu` cookie set for a year(?) if you manually change MathJax settings.
 
 I'm not sure Firebase never sets cookies.  Things will change once I implement login (#50).
@@ -134,18 +133,18 @@ I've tried several free services for this, and currently prefer Travis:
 
 ## Where it's deployed and how to run your fork
 
-The main deployment runs on https://mathdown-cben.rhcloud.com/ (Openshift hosting operated by RedHat), and mathdown.net points to it.  The dynamic server has also been tested on Heroku.  See [deployment/](deployment/) subdirectory for details.
+The main deployment currently runs on Heroku.  See [deployment/](deployment/) subdirectory for details.  I'm interested at going back to static hosting.
 
 **However you run it, you can open the same document ids (`doc=...`) and real-time collaboration will work!**
 
 Quick ways to run:
 
-[![Launch on OpenShift](https://launch-shifter.rhcloud.com/launch/LAUNCH ON.svg)](https://openshift.redhat.com/app/console/application_type/custom?&cartridges[]=nodejs-0.10&initial_git_url=https://github.com/cben/mathdown.git&initial_git_branch=gh-pages&name=mathdown) — make sure to replace with your fork & branch as needed.  Don't enable scaling without reading "Creating an app" in [deployment/README.md](deployment/README.md).  Grab a tea - takes up to 10 minutes.  (Remember it'll not auto-update, it'll be up to you to git push newer versions...)
-
 Deploy on Heroku:
 
 	heroku create my-mathdown --remote heroku-my-mathdown
 	git push heroku-my-mathdown gh-pages:master
+
+some other ways to deploy on Heroku might not work due to my use of submodules (?)
 
 Run local server (`server.coffee`):
 

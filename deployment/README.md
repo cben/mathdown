@@ -3,7 +3,7 @@
 This app *mostly* works as static pages, and I intend to keep it this way.
 (To run simply open index.html.  Or fork on github and immediately use your gh-pages branch at https://YOUR-GITHUB-USERNAME.github.io/mathdown/.  See top-level README.md.)
 
-But for HTTPS on custom domain and some future features, I've switched to a Node.js server and the main hosting to RHcloud.
+But for HTTPS on custom domain and some future features, I've switched to a Node.js server and the main hosting to ~~RHcloud aka Openshift Online v2~~; then Openshift v2 was sunset; the kubernetes-based Openshift Online v3 pricing is not friendly to small apps, so now using Heroku.
 
 Run as a dynamic app (`server.coffee`):
 
@@ -15,117 +15,9 @@ Run as a dynamic app (`server.coffee`):
 To deploy use `deployment/deploy.sh` (aka `npm run deploy`).
 It first pushes to staging copies of the app:
 https://mathdown-staging.herokuapp.com
-https://staging-mathdown.rhcloud.com
-then runs the test against those copies, and only then deploys the real Rhcloud & Heroku apps.
-
-## RHcloud (aka Openshift)
-
-[Tip: the exact app (`prod -n mathdown` below) can be omitted from all `rhc` commands if git config `rhc.*` are set.  See "Creating an app" below.]
-
-The main deployment runs on https://prod-mathdown.rhcloud.com/, and mathdown.{net,com} point to it (see DNS section).  To deploy:
-
-    # Once per computer
-    rhc setup
-    deployment/git-remotes.sh
-
-    # Don't run this directly - use deployment/deploy.sh
-    git push rhcloud gh-pages:master
-
-(it's possible to configure pushes to `gh-pages`, but I'm keeping the default `master` for least customization and consistency with heroku).
-
-Deployments history is not exposed in UI, can be recovered from reflog:
-
-    rhc ssh prod -n mathdown 'cd git/mathdown.git; git log --walk-reflogs master --date=local --pretty=short'
-
-**Do not interrupt git push**.  Once I did that and the app was not updated, one of the gears stayed down (haproxy showed "MAINT" state) but git itself was up to date so repeating git push was a no-op.
-
-I'm on the Bronze plan (requires credit card but starts at $0), which allows me: no idling, custom domain TLS, paying several $/mo for [more quota][], option to scale beyond the 3 free `small` machines ("gears").
-
-[more quota]: https://github.com/cben/mathdown/issues/73
-
-Admin: https://openshift.redhat.com/app/console/application/546a6d7e5973cac907000028-mathdown
-
-Read logs [[more info](https://developers.openshift.com/en/managing-log-files.html)]:
-
-    rhc ssh prod -n mathdown --gears 'cd app-root/logs/; ls -ltr; tail -f -n 100 *.log'
-
-    # To download them all locally:
-    for GEAR_AT_HOST in $(rhc show-app prod -n mathdown --gears=ssh); do
-      rsync -r $GEAR_AT_HOST:app-root/logs/ logs-$(date -I)-gear-$GEAR_AT_HOST/
-    done
-
-SSH directly into the main "gear":
-
-    rhc ssh prod -n mathdown
-
-or use direct command as shown on admin page.
-
-Other gears are similarly accessible by direct SSH but you need to check the host names:
-
-    rhc show-app prod -n mathdown --gears
-
-Performance: TODO
-
-Haproxy status at: http://prod-mathdown.rhcloud.com/haproxy-status/
-
-Haproxy config is at `haproxy/conf/haproxy.cfg` under home dir on first gear.
-Source seems to be at https://github.com/openshift/origin-server/blob/master/cartridges/openshift-origin-cartridge-haproxy/versions/1.4/configuration/haproxy.cfg.erb
-
-Valuable Openshift tips: https://stackoverflow.com/questions/11730590/what-are-some-of-the-tricks-to-using-openshift
-
-### Creating an app: scaling, gear size, timeouts, Jenkins
-
-The prod app should **always** be a scaling app (which means it includes Haproxy and can have >1 machines).  It should have at least 2 gears — this allows zero-downtime deploys (one gear goes down, then the other).  There is no way to turn an unscaled app to a scaled one except destroying and re-creating.
-What's worse, there is [no way to flip traffic to a new app without downtime][].
-
-[no way to flip traffic to a new app without downtime]: https://openshift.uservoice.com/forums/258655-ideas/suggestions/6705869-make-it-possible-to-deploy-more-than-one-version-o
-
-At some points the builds became slow enough that I'm hitting timeouts creating it from scratch (5min timeout) and even pushing new versions (2min I think?).
-See [#115](https://github.com/cben/mathdown/issues/115) for the gory details.
-
-Known solutions:
-
-  - This only happens (so far) with `--scaling` enabled.  Unscaled apps build fast enough.
-    Unscaled is probably OK for someone running a different/forked version.
-  - Create from an old "working" version (468cf5aaf3 seems to work), then push the current.  Unreliable.  Bleh.
-	  - However, creating an *empty* app (no `--from-code`), then doing `push -f` seems to work nicely.
-  - Use beefier gears, e.g. `rhc create ... --scaling --gear-size small.highcpu`.
-    There is no way to change gear size later except destroying and re-creating the app.
-    `small.highcpu` times 2 gears costs $36/mo.
-  - Offload builds to [Jenkins][]?  Builds are even slower, but are less on the critical path to timeout.  Unreliable.
-
-Note that when `rhc app create` tells you timed out, sometimes the app still gets created!
-
-[Jenkins]: https://developers.openshift.com/en/managing-continuous-integration.html
-
-As of these writing, I've used these procedures (it's useful to timestamp by piping to `| ts -s` from moreutils):
-
-    rhc setup  # Once per computer
-
-    rhc app create -a staging -n mathdown -t nodejs-0.10 --scaling --debug --trace
-    rm ./staging -rf
-
-    rhc app create -a prod -n mathdown --from-code https://github.com/cben/mathdown\#gh-pages -t nodejs-0.10 --scaling --gear-size small.highcpu --debug --trace
-    rhc cartridge storage nodejs-0.10 -a prod -n mathdown --set 1gb  # additional, 2gb total.
-    rhc cartridge scale nodejs-0.10 -a prod -n mathdown --min 2 --max 5 --debug --trace
-
-    # Configure rhc commands that don't specify an app to access the prod app:
-    git config -f prod/.git/config --get-regexp '^rhc\.' | xargs -n 2 git config
-    rm ./prod -rf
-
-    # See https://github.com/openshift/rhc/issues/513 about making the above less awkward.
-
-    deployment/git-remotes.sh
-    git push -f rhcloud-staging gh-pages:master
-    git push -f rhcloud gh-pages:master
-
-    ./deployment/tls-certs-startcom/rhc-set-certs.sh 'prod -n mathdown' ~/StartSSL/my-private-decrypted.key
-
-> TODO: re-test, update the above.
+then runs the test against those copies, and only then deploys the real Heroku apps.
 
 ## Heroku
-
-The primary reason Heroku is not my main hosting (beyond open source allegiance) is SSL (see below).
 
 There is also a deployment at https://mathdown.herokuapp.com/.  To deploy:
 
@@ -140,8 +32,9 @@ There is also a deployment at https://mathdown.herokuapp.com/.  To deploy:
 Admin: https://dashboard.heroku.com/apps/mathdown
 ("Activity" tab shows history of deploys.)
 
-I'm on "Hobby" $7/mo plan => 1 dyno, no idling.
-If I'm not serving mathdown.net all day, could run fine on Free plan ([dyno sleeps][] after a 30min without traffic, takes ~10sec to wake up, limited to **max 18hrs/day**).
+I'm on "Hobby" $7/mo plan => 1 dyno, custom domain SSL, no idling.
+
+mathdown-staging.herokuapp.com is on Free plan ([dyno sleeps][] after a 30min without traffic, takes ~10sec to wake up, limited to **max 18hrs/day**).
 
 [dyno sleeps]: https://devcenter.heroku.com/articles/dyno-sleeping
 
@@ -161,15 +54,16 @@ Performance (I installed various addons but haven't really instrumented anything
 
 ### SSL on Heroku
 
+https://devcenter.heroku.com/articles/ssl
+
 > TODO: update - easier with Let's Encrypt giving 1 cert for all 4 domains.
 
-The wildcard cert on https://mathdown.herokuapp.com/ is free.
-For custom domain cert, Heroku charges $20/mo for the [SSL addon][] and it only accepts *one* cert.
-Since I haven't bought a multi-domain cert for both .net and .com, I'd need $40/mo and [hackish config](http://stackoverflow.com/a/18982770/239657).
+The wildcard `*.herokuapp.com` cert for https://mathdown.herokuapp.com/ and https://mathdown-staging.herokuapp.com always works.
 
-=> I've provisioned the .net cert on Heroku so I can sometimes direct traffic there.
-.com must stay on RHcloud.  But .com doesn't officially exist.
+For custom domains, apps with paid dynos (including my Hobby plan) can upload certs or even free automated cert provisioning by Heroku.
+I tried automated provisioning but it requires DNS to point to Heroku, so doesn't allow zero-downtime switching between heroku and other places.
 
+So I stayed with getting certs from Let's Encrypt myself and uploading to Heroku (also included with any paid dynos, including my Hobby plan).
 Cert config is not in the via web dashboard at all (AFAICT).  To see status:
 
     heroku certs:info --app=mathdown
@@ -178,12 +72,7 @@ This tells you the "SSL Endpoint", currently osaka-3545.herokussl.com, that DNS 
 
 Provisioning the cert:
 
-    # only I have ~/StartSSL/, it can't go under git
-    openssl rsa -in ~/StartSSL/my-private-encrypted.key -out ~/StartSSL/my-private-decrypted.key
-    heroku certs:update --app=mathdown deployment/tls-certs-startcom/GENERATED-CHAINED-mathdown.net.pem  ~/StartSSL/my-private-decrypted.key
-	rm ~/StartSSL/my-private-decrypted.key
-
-[SSL addon]: https://devcenter.heroku.com/articles/ssl-endpoint
+    deployment/tls-certs-letsencrypt/heroku-set-certs.sh
 
 ## HTTPS (TLS/SSL) certificates
 
@@ -199,31 +88,26 @@ To obtain new certs:
 The certs are under `tls-certs-letsencrypt/certs/` subdirectory (non-secret parts in git).
 To inspect the certs, including **expiration date**, run `tls-certs-letsencrypt/show-cert.sh`.
 
-Note: Both RHcloud and Heroku can only support custom-domain certs with SNI (client sending requested host during TLS handshake).  The main group this leaves in the dark is Android 2.x default browser, and IE8 on XP.
+Note: Heroku, as any reasonably priced hosting that doesn't give dedicated IPv4, can only support custom-domain certs with SNI (client sending requested host during TLS handshake).  The main group this leaves in the dark is Android 2.x default browser, and IE8 on XP.
 
 [Jason Kulatunga's tutorial]: http://blog.thesparktree.com/post/138999997429/generating-intranet-and-private-network-ssl
 [Let's Encrypt]: https://letsencrypt.org/
-
-Configuring the domains and certs on RHcloud can be repeated with `tls-certs-letsencrypt/rhc-set-certs.sh` script.
 
 ## DNS
 
 mathdown.net and mathdown.com domains are registered at https://www.gandi.net/ (expire 2019 Sep 10).
 
-Using an apex domain (with www. subdomain) turns out to be a pain, but I'm ~~sticking with it for now(?)~~.
+Using an apex domain (with www. subdomain) turned out to be a pain, so while I'll keep them working, I'm redirecting to www.mathdown.net as the canonical URL.
 
   - Can't do normal CNAME; [some DNS providers][] can simulate it, notably [Cloudflare claim to have done it well][] (and free unlike DNSimple).
   - Without CNAME, Github Pages do provide fixed IPs that are slower ([extra 302 redirect][]).
-  - Without CNAME, Heroku can't work at all!
+  - Without CNAME, ~~Heroku can't work at all~~!
 
 ~~That's why DNS was served by Cloudflare (free plan, just DNS "bypassing" their CDN).~~
 **Alas, Cloudflare served the apex mathdown.{net,com} with a TTL of 7 days**, which means a long outage for some users when the server IP changes [https://github.com/cben/mathdown/issues/104].  UPDATE 2016-10: a CloudFlare engineer wrote back saying they fixed something so this might work fine now.
 
 I've switched to DNSimple as my DNS, with TTL of 1-10min.
-mathdown.net, www.mathdown.net, mathdown.com, www.mathdown.com usually all point at RHcloud, though .net may be shunted to Heroku sometimes.
-
-I ~~also might~~ have switched back to `www.mathdown.net` as the primary domain.
-> TODO: UPDATE
+mathdown.net, www.mathdown.net, mathdown.com, www.mathdown.com currently all point at Heroku.
 
 Quick way to download current DNSimple settings (in a logged-in browser):
 https://dnsimple.com/domains/mathdown.net/zone.txt
@@ -255,7 +139,7 @@ If the server is down I will get mails, but I'm not tracking server-side load/er
 
 > TODO: I had expired TLS cert for about a day this summer, and I don't think any of these 3 monitoring services reported downtime?!
 
-My Firebase usage graph: https://mathdown.firebaseio.com/?page=Analytics
+My Firebase usage graph: https://console.firebase.google.com/u/0/project/firebase-mathdown/database/usage
 Firebase uptime: http://status.firebase.com/ (as of May 2015 my data is on [s-dal5-nss-33](http://status.firebase.com/1502938) but could move).
 
-OpenShift status: https://openshift.redhat.com/app/status/ but more details on twitter: https://twitter.com/openshift_ops
+Heroku status: https://status.heroku.com/
