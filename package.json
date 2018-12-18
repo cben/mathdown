@@ -15,7 +15,7 @@
     "wd": "~1.10.3"
   },
   "engines": {
-    "node": "8.x"
+    "node": "10.x"
   },
   "main": "server.coffee",
   "scripts": {
