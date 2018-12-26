@@ -137,9 +137,13 @@ describeBrowserTest = (browserName, getDesired, getSite) ->
           expect(err).to.be(null)
           browser.waitForElementByCss '.MathJax_Display', 30*sec, (err, el) ->
             expect(err).to.be(null)
+            # As of MathJax 2.7, there are 2 parts, one with aria-hidden="true" containing the visible rendering,
+            # and one with .MJX_Assistive_MathML class.
+            # `el.text` is supposed to return only visible text, but returns both as "α\nα".
+            # Never mind, (m)ultiline regexp flag makes $ match the newline.
             el.text (err, text) ->
               expect(err).to.be(null)
-              expect(text).to.match(/^\s*α\s*$/)
+              expect(text).to.match(/^\s*α\s*$/m)
               eachPassed = true
               done()
 
