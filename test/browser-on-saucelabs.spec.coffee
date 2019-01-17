@@ -139,7 +139,7 @@ describeBrowserTest = (browserName, getDesired, getSite) ->
             expect(err).to.be(null)
             el.text (err, text) ->
               expect(err).to.be(null)
-              expect(text).to.match(/^\s*α\s*$/)
+              expect(text).to.match(/^\s*(α|𝛼)\s*$/)
               eachPassed = true
               done()
 
