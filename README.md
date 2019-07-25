@@ -1,7 +1,7 @@
-https://www.mathdown.net
-========================
+Source of https://www.mathdown.net
+==================================
 
-Collaborative markdown with math.  Main features:
+Online collaborative markdown with math.  Main features:
 
 - Markdown is styled in-place, no source/preview separation.
 - Edits are synced in real time.
