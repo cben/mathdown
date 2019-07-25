@@ -41,10 +41,10 @@ fi
 cd "$(dirname "$0")"
 
 echo $'\n== INSTALLING =='
-virtualenv -p python2 ./lexicon_venv/
+virtualenv -p python3 ./lexicon_venv/
 export PATH="$PWD/lexicon_venv/bin/:$PATH"
 
-pip install --upgrade ./lexicon/
+pip3 install --upgrade ./lexicon/
 
 echo $'\n== TESTING DNS CONTROL =='
 lexicon "$PROVIDER" list "$MAIN_DOMAIN" CNAME
