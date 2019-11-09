@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "http://mathdown.net",
   "dependencies": {
-    "chalk": "~2.4.1",
+    "chalk": "~3.0.0",
     "coffee-script": "~1.12.7",
     "st": "~1.2.2"
   },
