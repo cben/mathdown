@@ -65,11 +65,35 @@ body { height: 80%; width: 95%; }
   body { display: table; }
   form { display: table-row; } */
 
+/* David is the best-matching serif Hebrew style.
+   But its italic is problematic: slants to the left, which inherently
+   does't mix well with right-slanted latin; the Culmus version also
+   "takes over" punctuation to be left-slanted, and even English letters
+   to remain upright :-(
+   KLUDGE: hide the native italic from the browser, to force "faux oblique"
+   that will slant to the right!  https://stackoverflow.com/a/25583439/239657
+   Also, constrain to Hebrew block to avoid taking over other scripts.
+*/
+@font-face {
+  font-family: 'DavidWithoutItalic';
+  font-style: normal;
+  font-weight: normal;
+  unicode-range: U+0590-05FF, U+FB1D-FB4F; /* Hebrew, Hebrew subset of Alphabetic Presentation Forms */
+  src: local('David CLM Medium'), local('David'), local('David Regular');
+}
+@font-face {
+  font-family: 'DavidWithoutItalic';
+  font-style: normal;
+  font-weight: bold;
+  unicode-range: U+0590-05FF, U+FB1D-FB4F; /* Hebrew, Hebrew subset of Alphabetic Presentation Forms */
+  src: local('David CLM Bold'), local('David Bold');
+}
+
 /* Font choices based on Math.SE: http://graphicdesign.stackexchange.com/a/12961 */
 /* "lining_numerals_charter" replaces only the digits 0-9, comes from fonts/ subdir.
    See https://github.com/cben/mathdown/issues/95 */
 .CodeMirror {
-  font-family: "lining_numerals_charter", "Georgia", "Bitstream Charter", "David", "David CLM", "Times New Roman", "Times", serif;
+  font-family: "lining_numerals_charter", "Georgia", "Bitstream Charter", "DavidWithoutItalic", "Times New Roman", "Times", serif;
 }
 /* markdown mode styles `...` and indented code blocks as "comment". */
 .cm-comment, .cm-leadingspace, .cm-formatting-list, .cm-formatting-quote, .cm-formatting-task {
