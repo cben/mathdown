@@ -26,6 +26,7 @@ else
    heroku certs:add --app "$app" "$cert" "$privkey"
 fi
 
+sleep 5
 curl --head "https://$main_domain/"
 
 echo 'To analyze certs & security:'
