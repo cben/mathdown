@@ -38,7 +38,7 @@ timeouts = {
 desiredBrowsers = [
   # Generated with https://docs.saucelabs.com/reference/platforms-configurator/
   # Desktop:
-  {browserName: 'internet explorer', version: '8.0', platform: 'Windows 7'}
+  {browserName: 'internet explorer', version: '9.0', platform: 'Windows 7'}
   {browserName: 'internet explorer', version: 'latest', platform: 'Windows 10'}
   {browserName: 'MicrosoftEdge'}
   # arbitrary somewhat old - but not ancient - FF and Chrome versions.
