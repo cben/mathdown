@@ -1,7 +1,7 @@
 # Usage: By default runs local server, tests it via tunnel;
 # if SITE_TO_TEST env var is set to a publicly accessible URL, tests that skipping server & tunnel.
 
-sauceTunnel = require('sauce-tunnel')
+sauceTunnel = require('sauce-connect-tunnel')
 wd = require('wd')  # TODO: compare vs http://webdriver.io/ vs webdriverJS
 chalk = require('chalk')
 expect = require('expect.js')
