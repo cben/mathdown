@@ -9,9 +9,9 @@
 #logo {
   font-size: 50%;  /* Fit 2-line math within single-line header */
   color: black; text-decoration: none;  /* Don't look like a link */
-  display: inline-block; width: 4em;
+  display: inline-block; width: 4em; white-space: nowrap;
 }
-.warning { color: orange; }
+.warning { color: #ff7f50; /* coral */ }
 .call_to_action {
   font-weight: bold;
   font-size: inherit; font-family: inherit; /* avoid parts of browser <button> styling */
@@ -65,12 +65,38 @@ body { height: 80%; width: 95%; }
   body { display: table; }
   form { display: table-row; } */
 
+/* David is the best-matching serif Hebrew style.
+   But its italic is problematic: slants to the left, which inherently
+   does't mix well with right-slanted latin; the Culmus version also
+   "takes over" punctuation to be left-slanted, and even English letters
+   to remain upright :-(
+   KLUDGE: hide the native italic from the browser, to force "faux oblique"
+   that will slant to the right!  https://stackoverflow.com/a/25583439/239657
+   Also, constrain to Hebrew block to avoid taking over other scripts.
+*/
+@font-face {
+  font-family: 'DavidWithoutItalic';
+  font-style: normal;
+  font-weight: normal;
+  unicode-range: U+0590-05FF, U+FB1D-FB4F; /* Hebrew, Hebrew subset of Alphabetic Presentation Forms */
+  src: local('David CLM Medium'), local('David'), local('David Regular');
+}
+@font-face {
+  font-family: 'DavidWithoutItalic';
+  font-style: normal;
+  font-weight: bold;
+  unicode-range: U+0590-05FF, U+FB1D-FB4F; /* Hebrew, Hebrew subset of Alphabetic Presentation Forms */
+  src: local('David CLM Bold'), local('David Bold');
+}
+
 /* Font choices based on Math.SE: http://graphicdesign.stackexchange.com/a/12961 */
+/* "lining_numerals_charter" replaces only the digits 0-9, comes from fonts/ subdir.
+   See https://github.com/cben/mathdown/issues/95 */
 .CodeMirror {
-  font-family: "Georgia", "Bitstream Charter", "David", "David CLM", "Times New Roman", "Times", serif;
+  font-family: "lining_numerals_charter", "Georgia", "Bitstream Charter", "DavidWithoutItalic", "Times New Roman", "Times", serif;
 }
 /* markdown mode styles `...` and indented code blocks as "comment". */
-.cm-comment, .cm-leadingspace, .cm-formatting-list, .cm-formatting-quote {
+.cm-comment, .cm-leadingspace, .cm-formatting-list, .cm-formatting-quote, .cm-formatting-task {
   /* Prefer Courier and similar serif monospaced fonts.
      Prefer Nimbus Mono L to Courier New -> Liberation Mono substitution
      on linux (it's metrically compatible but sans-serif). */
@@ -84,9 +110,9 @@ pre.cm-header-3 { font-size: 1.17em; }
 pre.cm-header-4 { font-size: 1.00em; }
 pre.cm-header-5 { font-size: 0.83em; }
 pre.cm-header-6 { font-size: 0.67em; }
-/* Arbitrary margins for headers (non-hegligible but not too big). */
+/* Arbitrary margins for headers (non-negligible but not too big). */
 pre.cm-header { padding-top: 0.5em; padding-bottom: 0.5em; }
-/* De-emphasize markup characters.  Whitewash colors by *0.4 factor. */
+/* De-emphasize markup characters.  Whitewash colors by *0.4 factor. TODO: opacity? */
 .cm-s-default .cm-formatting-header { color: #66F; }
 .cm-s-default .cm-formatting-em { color: #666; }
 .cm-s-default .cm-formatting-strong { color: #666; }
@@ -102,6 +128,9 @@ pre.cm-header { padding-top: 0.5em; padding-bottom: 0.5em; }
 .cm-s-default .cm-keyword { color: #470052; }
 .cm-s-default .cm-keyword.cm-formatting-list { color: #708; }
 */
+
+/* Poor man's checkbox. */
+.cm-formatting-task { border: 1px inset; }
 
 /* exclude math from monospace style to avoid mathjax vertically
    squishing formulas, especially display. */

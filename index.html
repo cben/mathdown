@@ -55,13 +55,15 @@
     <script src="firepad/dist/firepad.js"></script>
 
     <link rel="stylesheet" href="mathdown.css"/>
+    <link rel="stylesheet" href="fonts/lining_numerals_charter.css"/>
   </head>
 
   <body class="tex2jax_ignore">
     <!-- TODO: clean content/CSS. -->
     <div id="header">
-      <a href="?doc=about" target="_blank" class="tex2jax_process" id="logo">
-        $\binom{\mathcal{Math}}{\text{down}}$
+      <a href="?doc=about" target="_blank" id="logo">
+        <!-- Use script form rather than $...$ to hide until it's rendered. -->
+        <script type="math/tex; mode=inline">\binom{\mathcal{Math}}{\text{down}}</script>
       </a>
       <span class="warning">⚠ Alpha quality ⚠</span>
       |
@@ -75,6 +77,13 @@
     <div id="status_container">
       <span id="status" class="info">loading...</span>
     </div>
+
+    <noscript>
+      <h1 class="warning">
+        Sorry, currently even viewing a Mathdown document requires JavaScript in your browser.
+        I consider that <a href="https://github.com/cben/mathdown/issues/7">a bug</a>.
+      </h1>
+    </noscript>
 
     <form id="content"><textarea id="code" name="code"></textarea></form>
     <script src="mathdown.js"></script>

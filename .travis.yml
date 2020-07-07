@@ -1,8 +1,7 @@
 # This controls automated builds at Travis & Shippable.
 
-# http://blog.travis-ci.com/2014-12-17-faster-builds-with-container-based-infrastructure/
-# Comment out for now because with it travis didn't build at all?
-##sudo: false
+# http://docs.travis-ci.com/user/migrating-from-legacy
+sudo: false
 
 # By default travis blacklists `gh-pages` branch.  We want it tested.
 # http://docs.travis-ci.com/user/build-configuration/#Specify-branches-to-build
@@ -12,8 +11,13 @@ branches:
     - /.*/
 
 language: node_js
+# Should test the Node version that runs in production.
+# https://docs.travis-ci.com/user/languages/javascript-with-nodejs/#Specifying-Node.js-versions
+# https://devcenter.heroku.com/articles/nodejs-support#specifying-a-node-js-version
+# I believe RHcloud (openshift 2) was running 0.11 but it's being sunset anyway.
 node_js:
-  - "0.11"  # Latest http://docs.travis-ci.com/user/languages/javascript-with-nodejs/#Provided-Node.js-Versions
+  - 6
+  - 8
 
 # http://blog.travis-ci.com/2013-12-05-speed-up-your-builds-cache-your-dependencies/
 cache:
