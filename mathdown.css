@@ -103,6 +103,8 @@ body { height: 80%; width: 95%; }
   font-family: "Courier 10 Pitch", "Nimbus Mono L", "Courier New", "Courier", "FreeMono", monospace;
 }
 
+.cm-s-readonly { background-color: #F8F8F8; }
+
 /* Match h1..h6 default sizes in WebKit, Mozilla & IE as of 2013. */
 pre.cm-header-1 { font-size: 2.00em; }
 pre.cm-header-2 { font-size: 1.50em; }
