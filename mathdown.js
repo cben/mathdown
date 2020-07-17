@@ -295,7 +295,7 @@ function locationQueryParams() {
 
 var queryParams = locationQueryParams();
 var doc = queryParams["doc"];
-var view = queryParams["view"];
+var view = queryParams["viewurl"];
 // EXPERIMENTAL KLUDGE param: for now we support dir=rtl to make RTL docs (somewhat) practical
 // (but don't expose it in the GUI).
 // In the future it might be ignored - once we autodetect each line's base direction (#23).
@@ -319,13 +319,17 @@ if (doc !== undefined) {
 
   var req = new XMLHttpRequest();
   req.onreadystatechange = function() {
-    log("view=... loading:", req.readyState, req.status);
+    log("viewurl <" + view + "> loading: readyState =", req.readyState, "status =", req.status);
     if (req.readyState === 4) {
       if (req.status === 200) {
+        // TODO: respect req.getResponseHeader('Content-Type') to make this a universal viewer?
+        //   Or take a viewmode param?
 	editor.setValue(req.responseText);
 	setStatus("", "done");
       } else {
-	editor.setValue("# *ERROR*: " + req.status + " " + req.statusText);
+	editor.setValue("# *ERROR*: " + req.status + " " + req.statusText + "\n" +
+                        "\n" +
+                        req.responseText);
 	setStatus("warning", "Loading error.");
       }
 
@@ -334,6 +338,8 @@ if (doc !== undefined) {
       // Firefox works, but doesn't know the content-type, so tries to parse response as x/html ("help.md: syntax error").  However if target doesn't exist, throws "NS_ERROR_DOM_BAD_URI: Access to restricted URI denied".
     }
   }
+  // Security: this can make GET request with any URL!
+  // Is this risky as kind of "open redirect" for requests?
   req.open('GET', view, true);  // TODO: constrain `view` against traversal?
 //  try {
     req.send(null);
