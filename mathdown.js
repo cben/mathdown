@@ -314,7 +314,7 @@ if (doc !== undefined) {
   var firepad = Firepad.fromCodeMirror(firepadRef, editor);
   setupFirepad(editor, firepad);
 } else if (view !== undefined) {
-  var editor = createEditor(docDirection, {readOnly: true});
+  var editor = createEditor(docDirection, {readOnly: true, theme: "default readonly"});
   setupEditor(editor);
 
   var req = new XMLHttpRequest();
