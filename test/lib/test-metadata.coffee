@@ -1,4 +1,4 @@
-execSync = require('sync-exec')
+execSync = require('child_process').execSync
 
 # Continuous integration metadata
 # ===============================
@@ -33,7 +33,7 @@ exports.getBuildInfo = ->
     else
       # Synthesize unique build string for local `npm test` runs.
       console.log('Running `git describe` to get build info...')
-      versionInfo = execSync('git describe --always --all --long --dirty').stdout.trim()
+      versionInfo = execSync('git describe --always --all --long --dirty').toString().trim()
       timestamp = new Date().toISOString()
       "Local at #{versionInfo} on #{timestamp}"
   buildInfo
