@@ -14,7 +14,7 @@
     "wd": "git+https://github.com/admc/wd.git#master"
   },
   "engines": {
-    "node": "8.x"
+    "node": "10.x"
   },
   "main": "server.coffee",
   "scripts": {
