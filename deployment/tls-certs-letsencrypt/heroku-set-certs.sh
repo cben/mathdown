@@ -27,7 +27,7 @@ else
 fi
 
 sleep 5
-curl --head "https://$main_domain/"
+curl --head --location "https://$main_domain/"
 
 echo 'To analyze certs & security:'
 printf '  https://www.ssllabs.com/ssltest/analyze.html?d=%s&latest\n' "${domains[@]}"
