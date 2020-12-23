@@ -52,7 +52,11 @@ lexicon "$PROVIDER" list "$MAIN_DOMAIN" CNAME
 echo $'\n== OBTAINING CERTS =='
 
 mkdir -p "$CERTS_DIR"
-"${BASH[@]}" ./dehydrated/dehydrated --cron --challenge dns-01 --hook ./lexicon/examples/dehydrated.default.sh --domain "$MAIN_DOMAIN $ALT_DOMAINS" --out "$CERTS_DIR" | tee -a "$CERTS_DIR/dehydrated.out"
+
+# Default algo changed to secp384r1 but doesn't work:
+# > Heroku only supports RSA keys for certs. Elliptic curve keys are not supported.
+# -- https://devcenter.heroku.com/articles/acquiring-an-ssl-certificate
+"${BASH[@]}" ./dehydrated/dehydrated --cron --challenge dns-01 --hook ./lexicon/examples/dehydrated.default.sh --domain "$MAIN_DOMAIN $ALT_DOMAINS" --out "$CERTS_DIR" --algo rsa | tee -a "$CERTS_DIR/dehydrated.out"
 
 echo $'\n== RESULTS =='
 
