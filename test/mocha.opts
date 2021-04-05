@@ -1,1 +1,4 @@
---compilers coffee:coffee-script/register
+--exit
+--require coffee-script/register
+--watch-extensions js,coffee
+test/**/*.{js,coffee}
