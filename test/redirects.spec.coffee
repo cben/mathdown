@@ -76,3 +76,5 @@ describe 'redirects server behavior', ->
     getWithoutHost reqOptions, (res) ->
       expect(res.statusCode).to.equal(200)
       done()
+
+run()

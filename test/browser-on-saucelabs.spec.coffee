@@ -1,12 +1,14 @@
 # Usage: By default runs local server, tests it via tunnel;
 # if SITE_TO_TEST env var is set to a publicly accessible URL, tests that skipping server & tunnel.
 
-sauceTunnel = require('sauce-tunnel')
+SauceLabs = require('saucelabs').default
 wd = require('wd')  # TODO: compare vs http://webdriver.io/ vs webdriverJS
 chalk = require('chalk')
 expect = require('expect.js')
+lodash = require('lodash')
+uuid = require('uuid')
 
-require('coffee-script/register')
+require('coffeescript/register')
 server = require('../server')
 testMetadata = require('./lib/test-metadata')
 
@@ -35,28 +37,43 @@ timeouts = {
   sauceIdle: 30*sec
 }
 
-desiredBrowsers = [
-  # Generated with https://docs.saucelabs.com/reference/platforms-configurator/
-  # Desktop:
-  {browserName: 'internet explorer', version: '8.0', platform: 'Windows 7'}
-  {browserName: 'internet explorer', version: 'latest', platform: 'Windows 10'}
-  {browserName: 'MicrosoftEdge'}
-  # arbitrary somewhat old - but not ancient - FF and Chrome versions.
-  {browserName: 'firefox', version: '30.0', platform: 'Linux'}
-  {browserName: 'chrome', version: '35.0', platform: 'Linux'}
-  {browserName: 'Safari', version: '8.0', platform: 'OS X 10.10'}
-  {browserName: 'Safari', version: 'latest', platform: 'macOS 10.13'}
-  # Mobile (doesn't mean it's usable though):
-#  {browserName: 'Safari', deviceName: 'iPad Simulator', platformName: 'iOS', platformVersion: '9.3'}
-#  {browserName: 'Browser', deviceName: 'Android Emulator', platformName: 'Android', platformVersion: '4.4'}
-]
+# Desired environments
+# =====================
+
+sauceLabs = new SauceLabs({user: sauceUser, key: sauceKey})
+
+getDesiredBrowsers = ->
+  # https://docs.saucelabs.com/dev/api/platform/index.html
+  platforms = await sauceLabs.listPlatforms('webdriver')
+
+  oldestBrowser = (api_name) ->
+    matchingPlatforms = lodash.filter(platforms, (p) => p.api_name == api_name)
+    oldestPlatform = lodash.minBy(matchingPlatforms, (p) => Number(p.short_version))
+    # Convert to format expected by 
+    {browserName: api_name, version: oldestPlatform.long_version, platform: oldestPlatform.os}
+
+  [
+    # Generated with https://docs.saucelabs.com/reference/platforms-configurator/
+    # Desktop:
+    oldestBrowser('internet explorer')
+    {browserName: 'internet explorer', version: 'latest', platform: 'Windows 10'}
+    {browserName: 'MicrosoftEdge'}
+    # arbitrary somewhat old - but not ancient - FF and Chrome versions.
+    {browserName: 'firefox', version: '30.0', platform: 'Linux'}
+    {browserName: 'chrome', version: '35.0', platform: 'Linux'}
+    {browserName: 'Safari', version: '8.0', platform: 'OS X 10.10'}
+    {browserName: 'Safari', version: 'latest', platform: 'macOS 10.13'}
+    # Mobile (doesn't mean it's usable though):
+    # {browserName: 'Safari', deviceName: 'iPad Simulator', platformName: 'iOS', platformVersion: '9.3'}
+    # {browserName: 'Browser', deviceName: 'Android Emulator', platformName: 'Android', platformVersion: '4.4'}
+  ]
 
 commonDesired = {
   build: testMetadata.getBuildInfo()
   tags: testMetadata.getTags()
   'idle-timeout': timeouts.sauceIdle
 }
-console.log("commonDesired =", commonDesired)
+log("commonDesired =", commonDesired)
 
 merge = (objs...) ->
   merged = {}
@@ -64,6 +81,9 @@ merge = (objs...) ->
     for k, v of obj
       merged[k] = v
   merged
+
+# Tests
+# =====
 
 # I've factored parts of the test suite into "desribeFoo" functions.
 # When I want to pass them values computed in before[Each] blocks, I have to
@@ -91,7 +111,7 @@ describeBrowserTest = (browserName, getDesired, getSite) ->
     # I suppose `browser.get()` does reset browser state...
     # Also, seeing individual tests on SauceLabs would be cool: https://youtu.be/Dzplh1tAwIg?t=370
     before (done) ->
-      @timeout(timeouts.sauceSession)
+      this.timeout(timeouts.sauceSession)
       browser = wd.remote('ondemand.saucelabs.com', 80, sauceUser, sauceKey)
       browser.on 'status', (info) ->
         log(chalk.cyan(info))
@@ -123,14 +143,14 @@ describeBrowserTest = (browserName, getDesired, getSite) ->
     #       done()
 
     after (done) ->
-      @timeout(timeouts.sauceSessionClose)
+      this.timeout(timeouts.sauceSessionClose)
       browser.sauceJobStatus allPassed, ->
         browser.quit ->
           log('')  # blank line after lots of noise
           done()
 
     it 'should load and render math', (done) ->
-      @timeout(60*sec)  # 30s would be enough if not for mobile?
+      this.timeout(60*sec)  # 30s would be enough if not for mobile?
       browser.get getSite() + '?doc=_mathdown_test_smoke', (err) ->
         expect(err).to.be(null)
         browser.waitFor wd.asserters.jsCondition('document.title.match(/smoke test/)'), 10*sec, (err, value) ->
@@ -143,55 +163,64 @@ describeBrowserTest = (browserName, getDesired, getSite) ->
               eachPassed = true
               done()
 
-describeAllBrowsers = (getDesired, getSite) ->
-  for b in desiredBrowsers
-    do (b) ->
-      name = "#{b.browserName} #{b.deviceName} #{b.version} on #{b.platform}"
-      describeBrowserTest(name, (-> merge(b, getDesired())), getSite)
+# Defines test cases and executes them with explicit run(), for mocha --delay mode.
+# This lets us do async preparations before defining the cases, see main().
+runTests = (desiredBrowsers) ->
+  describeAllBrowsers = (getDesired, getSite) ->
+    for b in desiredBrowsers
+      do (b) ->
+        name = "#{b.browserName} #{b.deviceName} #{b.version} on #{b.platform}"
+        describeBrowserTest(name, (-> merge(b, getDesired())), getSite)
 
-siteToTest = process.env.SITE_TO_TEST
+  siteToTest = process.env.SITE_TO_TEST
 
-if siteToTest  # Testing existing instance
-  describe "#{siteToTest}", ->
-    describeAllBrowsers(
-      (-> merge(commonDesired, {name: 'smoke test of ' + siteToTest})),
-      (-> siteToTest))
-else  # Run local server, test it via tunnel
-  describe 'Served site via Sauce Connect', ->
-    tunnel = null
-    actualTunnelId = null
-    httpServer = null
+  if siteToTest  # Testing existing instance
+    describe "#{siteToTest}", ->
+      describeAllBrowsers(
+        (-> merge(commonDesired, {name: 'smoke test of ' + siteToTest})),
+        (-> siteToTest))
+  else  # Run local server, test it via tunnel
+    describe 'Served site via Sauce Connect', ->
+      tunnel = null
+      actualTunnelId = null
+      httpServer = null
 
-    before (done) ->
-      @timeout(timeouts.tunnel)
+      before (done) ->
+        this.timeout(timeouts.tunnel)
 
-      # https://docs.saucelabs.com/reference/sauce-connect/#can-i-access-applications-on-localhost-
-      # lists ports we can use.  TODO: try other ports if in use.
-      port = 8001
-      httpServer = server.main port, ->
-
-        # undefined => unique tunnel id will be automatically chosen
-        tunnel = new sauceTunnel(sauceUser, sauceKey, undefined, true, ['--verbose'])
-        log(chalk.green('Creating tunnel...'))
-        tunnel.start (tunnel_status) ->
-          expect(tunnel_status).to.be.ok()
-          log(chalk.green('tunnel created:'), tunnel.identifier)
-          actualTunnelId = tunnel.identifier
+        # https://docs.saucelabs.com/reference/sauce-connect/#can-i-access-applications-on-localhost-
+        # lists ports we can use.  TODO: try other ports if in use.
+        port = 8001
+        httpServer = server.main port, ->
+          log(chalk.magenta('Creating tunnel...'))
+          actualTunnelId = uuid.v4()
+          tunnel = await sauceLabs.startSauceConnect({
+            logger: (stdout) => console.log(chalk.magenta(stdout.trimEnd())),
+            tunnelIdentifier: actualTunnelId,
+          })
           done()
 
-    after (done) ->
-      @timeout(timeouts.tunnelClose)
-      # TODO (in mocha?): run this on SIGINT
-      tunnel.stop ->
-        log(chalk.green('Tunnel stopped, cleaned up.'))
+      after ->
+        this.timeout(timeouts.tunnelClose)
+        # TODO (in mocha?): run this on SIGINT
+        await tunnel.close()
+        log(chalk.magenta('Tunnel stopped, cleaned up.'))
         # Not waiting for server to close - won't happen if the client kept open
         # connections, https://github.com/nodejs/node-v0.x-archive/issues/5052
         httpServer.close()
-        done()
 
-    describeAllBrowsers(
-      (-> merge(commonDesired, {name: 'smoke test', 'tunnel-identifier': actualTunnelId})),
-      (-> "http://localhost:#{httpServer.address().port}"))
+      describeAllBrowsers(
+        (-> merge(commonDesired, {name: 'smoke test', 'tunnel-identifier': actualTunnelId})),
+        (-> "http://localhost:#{httpServer.address().port}"))
+  
+  run()
+
+main = ->
+  desiredBrowsers = await getDesiredBrowsers()
+  #console.log('desiredBrowsers =', desiredBrowsers)
+  runTests(desiredBrowsers)
+
+main()
 
 # TODO: parallelize (at least between different browsers).
 # I probably want Vows instead of Jasmine, see https://github.com/jlipps/sauce-node-demo example?

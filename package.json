@@ -3,14 +3,16 @@
   "version": "0.0.0",
   "description": "http://mathdown.net",
   "dependencies": {
-    "chalk": "~2.4.1",
-    "coffee-script": "~1.12.7",
-    "st": "~2.0.0"
+    "chalk": "^2.4.2",
+    "coffeescript": "^2.5.0",
+    "st": "^2.0.0"
   },
   "devDependencies": {
     "expect.js": "~0.3.1",
+    "lodash": "^4.17.21",
     "mocha": "~5.2.0",
-    "sauce-tunnel": "~2.5.0",
+    "saucelabs": "^5.1.0",
+    "uuid": "^8.3.2",
     "wd": "git+https://github.com/admc/wd.git#master"
   },
   "engines": {
