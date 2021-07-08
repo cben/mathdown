@@ -4,8 +4,11 @@
 name: Node.js CI
 
 on:
-  push:
-    branches: [ '*' ]
+  # Test on multiple browsers is relatively heavy.
+  # Running both on push and PR usually results in running both things twice.
+  # Also PRs have other goodies e.g. Netlify Previews.
+  #push:
+  #  branches: [ 'gh-pages' ]
   pull_request:
     branches: [ '*' ]
 
