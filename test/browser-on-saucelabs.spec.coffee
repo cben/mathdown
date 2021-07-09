@@ -1,6 +1,7 @@
 # Usage: By default runs local server, tests it via tunnel;
 # if SITE_TO_TEST env var is set to a publicly accessible URL, tests that skipping server & tunnel.
 
+util = require('util')
 SauceLabs = require('saucelabs').default
 wd = require('wd')  # TODO: compare vs http://webdriver.io/ vs webdriverJS
 chalk = require('chalk')
@@ -21,7 +22,8 @@ sauceKey = process.env.SAUCE_ACCESS_KEY || '23056294-abe8-4fe9-8140-df9a59c45c7d
 # Try to keep all logging indented deeper than Mocha test tree.
 indentation = '          '
 log = (fmt, args...) ->
-  console.log(indentation + fmt, args...)
+  text = util.format(fmt, args...)
+  console.log(text.replace(/^/mg, indentation))
 
 sec = 1000
 min = 60*sec
@@ -195,7 +197,7 @@ runTests = (desiredBrowsers) ->
           log(chalk.magenta('Creating tunnel...'))
           actualTunnelId = uuid.v4()
           tunnel = await sauceLabs.startSauceConnect({
-            logger: (stdout) => console.log(chalk.magenta(stdout.trimEnd())),
+            logger: (stdout) => log(chalk.magenta(stdout.trimEnd())),
             tunnelIdentifier: actualTunnelId,
           })
           done()
@@ -217,7 +219,7 @@ runTests = (desiredBrowsers) ->
 
 main = ->
   desiredBrowsers = await getDesiredBrowsers()
-  #console.log('desiredBrowsers =', desiredBrowsers)
+  log('desiredBrowsers =', desiredBrowsers)
   runTests(desiredBrowsers)
 
 main()
