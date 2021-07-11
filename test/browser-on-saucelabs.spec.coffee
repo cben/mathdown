@@ -155,7 +155,7 @@ describeBrowserTest = (browserName, getDesired, getSite) ->
       this.timeout(60*sec)  # 30s would be enough if not for mobile?
       browser.get getSite() + '?doc=_mathdown_test_smoke', (err) ->
         expect(err).to.be(null)
-        browser.waitFor wd.asserters.jsCondition('document.title.match(/smoke test/)'), 10*sec, (err, value) ->
+        browser.waitFor wd.asserters.jsCondition('document.title.match(/smoke test/)'), 30*sec, (err, value) ->
           expect(err).to.be(null)
           browser.waitForElementByCss '.MathJax_Display', 30*sec, (err, el) ->
             expect(err).to.be(null)
