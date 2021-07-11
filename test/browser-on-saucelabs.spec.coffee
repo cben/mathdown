@@ -62,7 +62,7 @@ getDesiredBrowsers = ->
     {browserName: 'MicrosoftEdge'}
     # arbitrary somewhat old - but not ancient - FF and Chrome versions.
     {browserName: 'firefox', version: '30.0', platform: 'Linux'}
-    {browserName: 'chrome', version: '35.0', platform: 'Linux'}
+    {browserName: 'chrome', version: 'latest', platform: 'Linux'}
     {browserName: 'Safari', version: '8.0', platform: 'OS X 10.10'}
     {browserName: 'Safari', version: 'latest', platform: 'macOS 10.13'}
     # Mobile (doesn't mean it's usable though):
@@ -74,6 +74,7 @@ commonDesired = {
   build: testMetadata.getBuildInfo()
   tags: testMetadata.getTags()
   'idle-timeout': timeouts.sauceIdle
+  extendedDebugging: true
 }
 log("commonDesired =", commonDesired)
 
