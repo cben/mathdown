@@ -108,6 +108,7 @@ describeBrowserTest = (browserName, getDesired, getSite) ->
     afterEach ->
       if not eachPassed
         allPassed = false
+      log(eachPassed ? chalk.green('ok') : chalk.red('fail'))
 
     # TODO: should I reuse one browser instance for many tests?
     # From the wd docs reusing one should work but is it isolated enough?
