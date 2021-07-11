@@ -198,7 +198,7 @@ runTests = (desiredBrowsers) ->
           log(chalk.magenta('Creating tunnel...'))
           actualTunnelId = uuid.v4()
           tunnel = await sauceLabs.startSauceConnect({
-            logger: (stdout) => log(chalk.magenta(stdout.trimEnd())),
+            logger: (stdout) => log(chalk.magenta(stdout.trimEnd().replace(sauceKey, '[REDACTED]'))),
             tunnelIdentifier: actualTunnelId,
           })
           done()
