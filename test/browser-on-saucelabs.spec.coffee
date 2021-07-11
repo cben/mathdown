@@ -63,6 +63,7 @@ getDesiredBrowsers = ->
     # arbitrary somewhat old - but not ancient - FF and Chrome versions.
     {browserName: 'firefox', version: '30.0', platform: 'Linux'}
     {browserName: 'chrome', version: 'latest', platform: 'Linux'}
+    {browserName: 'chrome', version: 'latest', platform: 'Windows 10'}
     {browserName: 'Safari', version: '8.0', platform: 'OS X 10.10'}
     {browserName: 'Safari', version: 'latest', platform: 'macOS 10.13'}
     # Mobile (doesn't mean it's usable though):
