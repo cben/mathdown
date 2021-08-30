@@ -18,7 +18,7 @@ alt_domains=('www.mathdown.net' 'www.mathdown.com' 'mathdown.com')
 domains=("$main_domain" "${alt_domains[@]}")
 
 app=mathdown
-cert=certs/mathdown.net/cert.pem
+cert=certs/mathdown.net/fullchain.pem
 privkey=certs/mathdown.net/privkey.pem
 if heroku certs:info --app "$app"; then
    heroku certs:update --app "$app" "$cert" "$privkey"
