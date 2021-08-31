@@ -13,4 +13,4 @@ echo
 # Summarize all certs in chain: http://serverfault.com/a/755815
 openssl crl2pkcs7 -nocrl -certfile "$1" |
   openssl pkcs7 -print_certs -noout -text |
-  egrep --color 'Certificate:|Issuer|Validity|Before|After|Subject|DNS'
+  grep --extended-regexp --color 'Certificate:|Issuer|Validity|Before|After|Subject|DNS'
