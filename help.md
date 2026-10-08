@@ -1,3 +1,4 @@
+# Help
 Supported Markdown syntaxes:
 # Headings start with # sign.
 ## 2nd-level heading
@@ -5,7 +6,7 @@ Supported Markdown syntaxes:
 
 ----
 
-Use asterisks for *emphasis* and ***strong* emphasis**.  _Underlines_ also work.
+Use asterisks for *emphasis* and ***strong* emphasis**.  _Underlines_ also work.  ~~Strikeout~~
 
 Surround literal text with (e.g. computer code) with `backticks`.
 For a literal block:
@@ -13,6 +14,7 @@ For a literal block:
 surround with triple backticks
 ```
 or:
+
     indent by 4 spaces.
 
 # Lists
@@ -70,6 +72,10 @@ Mathdown doesn't yet help you with this, but the syntax you're writing is standa
 
 2. The best conversion tool is [Pandoc](http://pandoc.org/).  You'll want to run something like:
 
-      pandoc -s --mathjax -f markdown_github-blank_before_header+tex_math_dollar+tex_math_single_backslash MY_FILE.md -o MY_FILE.html
+      pandoc -s --standalone --mathjax -f markdown_github-blank_before_header+tex_math_dollars+tex_math_single_backslash+latex_macros+startnum+markdown_in_html_blocks+hard_line_breaks MY_FILE.md -o MY_FILE.html
 
-   The output format is inferred from the `-o` extension, can be overriden with e.g. `-t beamer`.
+    (The output format is inferred from the `-o` extension, can be overriden with e.g. `-t beamer`.)
+
+    Or convert online (privacy caveat: sends your text to their server) at
+   https://pandoc.org/try/?params={"to"%3A"html"%2C"from"%3A"markdown_github-blank_before_header%2Btex_math_dollars%2Btex_math_single_backslash%2Bstartnum%2Bmarkdown_in_html_blocks%2Blatex_macros%2Bhard_line_breaks"%2C"standalone"%3Atrue%2C"html-math-method"%3A"mathjax"}
+
