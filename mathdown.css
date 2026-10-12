@@ -101,6 +101,9 @@ body { height: 80%; width: 95%; }
      Prefer Nimbus Mono L to Courier New -> Liberation Mono substitution
      on linux (it's metrically compatible but sans-serif). */
   font-family: "Courier 10 Pitch", "Nimbus Mono L", "Courier New", "Courier", "FreeMono", monospace;
+  /* We lift cm-header* styling to line level, so that math scales accordingly.
+     But when a header is indented, leading spaces should keep standard width. */
+  font-size: 1.00rem;
 }
 
 /* Match h1..h6 default sizes in WebKit, Mozilla & IE as of 2013. */
