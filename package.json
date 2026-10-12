@@ -5,6 +5,7 @@
   "dependencies": {
     "chalk": "^2.4.2",
     "coffeescript": "^2.5.0",
+    "serve": "^14.2.6",
     "st": "^2.0.0"
   },
   "devDependencies": {
@@ -20,7 +21,8 @@
   },
   "main": "server.coffee",
   "scripts": {
-    "start": "coffee server.coffee",
+    "start": "serve",
+    "server": "coffee server.coffee",
     "test": "mocha",
     "deploy": "deployment/deploy.sh"
   },

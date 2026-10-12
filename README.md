@@ -51,7 +51,7 @@ The downside is users can't really control their data.  Running a "self-hosted" 
 The upside is all forks interoperate; you can change the design or tweak the editor and still access same documents.  E.g. https://mathdown.net/index.html?doc=demo and http://rhythmus.be/mathdown/index.html?doc=demo look different but access the same doc -- and real-time collaboration between them works!
 
 I'm so far on the [free Firebase plan](https://www.firebase.com/pricing.html) - 100 devices (not sure if 1:1 with users), 1GB Data Storage (used < 100MB).  => Will need 49USD/mo plan as soon as I get non-negligible usage.
-https://mathdown.firebaseio.com/?page=Analytics (only visible to me)
+https://console.firebase.google.com/u/0/project/firebase-mathdown/usage (only visible to me)
 
 ### Deletion is impossible
 
@@ -71,13 +71,9 @@ The only cookies I'm aware of:
 
   - `mjx.menu` cookie set for a year(?) if you manually change MathJax settings.
 
-I'm not sure Firebase never sets cookies.  Things will change once I implement login (#50).
+I'm not sure Firebase never sets cookies.  Things would change if I implement login (#50).
 
 ## Installing dependencies
-
-[![Dependency Status](https://david-dm.org/cben/mathdown.svg)](https://david-dm.org/cben/mathdown)
-[![devDependency Status](https://david-dm.org/cben/mathdown/dev-status.svg)](https://david-dm.org/cben/mathdown#info=devDependencies)
-[![Greenkeeper badge](https://badges.greenkeeper.io/cben/mathdown.svg)](https://greenkeeper.io/)
 
  1. After checking out, run this to materialize client-side dependencies:
 
@@ -102,8 +98,6 @@ I'm not sure Firebase never sets cookies.  Things will change once I implement l
     npm shrinkwrap
 
     Then commit the new `package.json` and `npm-shrinkwrap.json`.
-  TODO: find way to use same **node.js version** in dev and prod?
-
 
 ## Test(s)
 
@@ -122,59 +116,46 @@ To run only some tests and/or browsers, use:
 
     ./node_modules/.bin/mocha --grep firefox
 
-The test runs automatically on any commit and pull request.
-I've tried several free services for this, and currently prefer Travis:
+~~The test runs automatically on any commit and pull request.~~
+TODO: This project was set up on Travis-CI but it's no longer open-source friendly (#216).
 
-  * [Travis](https://travis-ci.org/cben/mathdown/branches) - works, open source code.  Controlled by `.travis.yml`.
-  * [Wercker](https://app.wercker.com/#applications/54b6c5a2d9b237dd37003402) - works.  Controlled by `wercker.yml`.
-  * [Drone](https://drone.io/github.com/cben/mathdown) - Docker-based, [open source](https://github.com/drone/drone) rewrite in progress.  Alas, always timed out during test.  Test config on the web.
-  * [Shippable](https://app.shippable.com/projects/54b58b855ab6cc13528881c1) - builds history only accessible by me?  Bad, I want public.  Controlled by `.travis.yml`.
-  * [Codeship](https://codeship.com/projects/17706) - same, dashboard is private.  Test config on the web.
 
 ## Where it's deployed and how to run your fork
 
-The main deployment currently runs on Heroku.  See [deployment/](deployment/) subdirectory for details.  I'm interested at going back to static hosting.
+This app works as pure static pages, and I intend to keep it this way. However, opening index.html as `file:` URL no longer works, you do need an http server.
+The main deployment currently runs on Netlify.
 
-**However you run it, you can open the same document ids (`doc=...`) and real-time collaboration will work!**
+**However you run it — locally or prod — you can open the same document ids (`doc=...`) and real-time collaboration will work!**
 
-Quick ways to run:
+  * Run local server (`server.coffee`):
 
-Deploy on Heroku:
+        npm install  # once
+        npm start    # Prints URL you can click
 
-	heroku create my-mathdown --remote heroku-my-mathdown
-	git push heroku-my-mathdown gh-pages:master
+    (you can choose a port by setting PORT env var.  <kbd>Ctrl+C</kbd> when done.)
 
-some other ways to deploy on Heroku might not work due to my use of submodules (?)
-
-Run local server (`server.coffee`):
-
-    npm install  # once
-    env PORT=8001 npm start  # Prints URL you can click
-
-(you can choose any port of course.  <kbd>Ctrl+C</kbd> when done.)
-
-This app *mostly* works as pure static pages, and I intend to keep it this way.
-
-  * From a checkout, **just open `index.html` in your browser**.
+    Or use any other static server e.g. `python3 -m http.server`
 
   * Github Pages serves the gh-pages branch at https://cben.github.io/mathdown.
 
       * If you fork this repo, you can immediately use your version at https://YOUR-GITHUB-USERNAME.github.io/mathdown/!
-      Or maybe not immediately but [after you push something](http://stackoverflow.com/q/8587321/239657).
+        Or maybe not immediately but [after you push something](http://stackoverflow.com/q/8587321/239657).
 
-  * For other branches/commits, there is no trivial solution - rawgit.com would be great but doesn't currently support submodules.
+  * Pull requests should get Netlify previews.
 
-  * The easiest way to run (and share) uncommitted modifications is probably Cloud 9.  TODO: test, details.
+  * You could also setup your own Netlify for your fork.
 
-The only benefits the dynamic server is going to bring (not implemented yet) will be:
+(Services like https://raw.githack.com/ would be handy but don't support submodules afaict.)
 
- 1. Including the document text in the HTTP response for search engines (#7).
- 2. Prettier `mathdown.net/foobar` instead of `mathdown.net/?doc=foobar` URLs (#59).
+https://httpbin.dev
+
+P.S. [deployment/](deployment/) subdirectory documents obsolete details of prior hostings (Heroku, OpenShift, TLS stuff).
 
 ----
 
 Other things called "mathdown":
 
+ * https://mathdown.app/ — markdown editor for Mac, iPad, iPhone. LaTeX formula rendering, but also "REPL" blocks for some interactive computations (numeric & symbolic).
  * https://github.com/mayoff/Mathdown/tree/mathjax — Markdown.pl hacked for MathJax pass-through
  * https://github.com/keishi/kernlog/blob/master/markdown/extensions/mathdown.py — math in python-markdown, part of "Yet another blog for google app engine"
  * http://kwkbtr.info/log/201010050320 — a way to combine Showdown + Mathjax
