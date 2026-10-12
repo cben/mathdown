@@ -151,6 +151,7 @@ describeBrowserTest = (browserName, getDesired, getSite) ->
 
     it 'should load and render math', (done) ->
       this.timeout(60*sec)  # 30s would be enough if not for mobile?
+      # TODO: should I use '/?viewurl=test/_mathdown_test_smoke.md'? both?
       browser.get getSite() + '?doc=_mathdown_test_smoke', (err) ->
         expect(err).to.be(null)
         browser.waitFor wd.asserters.jsCondition('document.title.match(/smoke test/)'), 10*sec, (err, value) ->

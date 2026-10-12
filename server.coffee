@@ -43,7 +43,7 @@ exports.main = (port, callback) ->
   httpServer.on 'request', handleRequest
 
   httpServer.on 'listening', ->
-    console.log("HttpServer up, e.g. http://localhost:#{httpServer.address().port}/?doc=demo");
+    console.log("HttpServer up, e.g. http://localhost:#{httpServer.address().port}/?doc=demo  or  http://localhost:#{httpServer.address().port}/?viewurl=demo.md");
   if callback?
     httpServer.on 'listening', callback
   httpServer.listen(port, listen_on_address)
