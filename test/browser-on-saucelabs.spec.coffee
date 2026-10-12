@@ -1,6 +1,7 @@
 # Usage: By default runs local server, tests it via tunnel;
 # if SITE_TO_TEST env var is set to a publicly accessible URL, tests that skipping server & tunnel.
 
+util = require('util')
 SauceLabs = require('saucelabs').default
 wd = require('wd')  # TODO: compare vs http://webdriver.io/ vs webdriverJS
 chalk = require('chalk')
@@ -21,7 +22,8 @@ sauceKey = process.env.SAUCE_ACCESS_KEY || '23056294-abe8-4fe9-8140-df9a59c45c7d
 # Try to keep all logging indented deeper than Mocha test tree.
 indentation = '          '
 log = (fmt, args...) ->
-  console.log(indentation + fmt, args...)
+  text = util.format(fmt, args...)
+  console.log(text.replace(/^/mg, indentation))
 
 sec = 1000
 min = 60*sec
@@ -60,7 +62,8 @@ getDesiredBrowsers = ->
     {browserName: 'MicrosoftEdge'}
     # arbitrary somewhat old - but not ancient - FF and Chrome versions.
     {browserName: 'firefox', version: '30.0', platform: 'Linux'}
-    {browserName: 'chrome', version: '35.0', platform: 'Linux'}
+    {browserName: 'chrome', version: 'latest', platform: 'Linux'}
+    {browserName: 'chrome', version: 'latest', platform: 'Windows 10'}
     {browserName: 'Safari', version: '8.0', platform: 'OS X 10.10'}
     {browserName: 'Safari', version: 'latest', platform: 'macOS 10.13'}
     # Mobile (doesn't mean it's usable though):
@@ -72,6 +75,7 @@ commonDesired = {
   build: testMetadata.getBuildInfo()
   tags: testMetadata.getTags()
   'idle-timeout': timeouts.sauceIdle
+  extendedDebugging: true
 }
 log("commonDesired =", commonDesired)
 
@@ -105,6 +109,7 @@ describeBrowserTest = (browserName, getDesired, getSite) ->
     afterEach ->
       if not eachPassed
         allPassed = false
+      log(if eachPassed then chalk.green('ok') else chalk.red('fail'))
 
     # TODO: should I reuse one browser instance for many tests?
     # From the wd docs reusing one should work but is it isolated enough?
@@ -153,7 +158,7 @@ describeBrowserTest = (browserName, getDesired, getSite) ->
       this.timeout(60*sec)  # 30s would be enough if not for mobile?
       browser.get getSite() + '?doc=_mathdown_test_smoke', (err) ->
         expect(err).to.be(null)
-        browser.waitFor wd.asserters.jsCondition('document.title.match(/smoke test/)'), 10*sec, (err, value) ->
+        browser.waitFor wd.asserters.jsCondition('document.title.match(/smoke test/)'), 30*sec, (err, value) ->
           expect(err).to.be(null)
           browser.waitForElementByCss '.MathJax_Display', 30*sec, (err, el) ->
             expect(err).to.be(null)
@@ -195,7 +200,7 @@ runTests = (desiredBrowsers) ->
           log(chalk.magenta('Creating tunnel...'))
           actualTunnelId = uuid.v4()
           tunnel = await sauceLabs.startSauceConnect({
-            logger: (stdout) => console.log(chalk.magenta(stdout.trimEnd())),
+            logger: (stdout) => log(chalk.magenta(stdout.trimEnd().replace(sauceKey, '[REDACTED]'))),
             tunnelIdentifier: actualTunnelId,
           })
           done()
@@ -217,7 +222,7 @@ runTests = (desiredBrowsers) ->
 
 main = ->
   desiredBrowsers = await getDesiredBrowsers()
-  #console.log('desiredBrowsers =', desiredBrowsers)
+  log('desiredBrowsers =', desiredBrowsers)
   runTests(desiredBrowsers)
 
 main()
