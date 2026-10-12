@@ -329,15 +329,18 @@ if (doc !== undefined) {
           setStatus("", "done");
         });
       } else {
-	editor.setValue("# *ERROR*: " + req.status + " " + req.statusText + "\n" +
-                        "\n" +
-                        req.responseText);
+        var text = "# *ERROR*: " + req.status + " " + req.statusText + "\n" +
+                                "\n" +
+                                req.responseText
+        if (location.protocol === "file:") {
+          // HTTP requests from file: tabs are blocked nowdays, of CORS.
+          text += "\n" +
+                  "> # Tip: This won't work if you open index.html\n" +
+                  "You now need a local HTTP server for development, e.g. run `npm start`.";
+        }
+	editor.setValue(text);
 	setStatus("warning", "Loading error.");
       }
-
-      // With file://, it's anybody's guess if this works.
-      // Chrome refuses (and req.send() throws NetworkError.
-      // Firefox works, but doesn't know the content-type, so tries to parse response as x/html ("help.md: syntax error").  However if target doesn't exist, throws "NS_ERROR_DOM_BAD_URI: Access to restricted URI denied".
     }
   }
   // Security: this can make GET request with any URL!
