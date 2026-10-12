@@ -37,6 +37,7 @@ function setStatus(className, text) {
   if (text) {
     statusElement.appendChild(document.createTextNode(text));
   }
+  log("setStatus:", className, text);
 }
 
 // Random pad IDs
@@ -231,8 +232,6 @@ function setupEditor(editor) {
 
 function setupFirepad(editor, firepad) {
   firepad.on("ready", function() {
-    setStatus("", "done");
-
     if (firepad.isHistoryEmpty()) {
       firepad.setText(
         "# Untitled\n" +
@@ -258,9 +257,12 @@ function setupFirepad(editor, firepad) {
     editor.focus();
 
     // Queuing this allows text to appear before math.
+    setStatus("info", "math...");
     MathJax.Hub.Queue(function() {
       CodeMirror.hookMath(editor, MathJax);
-      editor.renderAllMath();
+      editor.renderAllMath(function() {
+        setStatus("", "done");
+      });
     });
   });
 
@@ -321,7 +323,11 @@ if (doc !== undefined) {
         // TODO: respect req.getResponseHeader('Content-Type') to make this a universal viewer?
         //   Or take a viewmode param?
 	editor.setValue(req.responseText);
-	setStatus("", "done");
+        setStatus("info", "math...");
+	CodeMirror.hookMath(editor, MathJax);
+        editor.renderAllMath(function() {
+          setStatus("", "done");
+        });
       } else {
 	editor.setValue("# *ERROR*: " + req.status + " " + req.statusText + "\n" +
                         "\n" +
@@ -335,8 +341,11 @@ if (doc !== undefined) {
     }
   }
   // Security: this can make GET request with any URL!
-  // Is this risky as kind of "open redirect" for requests?
-  req.open('GET', view, true);  // TODO: constrain `view` against traversal?
+  // Is this risky as kind of "open redirect" for requests? CSPT?
+  // Sounds OK-ish to me on a static site, no auth.
+  // - [ ] Should I constrain it to same-dir files, blocking cross-domain and path traversal?
+  // - [x] `?doc=...` won't leak via Referer, defaults + <meta> tag ensure we only send origin.
+  req.open('GET', view, true);
 //  try {
     req.send(null);
 //  } catch(err){}
