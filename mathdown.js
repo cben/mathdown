@@ -8,7 +8,7 @@
 // Prevent errors on IE (but do strive to log somehow if IE Dev Tools are open).
 function log() {
   try {
-    if(console.log.apply) {
+    if (console.log.apply) {
       console.log.apply(console, arguments);
     } else {
       /* IE's console.log doesn't have .apply, .call, or bind. */
@@ -22,7 +22,7 @@ log("MJ:", MathJax.Message.Log());
 var origFilterText = MathJax.Message.filterText;
 MathJax.Message.filterText = function(text, n, msgType) {
   // Exclude non-informative "Processing/Typesetting math: 0% / 100%".
-  if(msgType !== "ProcessMath" && msgType !== "TypesetMath") {
+  if (msgType !== "ProcessMath" && msgType !== "TypesetMath") {
     log("MJ:", text, "[" + msgType + "]");
   }
   return origFilterText(text, n, msgType);
@@ -34,9 +34,10 @@ var statusElement = document.getElementById("status");
 function setStatus(className, text) {
   statusElement.innerHTML = "";
   statusElement.className = className;
-  if(text) {
+  if (text) {
     statusElement.appendChild(document.createTextNode(text));
   }
+  log("setStatus:", className, text);
 }
 
 // Random pad IDs
@@ -122,17 +123,18 @@ CodeMirror.defineMode("gfm_header_line_classes", function(cmConfig, modeCfg) {
 CodeMirror.keyMap["default"]["Tab"] = "indentMore";
 CodeMirror.keyMap["default"]["Shift-Tab"] = "indentLess";
 
-function createEditor(docDirection) {
+function createEditor(docDirection, optionOverides) {
   return CodeMirror.fromTextArea(document.getElementById("code"),
-                                 {flattenSpans: true, // important e.g. for .cm-formatting-task.
-                                  foldGutter: true,
-                                  gutters: ["CodeMirror-foldgutter"],
-                                  indentUnit: 4,
-                                  lineNumbers: false,
-                                  lineWrapping: true,
-                                  mode: "gfm_header_line_classes",
-                                  showLeadingSpace: true,
-                                  direction: docDirection});
+				 {flattenSpans: true, // important e.g. for .cm-formatting-task.
+				  foldGutter: true,
+				  gutters: ["CodeMirror-foldgutter"],
+				  indentUnit: 4,
+				  lineNumbers: false,
+				  lineWrapping: true,
+				  mode: "gfm_header_line_classes",
+				  showLeadingSpace: true,
+				  direction: docDirection,
+				  ...optionOverides});
 }
 
 function setupEditor(editor) {
@@ -230,8 +232,6 @@ function setupEditor(editor) {
 
 function setupFirepad(editor, firepad) {
   firepad.on("ready", function() {
-    setStatus("", "done");
-
     if (firepad.isHistoryEmpty()) {
       firepad.setText(
         "# Untitled\n" +
@@ -257,16 +257,19 @@ function setupFirepad(editor, firepad) {
     editor.focus();
 
     // Queuing this allows text to appear before math.
+    setStatus("info", "math...");
     MathJax.Hub.Queue(function() {
       CodeMirror.hookMath(editor, MathJax);
-      editor.renderAllMath();
+      editor.renderAllMath(function() {
+        setStatus("", "done");
+      });
     });
   });
 
   //  firepadRef.child("
   firepad.on("synced", function(isSynced) {
     log("synced", isSynced);
-    if(!isSynced) {
+    if (!isSynced) {
       setStatus("info", "Unsaved!");
     } else {
       setStatus("", "saved");
@@ -290,24 +293,66 @@ function locationQueryParams() {
 
 var queryParams = locationQueryParams();
 var doc = queryParams["doc"];
+var view = queryParams["viewurl"];
 // EXPERIMENTAL KLUDGE param: for now we support dir=rtl to make RTL docs (somewhat) practical
 // (but don't expose it in the GUI).
 // In the future it might be ignored - once we autodetect each line's base direction (#23).
 // Also, document direction is semantic, it makes more sense to store it in firebase?
 var docDirection = (queryParams["dir"] === "rtl" ? "rtl" : "ltr");
 
-if(doc === undefined) {
-    // TODO: this should be a server-side redirect (when we have a server).
-    window.location.search = "?doc=about";
-} else {
+if (doc !== undefined) {
   var rootRef = new Firebase("https://mathdown.firebaseIO.com/");
   var firepadsRef = rootRef.child("firepads");
   var firepadRef = firepadsRef.child(doc);
   log("firebase ref:", firepadRef.toString());
 
-  var editor = createEditor(docDirection);
+  var editor = createEditor(docDirection, {});
   setupEditor(editor);
 
   var firepad = Firepad.fromCodeMirror(firepadRef, editor);
   setupFirepad(editor, firepad);
+} else if (view !== undefined) {
+  var editor = createEditor(docDirection, {readOnly: true, theme: "default readonly"});
+  setupEditor(editor);
+
+  var req = new XMLHttpRequest();
+  req.onreadystatechange = function() {
+    log("viewurl <" + view + "> loading: readyState =", req.readyState, "status =", req.status);
+    if (req.readyState === 4) {
+      if (req.status === 200) {
+        // TODO: respect req.getResponseHeader('Content-Type') to make this a universal viewer?
+        //   Or take a viewmode param?
+	editor.setValue(req.responseText);
+        setStatus("info", "math...");
+	CodeMirror.hookMath(editor, MathJax);
+        editor.renderAllMath(function() {
+          setStatus("", "done");
+        });
+      } else {
+        var text = "# *ERROR*: " + req.status + " " + req.statusText + "\n" +
+                                "\n" +
+                                req.responseText
+        if (location.protocol === "file:") {
+          // HTTP requests from file: tabs are blocked nowdays, of CORS.
+          text += "\n" +
+                  "> # Tip: This won't work if you open index.html\n" +
+                  "You now need a local HTTP server for development, e.g. run `npm start`.";
+        }
+	editor.setValue(text);
+	setStatus("warning", "Loading error.");
+      }
+    }
+  }
+  // Security: this can make GET request with any URL!
+  // Is this risky as kind of "open redirect" for requests? CSPT?
+  // Sounds OK-ish to me on a static site, no auth.
+  // - [ ] Should I constrain it to same-dir files, blocking cross-domain and path traversal?
+  // - [x] `?doc=...` won't leak via Referer, defaults + <meta> tag ensure we only send origin.
+  req.open('GET', view, true);
+//  try {
+    req.send(null);
+//  } catch(err){}
+} else {
+  // TODO: this should be a server-side redirect (when we have a server).
+  window.location.search = "?doc=about";
 }

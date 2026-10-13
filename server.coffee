@@ -1,3 +1,10 @@
+# OBSOLETE! This was used back when I was deploying a server (Heroku etc).
+#   Nowdays prod is static netlify anyway.
+#   This could be deleted, except it's imported by the e2e test (though that no longer works #220).
+#
+# This is NOT development-friendly because it caches files in RAM and does not watch for edits.
+# For development, use `npm start`.
+
 http = require('http')
 assert = require('assert')
 
@@ -43,7 +50,8 @@ exports.main = (port, callback) ->
   httpServer.on 'request', handleRequest
 
   httpServer.on 'listening', ->
-    console.log("HttpServer up, e.g. http://localhost:#{httpServer.address().port}/?doc=demo");
+    console.log("HttpServer up, e.g. http://localhost:#{httpServer.address().port}/?doc=demo  or  http://localhost:#{httpServer.address().port}/?viewurl=demo.md");
+    console.log("NOTE: This is old prod server code, caches files; for development use `npm start` instead!")
   if callback?
     httpServer.on 'listening', callback
   httpServer.listen(port, listen_on_address)
