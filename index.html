@@ -44,6 +44,9 @@
         },
         TeX: {
           extensions: ["autoload-all.js"]
+        },
+        "fast-preview": {
+          disabled: true
         }
       });
     </script>
@@ -60,8 +63,10 @@
     <!-- TODO: clean content/CSS. -->
     <div id="header">
       <a href="?doc=about" target="_blank" id="logo">
-        <!-- Use script form rather than $...$ to hide until it's rendered. -->
-        <script type="math/tex; mode=inline">\binom{\mathcal{Math}}{\text{down}}</script>
+        <span style="font-size: 120%">
+          <!-- Use script form rather than $...$ to hide until it's rendered. -->
+          <script type="math/tex; mode=inline">\small \binom{\mathcal{Math}}{\text{down}}</script>
+        </span>
       </a>
       <span class="warning">⚠ Alpha quality ⚠</span>
       |
